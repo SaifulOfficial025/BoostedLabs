@@ -23,7 +23,6 @@ function SignUp() {
           <FaArrowCircleLeft className="w-5 h-5" />
           Back
         </button>
-      <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4 font-sans">
         <img
           src="/BoostedLabLogo.svg"
           alt="Boosted Labs Logo"

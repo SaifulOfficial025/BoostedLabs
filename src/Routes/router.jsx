@@ -8,7 +8,7 @@ import About from "../Pages/About";
 import Profile from "../Pages/Profile/Profile";
 import FilteredProduct from "../Pages/Home/FilteredProduct";
 import SignIn from "../Pages/Authentication/SignIn";
-import SignUp from "../Pages/Authentication/SignUP";
+import SignUp from "../Pages/Authentication/SignUp";
 import ForgetPasswordEmail from "../Pages/Authentication/ForgetPasswordEmail";
 import ForgetPasswordVerification from "../Pages/Authentication/ForgetPasswordVerifyOTP";
 import SetNewPassword from "../Pages/Authentication/SetNewPassword";
