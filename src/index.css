@@ -1,8 +1,39 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap');
+@font-face {
+  font-family: 'Open Sans Condensed';
+  src: url('/Fonts/OpenSans_Condensed-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
 
+@font-face {
+  font-family: 'Open Sans Condensed SemiBold';
+  src: url('/Fonts/OpenSans_Condensed-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
 
-#root{
-  font-family: "Space Grotesk", serif;
+@font-face {
+  font-family: 'Open Sans SemiCondensed Bold';
+  src: url('/Fonts/OpenSans_SemiCondensed-Bold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+html, body, #root {
+  font-family: 'Open Sans Condensed', 'Open Sans SemiCondensed', 'Open Sans SemiCondensed Bold', Arial, sans-serif;
+}
+:root {
+  --font-sans: 'Open Sans Condensed', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  /* --font-serif: 'Playfair Display', Georgia, Cambria, 'Times New Roman', Times, serif; */
+}
+
+html, body, #root {
+  font-family: var(--font-sans);
+}
+
+/* Use Playfair Display for headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
 }
 
 @tailwind base;

@@ -1,14 +1,26 @@
-import Container from "../../Layout/Container/Container"
+import Container from "../../Layout/Container/Container";
+import Footer from "../../Shared/Footer";
+import Header from "../../Shared/Header";
+import Noticebar from "../../Shared/Noticebar";
+import ChooseYourBoostedProduct from "./ChooseYourBoostedProduct";
+import Hero from "./Hero";
+import RealResult from "./RealResult";
+import UsageGuide from "./UsageGuide";
+import WhyBoostedLab from "./WhyBoostedLab";
 
 const Home = () => {
   return (
     <div>
-      <h2 className="text-3xl font-bold">landing page contain goes here</h2>
-      <Container>
-          <h2 className="text-3xl font-bold">Container Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt animi alias distinctio eligendi doloremque ducimus illum? Sint harum expedita quibusdam voluptate nihil sed porro quam provident! Vitae numquam delectus quasi.</h2>
-      </Container>
+      <Noticebar />
+      <Header />
+      <Hero />
+      <ChooseYourBoostedProduct />
+      <WhyBoostedLab />
+      <RealResult />
+      <UsageGuide />
+      <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
