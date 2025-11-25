@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaFire } from "react-icons/fa";
+import ShoppingCartModal from "./ShoppingCartModal";
 
 function ProductCard({
   badge = {
@@ -15,6 +16,8 @@ function ProductCard({
   onViewDetails,
   onAddToCart,
 }) {
+  const [showCart, setShowCart] = useState(false);
+
   return (
     <div className="bg-white rounded-2xl border border-[#e5e7eb] shadow-sm p-3 max-w-xs  font-sans">
       <div className="relative mb-4">
@@ -46,12 +49,18 @@ function ProductCard({
           View Details
         </button>
         <button
-          className="flex-1 rounded-lg py-2 text-white bg-black font-semibold text-base hover:bg-gray-900 transition"
-          onClick={onAddToCart}
+          className="flex-1 rounded-lg py-2 text-white bg-black font-semibold text-base hover:bg-gray-900 hover:shadow-lg active:scale-95 transition-all duration-300 ease-in-out"
+          onClick={() => {
+            onAddToCart();
+            setShowCart(true);
+          }}
         >
           Add To Cart
         </button>
       </div>
+      {showCart && (
+        <ShoppingCartModal open={showCart} onClose={() => setShowCart(false)} />
+      )}
     </div>
   );
 }

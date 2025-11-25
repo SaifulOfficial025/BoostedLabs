@@ -1,44 +1,74 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import { IoPersonOutline } from "react-icons/io5";
+import ShoppingCartModal from "./ShoppingCartModal";
+import { Link } from "react-router-dom";
 
 function Header() {
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [showCartModal, setShowCartModal] = useState(false);
+  const filterRef = useRef(null);
+
+  const handleFilterClick = () => {
+    setShowDropdown((prev) => !prev);
+  };
+
+  const handleCartClick = () => {
+    setShowCartModal(true);
+  };
+
+  // Close dropdown when clicking outside
+  React.useEffect(() => {
+    function handleClickOutside(event) {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div
-      className="w-full flex items-center justify-between px-8 py-4 absolute top-0 left-0 z-20 mt-12 font-sans"
+      className="w-full flex items-center justify-between px-16 py-4 absolute top-0 left-0 z-20 mt-12 font-sans"
       style={{ background: "transparent", minHeight: "56px" }}
     >
       {/* Logo */}
       <div className="flex items-center">
-        <img
-          src="/public/BoostedLabLogo.svg"
-          alt="Logo"
-          className="w-20 h-w-20 object-contain"
-        />
+        <Link to="/">
+          <img
+            src="/public/BoostedLabLogo.svg"
+            alt="Logo"
+            className="w-20 h-w-20 object-contain"
+          />
+        </Link>
       </div>
       {/* Navigation */}
       <nav className="flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2">
-        <a
-          href="#"
+        <Link
+          to="/"
           className="font-bold text-black border-b-2 border-black pb-1"
         >
           Home
-        </a>
-        <a href="#" className="text-black">
+        </Link>
+        <Link to="/shop" className="text-black">
           Shop
-        </a>
-        <a href="#" className="text-black">
+        </Link>
+        <Link to="/contact-us" className="text-black">
           Contact Us
-        </a>
-        <a href="#" className="text-black">
+        </Link>
+        <Link to="/about" className="text-black">
           About Us
-        </a>
+        </Link>
       </nav>
       {/* Search, Cart, Account */}
       <div className="flex items-center gap-4 ml-auto ">
         {/* Search Bar */}
         <div
-          className="flex items-center bg-white rounded-full px-5 py-2 shadow-md"
+          className="flex items-center bg-white rounded-full px-5 py-2 shadow-md relative"
           style={{ background: "transparent", minWidth: "220px" }}
+          ref={filterRef}
         >
           <svg
             width="18"
@@ -57,25 +87,59 @@ function Header() {
             placeholder="Search..."
             className="bg-transparent outline-none text-black text-md "
           />
-          {/* <svg
-            width="18"
-            height="18"
-            fill="none"
-            stroke="#222"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            className="ml-2"
-          >
-            <line x1="4" y1="21" x2="4" y2="14" />
-            <line x1="4" y1="10" x2="4" y2="3" />
-            <line x1="12" y1="21" x2="12" y2="12" />
-            <line x1="12" y1="8" x2="12" y2="3" />
-            <line x1="20" y1="21" x2="20" y2="16" />
-            <line x1="20" y1="12" x2="20" y2="3" />
-          </svg> */}
+          <img
+            src="/public/filter.png"
+            alt="Filter"
+            className="w-5 cursor-pointer"
+            onClick={handleFilterClick}
+          />
+          {showDropdown && (
+            <div className="absolute top-10 right-0 bg-[#f6fafd] border border-gray-400 rounded-xl shadow-lg w-46 py-4 px-6 z-50 flex flex-col gap-4">
+              <Link
+                to="/shop/filtered-products/weight-loss"
+                className="hover:bg-gray-200 rounded px-2 transition-colors "
+              >
+                <span className="text-xl text-[#64748b]">Weight loss</span>
+              </Link>
+              <Link
+                to="/shop/filtered-products/cosmetic"
+                className="hover:bg-gray-200 rounded px-2 transition-colors "
+              >
+                <span className="text-xl text-[#64748b]">Cosmetic</span>
+              </Link>
+              <Link
+                to="/shop/filtered-products/performance"
+                className="hover:bg-gray-200 rounded px-2 transition-colors "
+              >
+                <span className="text-xl text-[#64748b]">Performance</span>
+              </Link>
+              <Link
+                to="/shop/filtered-products/energy"
+                className="hover:bg-gray-200 rounded px-2 transition-colors "
+              >
+                <span className="text-xl text-[#64748b]">Energy</span>
+              </Link>
+              <Link
+                to="/shop/filtered-products/metabolic"
+                className="hover:bg-gray-200 rounded px-2 transition-colors "
+              >
+                <span className="text-xl text-[#64748b]">Metabolic</span>
+              </Link>
+              <Link
+                to="/shop/filtered-products/healing"
+                className="hover:bg-gray-200 rounded px-2 transition-colors "
+              >
+                <span className="text-xl text-[#64748b]">Healing</span>
+              </Link>
+            </div>
+          )}
         </div>
         {/* Cart Icon */}
-        <button className="bg-transparent p-2 rounded hover:bg-gray-100">
+        <button
+          className="bg-transparent p-2 rounded hover:bg-gray-100 hover:shadow-sm active:scale-95 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200"
+          onClick={handleCartClick}
+          aria-label="Open shopping cart"
+        >
           <svg
             width="22"
             height="22"
@@ -89,11 +153,17 @@ function Header() {
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
           </svg>
         </button>
+        <ShoppingCartModal
+          open={showCartModal}
+          onClose={() => setShowCartModal(false)}
+        />
         {/* My Account Button */}
-        <button className="flex items-center bg-black text-white px-3 py-3 rounded text-xs font-medium gap-2">
-          <IoPersonOutline className="w-5 h-5" />
-          My Account
-        </button>
+        <Link to="/signin">
+          <button className="flex items-center bg-black text-white px-3 py-3 rounded text-xs font-medium gap-2">
+            <IoPersonOutline className="w-5 h-5" />
+            My Account
+          </button>
+        </Link>
       </div>
     </div>
   );

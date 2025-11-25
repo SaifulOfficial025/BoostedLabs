@@ -1,4 +1,5 @@
 import React from "react";
+import { FaLongArrowAltRight } from "react-icons/fa";
 
 function Hero() {
   return (
@@ -12,16 +13,21 @@ function Hero() {
         minHeight: "80vh",
       }}
     >
-      <div className="flex flex-col justify-center max-w-xl z-10 ml-16">
-        <h1 className="text-4xl font-bold text-black mb-4">
+      <div className="flex flex-col justify-center max-w-3xl z-10 ml-16">
+        <h1 className="text-5xl font-bold text-black mb-4">
           Boost your body. Boost your life.
         </h1>
-        <p className="text-base text-[#3a4a5c] mb-8">
+        <p className="mt-5 text-2xl text-[#3a4a5c] mb-8">
           Science-backed peptides for healing, performance
           <br />& cosmetic wellness.
         </p>
-        <button className="bg-black text-white px-6 py-2 rounded font-normal text-base w-fit">
-          Shop Now
+        <button className="bg-black text-white px-10 py-4 rounded-xl font-normal text-md w-fit flex items-center gap-2 transition-all duration-300 relative group shadow-none hover:shadow-[0_0_16px_2px_rgba(0,0,0,0.25)]">
+          <span className="transition-all duration-500 group-hover:pr-6">
+            Shop Now
+          </span>
+          <span className="absolute right-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-2 transition-all duration-500 flex items-center">
+            <FaLongArrowAltRight className="text-white text-2xl" />
+          </span>
         </button>
       </div>
     </section>
