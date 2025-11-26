@@ -9,7 +9,7 @@ function ForgetPasswordEmail() {
   const navigate = useNavigate();
   return (
     <section>
-      <div className="flex items-start justify-center bg-white  py-5 font-sans mt-10">
+      <div className="flex items-start justify-center bg-white py-5 font-sans mt-10 px-4 sm:px-6">
         <div className="w-full max-w-lg">
           <button
             onClick={() => navigate(-1)}
@@ -20,12 +20,16 @@ function ForgetPasswordEmail() {
           </button>
         </div>
       </div>
-      <div className="flex flex-col items-center justify-center bg-white px-4 font-sans mt-10">
-        <img src={Logo} alt="Boosted Labs Logo" className="w-16 mb-6" />
-        <h1 className="text-3xl font-bold text-center mb-2 text-[#222]">
+      <div className="flex flex-col items-center justify-center bg-white px-4 sm:px-6 md:px-10 font-sans mt-10">
+        <img
+          src={Logo}
+          alt="Boosted Labs Logo"
+          className="w-14 sm:w-16 md:w-20 mb-6"
+        />
+        <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2 text-[#222]">
           Forgot your password?
         </h1>
-        <p className="text-gray-500 text-center mb-8">
+        <p className="text-gray-500 text-center mb-8 text-sm sm:text-base">
           Don’t worry, happens to all of us. Enter your email below to recover
           your password
         </p>

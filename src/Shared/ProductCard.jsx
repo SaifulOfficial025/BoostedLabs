@@ -22,7 +22,7 @@ function ProductCard({
   const navigate = useNavigate();
 
   return (
-    <div className="bg-white rounded-2xl border border-[#e5e7eb] shadow-sm p-3 max-w-xs  font-sans">
+    <div className="bg-white rounded-2xl border border-[#e5e7eb] shadow-sm p-3 max-w-xs mx-auto sm:mx-0 font-sans">
       <div className="relative mb-4">
         <div
           className={`absolute flex items-center gap-2 px-3 py-1 rounded-tl-md rounded-br-md ${badge.color}`}
@@ -33,8 +33,7 @@ function ProductCard({
           </span>
         </div>
         <div
-          className="rounded-xl border border-[#e5e7eb] p-2 flex items-center justify-center bg-[#f8fafc] cursor-pointer"
-          style={{ minHeight: "180px" }}
+          className="rounded-xl border border-[#e5e7eb] p-2 flex items-center justify-center bg-[#f8fafc] cursor-pointer min-h-[140px] sm:min-h-[180px]"
           onClick={() => {
             // navigate to product details when clicking image area
             if (productId !== undefined)
@@ -42,12 +41,16 @@ function ProductCard({
             if (onViewDetails) onViewDetails();
           }}
         >
-          <img src={image} alt={title} className="max-h-28 object-contain " />
+          <img
+            src={image}
+            alt={title}
+            className="max-h-20 sm:max-h-28 object-contain "
+          />
         </div>
       </div>
       <div className="mb-2">
         <h2
-          className="text-xl font-bold text-[#222] mb-1 cursor-pointer"
+          className="text-lg sm:text-xl font-bold text-[#222] mb-1 cursor-pointer text-center sm:text-left"
           onClick={() => {
             if (productId !== undefined)
               navigate(`/shop/product-details/${productId}`);
@@ -56,12 +59,16 @@ function ProductCard({
         >
           {title}
         </h2>
-        <p className="text-sm text-[#3a4a5c] leading-snug">{description}</p>
+        <p className="text-sm text-[#3a4a5c] leading-snug text-center sm:text-left">
+          {description}
+        </p>
       </div>
-      <div className="text-2xl font-bold text-[#222] mb-4 mt-5">${price}</div>
-      <div className="flex gap-3">
+      <div className="text-xl sm:text-2xl font-bold text-[#222] mb-4 mt-5 text-center sm:text-left">
+        ${price}
+      </div>
+      <div className="flex flex-col sm:flex-row gap-3">
         <button
-          className="flex-1 border border-[#222] rounded-lg py-2 text-[#222] bg-white font-semibold text-base hover:bg-gray-50 transition"
+          className="w-full sm:flex-1 border border-[#222] rounded-lg py-2 text-[#222] bg-white font-semibold text-base hover:bg-gray-50 transition"
           onClick={(e) => {
             e.stopPropagation();
             if (onViewDetails) onViewDetails();
@@ -72,7 +79,7 @@ function ProductCard({
           View Details
         </button>
         <button
-          className="flex-1 rounded-lg py-2 text-white bg-black font-semibold text-base hover:bg-gray-900 hover:shadow-lg active:scale-95 transition-all duration-300 ease-in-out"
+          className="w-full sm:flex-1 rounded-lg py-2 text-white bg-black font-semibold text-base hover:bg-gray-900 hover:shadow-lg active:scale-95 transition-all duration-300 ease-in-out"
           onClick={(e) => {
             // prevent parent click handlers
             e.stopPropagation();

@@ -74,7 +74,7 @@ function ForgetPasswordVerifyOTP() {
   };
 
   return (
-    <div className="min-h-screen flex items-start justify-center bg-white px-6 py-12 font-sans">
+    <div className="min-h-screen flex items-start justify-center bg-white px-4 sm:px-6 py-8 sm:py-12 font-sans">
       <div className="w-full max-w-lg">
         <button
           onClick={() => navigate(-1)}
@@ -85,7 +85,7 @@ function ForgetPasswordVerifyOTP() {
         </button>
 
         <div className="text-center">
-          <img src={Logo} alt="logo" className="w-20 mx-auto mb-6" />
+          <img src={Logo} alt="logo" className="w-16 sm:w-20 mx-auto mb-6" />
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">Verify code</h2>
           <p className="text-gray-500 mb-8">
             An authentication code has been sent to your email.
@@ -98,7 +98,7 @@ function ForgetPasswordVerifyOTP() {
           </label>
 
           <div
-            className="flex items-center justify-center gap-4 mb-3"
+            className="flex items-center justify-center gap-3 sm:gap-4 mb-3"
             onPaste={handlePaste}
           >
             {values.map((v, i) => (
@@ -108,7 +108,7 @@ function ForgetPasswordVerifyOTP() {
                 value={v}
                 onChange={(e) => handleChange(i, e)}
                 onKeyDown={(e) => handleKeyDown(i, e)}
-                className="w-14 h-14 text-center rounded-lg border border-gray-200 text-xl font-medium"
+                className="w-12 h-12 sm:w-14 sm:h-14 text-center rounded-lg border border-gray-200 text-xl font-medium"
                 inputMode="numeric"
                 pattern="[0-9]*"
                 maxLength={1}
@@ -138,7 +138,7 @@ function ForgetPasswordVerifyOTP() {
             <div className="flex justify-center">
               <button
                 type="submit"
-                className="w-full bg-black text-white py-3 rounded-lg font-semibold text-lg mt-2 mb-2 hover:bg-gray-900 transition"
+                className="w-full bg-black text-white py-2 sm:py-3 rounded-lg font-semibold text-base sm:text-lg mt-2 mb-2 hover:bg-gray-900 transition"
               >
                 Submit
               </button>

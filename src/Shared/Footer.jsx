@@ -9,10 +9,10 @@ import amex from "../../public/amex.png";
 
 function Footer() {
   return (
-    <footer className="w-full bg-black text-white pt-10 pb-4 px-32 ">
-      <div className="flex justify-between items-start mb-8">
+    <footer className="w-full bg-black text-white pt-10 pb-4 px-4 sm:px-6 md:px-32 ">
+      <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center sm:items-start mb-8 gap-8 text-center sm:text-left">
         {/* Stay Connected */}
-        <div className="flex flex-col gap-2 min-w-[200px]">
+        <div className="flex flex-col gap-2 min-w-[180px] items-center sm:items-start">
           <span className="font-semibold text-xl mb-5">Stay Connected</span>
           <span className="font-semibold text-[#cbd5e1]">BOOSTED LABS</span>
           <span className="text-md text-[#cbd5e1]">
@@ -45,7 +45,7 @@ function Footer() {
           </div>
         </div>
         {/* Account */}
-        <div className="flex flex-col gap-2 min-w-[120px]">
+        <div className="flex flex-col gap-2 min-w-[120px] items-center sm:items-start">
           <span className="font-bold text-xl mb-2">Account</span>
           <a href="#" className="text-md text-[#cbd5e1] mt-2">
             Shop
@@ -61,7 +61,7 @@ function Footer() {
           </a>
         </div>
         {/* Help Center */}
-        <div className="flex flex-col gap-2 min-w-[120px]">
+        <div className="flex flex-col gap-2 min-w-[120px] items-center sm:items-start">
           <span className="font-bold text-xl mb-2">Help Center</span>
           <a href="#" className="text-md text-[#cbd5e1] mt-2">
             Payment
@@ -78,26 +78,26 @@ function Footer() {
         </div>
       </div>
       <hr className="border-t border-gray-600 mb-4" />
-      <div className="flex justify-between items-center">
-        <span className="text-md text-[#cbd5e1]">
+      <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-4 text-center sm:text-left">
+        <span className="text-sm sm:text-md text-[#cbd5e1]">
           Copyright @ 2025. All rights reserved.
         </span>
-        <div className="flex gap-2">
+        <div className="flex justify-center sm:justify-start gap-2">
           {/* Payment Logos - use placeholder images */}
           <img
             src={visa}
             alt="Visa"
-            className="h-12 bg-white px-1 py-0.5 rounded-md"
+            className="h-8 sm:h-12 bg-white px-1 py-0.5 rounded-md"
           />
           <img
             src={master}
             alt="Mastercard"
-            className="h-12 bg-white px-1 py-0.5 rounded-md"
+            className="h-8 sm:h-12 bg-white px-1 py-0.5 rounded-md"
           />
           <img
             src={amex}
             alt="Amex"
-            className="h-12 bg-white px-1 py-0.5 rounded-md"
+            className="h-8 sm:h-12 bg-white px-1 py-0.5 rounded-md"
           />
         </div>
       </div>

@@ -55,7 +55,7 @@ function RecurringProductModal({ open = true, onClose }) {
 
   return (
     open && (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 px-4">
         <div className="bg-white rounded-xl shadow-lg max-w-lg w-full p-0 overflow-hidden">
           <div className="flex items-center justify-between px-6 py-4 border-b">
             <span className="text-lg font-semibold text-gray-800">
@@ -68,7 +68,7 @@ function RecurringProductModal({ open = true, onClose }) {
               &times;
             </button>
           </div>
-          <div className="px-6 py-4">
+          <div className="px-4 sm:px-6 py-4">
             <div className="flex items-center gap-2 mb-4">
               <input
                 type="checkbox"
@@ -116,9 +116,9 @@ function RecurringProductModal({ open = true, onClose }) {
               ))}
             </div>
           </div>
-          <div className="px-6 py-4 bg-gray-100">
+          <div className="px-4 sm:px-6 py-4 bg-gray-100">
             <button
-              className="w-full bg-gray-400 text-white py-3 rounded-lg font-semibold text-lg"
+              className="w-full bg-gray-400 text-white py-2 sm:py-3 rounded-lg font-semibold text-base sm:text-lg"
               disabled
             >
               Save

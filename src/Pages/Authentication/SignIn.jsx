@@ -13,7 +13,7 @@ function SignIn() {
   const navigate = useNavigate();
   return (
     <section>
-      <div className="flex items-start justify-center bg-white  py-5 font-sans mt-10">
+      <div className="flex items-start justify-center bg-white py-5 font-sans mt-10 px-4 sm:px-6">
         <div className="w-full max-w-lg">
           <button
             onClick={() => navigate(-1)}
@@ -25,12 +25,16 @@ function SignIn() {
         </div>
       </div>
 
-      <div className="flex flex-col items-center justify-center bg-white px-4 font-sans">
-        <img src={Logo} alt="Boosted Labs Logo" className="w-16 mb-6" />
-        <h1 className="text-3xl font-bold text-center mb-2 text-[#222]">
+      <div className="flex flex-col items-center justify-center bg-white px-4 sm:px-6 md:px-10 font-sans">
+        <img
+          src={Logo}
+          alt="Boosted Labs Logo"
+          className="w-14 sm:w-16 md:w-20 mb-6"
+        />
+        <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2 text-[#222]">
           Sign In
         </h1>
-        <p className="text-gray-500 text-center mb-8">
+        <p className="text-gray-500 text-center mb-8 text-sm sm:text-base">
           Please Enter Your Details Below to Continue
         </p>
         <form className="w-full max-w-md flex flex-col gap-4">
@@ -87,7 +91,7 @@ function SignIn() {
           <Link to="/">
             <button
               type="submit"
-              className="w-full bg-black text-white py-2 rounded-lg font-semibold text-lg mt-2 mb-2 hover:bg-gray-900 transition"
+              className="w-full bg-black text-white py-2 rounded-lg font-semibold text-base sm:text-lg mt-2 mb-2 hover:bg-gray-900 transition"
             >
               Sign In
             </button>
@@ -105,7 +109,7 @@ function SignIn() {
             <span className="font-medium text-gray-700">Google</span>
           </button>
         </form>
-        <p className="text-gray-500 text-sm mt-8 text-center">
+        <p className="text-gray-500 text-xs sm:text-sm mt-8 text-center mb-10">
           Don't have an account yet?{" "}
           <Link
             to="/signup"

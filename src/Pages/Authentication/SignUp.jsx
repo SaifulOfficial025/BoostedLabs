@@ -18,7 +18,7 @@ function SignUp() {
 
   return (
     <section>
-      <div className="flex items-start justify-center bg-white  py-5 font-sans mt-10">
+      <div className="flex items-start justify-center bg-white py-5 font-sans mt-10 px-4 sm:px-6">
         <div className="w-full max-w-lg">
           <button
             onClick={() => navigate(-1)}
@@ -29,12 +29,16 @@ function SignUp() {
           </button>
         </div>
       </div>
-      <div className="flex flex-col items-center justify-center bg-white px-4 font-sans mt-10">
-        <img src={Logo} alt="Boosted Labs Logo" className="w-16 mb-6" />
-        <h1 className="text-3xl font-bold text-center mb-2 text-[#222]">
+      <div className="flex flex-col items-center justify-center bg-white px-4 sm:px-6 md:px-10 font-sans mt-10">
+        <img
+          src={Logo}
+          alt="Boosted Labs Logo"
+          className="w-14 sm:w-16 md:w-20 mb-6"
+        />
+        <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2 text-[#222]">
           Register for an account
         </h1>
-        <p className="text-gray-500 text-center mb-8">
+        <p className="text-gray-500 text-center mb-8 text-sm sm:text-base">
           Please Enter Your Details Below to Sign up
         </p>
 
@@ -136,7 +140,7 @@ function SignUp() {
           <Link to="/otp-verification">
             <button
               type="submit"
-              className="w-full bg-black text-white py-3 rounded-lg font-semibold text-lg mt-2 mb-2 hover:bg-gray-900 transition"
+              className="w-full bg-black text-white py-2 sm:py-3 rounded-lg font-semibold text-base sm:text-lg mt-2 mb-2 hover:bg-gray-900 transition"
             >
               Sign Up
             </button>
@@ -157,7 +161,7 @@ function SignUp() {
           </button>
         </form>
 
-        <p className="text-gray-500 text-sm mt-8 text-center">
+        <p className="text-gray-500 text-xs sm:text-sm mt-8 text-center mb-10">
           Have an account?{" "}
           <Link
             to="/signin"

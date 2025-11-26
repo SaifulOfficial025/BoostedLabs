@@ -8,15 +8,15 @@ function ChangePasswordModal({ onBack, onConfirm }) {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-      <div className="bg-white rounded-xl shadow-lg max-w-md w-full p-8 relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 px-4">
+      <div className="bg-white rounded-xl shadow-lg max-w-md w-full p-6 sm:p-8 relative">
         <button
           className="absolute top-5 left-5 flex items-center gap-2 px-3 py-1 bg-black text-white rounded hover:bg-gray-800 text-sm"
           onClick={onBack}
         >
           <FaArrowLeft /> Back
         </button>
-        <h2 className="text-2xl font-bold text-center mb-8 mt-2">
+        <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 mt-2">
           Change Password
         </h2>
         <form className="space-y-6">

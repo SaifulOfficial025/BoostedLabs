@@ -25,20 +25,21 @@ function ProductAddingToCart({
   const increase = () => setQty((q) => q + 1);
 
   return (
-    <div className="max-w-7xl mx-auto  py-10 mt-14 font-sans">
+    <div className="max-w-7xl mx-auto py-10 mt-14 font-sans px-4 sm:px-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start rounded-md">
-        <div className=" bg-white rounded-md border border-gray-200 shadow-sm">
+        <div className="bg-white rounded-md border border-gray-200 shadow-sm">
           <div className="relative">
             {badge && (
               <div className="absolute  bg-blue-100 text-blue-700 text-md px-2 py-1 rounded-tl-md rounded-br-md">
                 {badge}
               </div>
             )}
-            <div
-              className="flex items-center justify-center p-6 bg-[#f8fafc] rounded-lg"
-              style={{ minHeight: 420 }}
-            >
-              <img src={productImage} alt={title} className=" object-contain" />
+            <div className="flex items-center justify-center p-6 bg-[#f8fafc] rounded-lg min-h-[320px] sm:min-h-[420px]">
+              <img
+                src={productImage}
+                alt={title}
+                className="object-contain max-h-80 sm:max-h-[360px]"
+              />
             </div>
           </div>
         </div>

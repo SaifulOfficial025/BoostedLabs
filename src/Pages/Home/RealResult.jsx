@@ -1,14 +1,13 @@
 import React from "react";
 import ReviewCard from "../../Shared/ReviewCard";
 
-
 function RealResult() {
   return (
-    <section className="w-full px-4 py-12 flex flex-col items-center font-sans mt-16">
+    <section className="w-full px-4 sm:px-6 py-12 flex flex-col items-center font-sans mt-16">
       <h2 className="text-2xl md:text-3xl font-bold text-black mb-2 text-center">
         REAL RESULTS
       </h2>
-      <div className="w-[280px] h-1.5 bg-black rounded-full mb-8"></div>
+      <div className="w-44 sm:w-[280px] h-1.5 bg-black rounded-full mb-8"></div>
 
       <div className="flex flex-col md:flex-row gap-6 w-full justify-center items-stretch">
         <ReviewCard

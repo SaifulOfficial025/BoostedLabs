@@ -27,8 +27,10 @@ function Products() {
   }));
 
   return (
-    <div className="max-w-7xl mx-auto py-12 mb-16">
-      <h1 className="text-3xl font-bold font-sans mb-8">All Products</h1>
+    <div className="max-w-7xl mx-auto py-12 mb-16 px-4 sm:px-6">
+      <h1 className="text-2xl sm:text-3xl font-bold font-sans mb-8">
+        All Products
+      </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((p) => (

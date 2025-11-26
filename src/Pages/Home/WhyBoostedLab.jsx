@@ -78,12 +78,12 @@ function WhyBoostedLab() {
     },
   ];
   return (
-    <section className="w-full px-4 py-12 flex flex-col items-center font-sans mt-16">
+    <section className="w-full px-4 sm:px-6 py-12 flex flex-col items-center font-sans mt-16">
       <h2 className="text-2xl md:text-3xl font-bold text-black mb-2 text-center">
         WHY BOOSTED LABS?
       </h2>
-      <div className="w-[400px] h-1.5 bg-black rounded-full mb-8"></div>
-      <div className="bg-[#f6fafd] rounded-2xl border border-[#e5e7eb] p-8 max-w-4xl w-full mx-auto">
+      <div className="w-28 sm:w-[400px] h-1.5 bg-black rounded-full mb-8"></div>
+      <div className="bg-[#f6fafd] rounded-2xl border border-[#e5e7eb] p-4 sm:p-8 max-w-4xl w-full mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-y-8 gap-x-12 mb-8">
           <div className="flex flex-col gap-6">
             {features.slice(0, 3).map((f, i) => (

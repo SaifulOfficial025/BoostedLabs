@@ -20,7 +20,7 @@ function SetNewPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-start justify-center bg-white px-6 py-12 font-sans">
+    <div className="min-h-screen flex items-start justify-center bg-white px-4 sm:px-6 py-8 sm:py-12 font-sans">
       <div className="w-full max-w-lg">
         <button
           onClick={() => navigate(-1)}
@@ -31,7 +31,7 @@ function SetNewPassword() {
         </button>
 
         <div className="text-center">
-          <img src={Logo} alt="logo" className="w-20 mx-auto mb-6" />
+          <img src={Logo} alt="logo" className="w-16 sm:w-20 mx-auto mb-6" />
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">
             Set a password
           </h2>
@@ -93,7 +93,7 @@ function SetNewPassword() {
           <Link to="/signin">
             <button
               type="submit"
-              className="w-full bg-black text-white py-3 rounded-lg font-semibold text-lg mt-2 mb-2 hover:bg-gray-900 transition"
+              className="w-full bg-black text-white py-2 sm:py-3 rounded-lg font-semibold text-base sm:text-lg mt-2 mb-2 hover:bg-gray-900 transition"
             >
               Set password
             </button>

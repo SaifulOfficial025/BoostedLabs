@@ -118,8 +118,10 @@ function FilteredProduct() {
     <section className="font-sans">
       <Noticebar />
       <Header />
-      <div className="max-w-7xl mx-auto px-6 py-12 mt-24">
-        <h2 className="text-2xl font-bold mb-8">{displayCategory} products</h2>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-6 lg:px-12 py-8 sm:py-12 mt-12 sm:mt-24">
+        <h2 className="text-xl sm:text-2xl font-bold mb-8">
+          {displayCategory} products
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
           {products.map((p) => (
             <ProductCard

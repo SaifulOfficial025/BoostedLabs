@@ -25,7 +25,7 @@ function UsageGuide() {
     },
   ];
   return (
-    <section className="w-full px-4 py-12 flex flex-col items-center font-sans mt-16 px-44 mb-16">
+    <section className="w-full px-4 sm:px-6 md:px-44 py-12 flex flex-col items-center font-sans mt-16 mb-16">
       <h2 className="text-2xl md:text-3xl font-bold text-black mb-2 text-center">
         USAGE GUIDES
       </h2>

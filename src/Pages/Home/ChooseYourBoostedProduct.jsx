@@ -58,7 +58,7 @@ function ChooseYourBoostedProduct() {
     },
   ];
   return (
-    <section className="w-full px-40 py-10 font-sans mt-16">
+    <section className="w-full px-4 sm:px-6 md:px-20 lg:px-40 py-10 font-sans mt-16">
       <div className="text-center mb-8">
         <h2 className="text-2xl md:text-3xl font-bold text-black mb-2">
           CHOOSE YOUR BOOSTED PRODUCTS
