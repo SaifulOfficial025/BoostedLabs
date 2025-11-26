@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiMail, FiLock } from "react-icons/fi";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { FaArrowCircleLeft } from "react-icons/fa";
+import GoogleImg from "../../../public/google.png";
+import Logo from "../../../public/BoostedLabLogo.svg";
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
@@ -28,11 +30,7 @@ function SignUp() {
         </div>
       </div>
       <div className="flex flex-col items-center justify-center bg-white px-4 font-sans mt-10">
-        <img
-          src="/BoostedLabLogo.svg"
-          alt="Boosted Labs Logo"
-          className="w-16 mb-6"
-        />
+        <img src={Logo} alt="Boosted Labs Logo" className="w-16 mb-6" />
         <h1 className="text-3xl font-bold text-center mb-2 text-[#222]">
           Register for an account
         </h1>
@@ -154,7 +152,7 @@ function SignUp() {
             type="button"
             className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-2 bg-white hover:bg-gray-50 transition"
           >
-            <img src="/public/google.png" alt="Google" className="w-5 h-5" />
+            <img src={GoogleImg} alt="Google" className="w-5 h-5" />
             <span className="font-medium text-gray-700">Google</span>
           </button>
         </form>

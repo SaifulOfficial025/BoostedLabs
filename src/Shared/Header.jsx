@@ -3,6 +3,7 @@ import { IoPersonOutline } from "react-icons/io5";
 import ShoppingCartModal from "./ShoppingCartModal";
 import { Link } from "react-router-dom";
 import Logo from "../../public/BoostedLabLogo.svg";
+import filtericon from "../../public/filter.png";
 
 function Header() {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -92,7 +93,7 @@ function Header() {
             className="bg-transparent outline-none text-white text-md  placeholder-white flex-1"
           />
           <img
-            src="/public/filter.png"
+            src={filtericon}
             alt="Filter"
             className="w-5 cursor-pointer"
             onClick={handleFilterClick}

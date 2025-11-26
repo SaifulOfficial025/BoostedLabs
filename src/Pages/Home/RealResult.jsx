@@ -1,6 +1,7 @@
 import React from "react";
 import ReviewCard from "../../Shared/ReviewCard";
 
+
 function RealResult() {
   return (
     <section className="w-full px-4 py-12 flex flex-col items-center font-sans mt-16">

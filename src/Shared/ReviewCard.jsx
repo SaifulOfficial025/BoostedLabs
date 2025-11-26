@@ -1,11 +1,9 @@
 import React from "react";
+import staricon from "../../public/star.png";
 
 function ReviewCard({ avatar, name, date, rating = 5, review }) {
   return (
-    <div
-      className="bg-[#f6fafd] rounded-2xl border border-[#e5e7eb] shadow-sm p-4 max-w-sm font-normal"
-      style={{ fontFamily: "Open Sans Condensed" }}
-    >
+    <div className="bg-[#f6fafd] rounded-2xl border border-[#e5e7eb] shadow-sm p-4 max-w-sm font-normal font-sans">
       <div className="flex items-center gap-3 mb-1">
         <div className="w-10 h-10 rounded-full flex items-center justify-center bg-blue-600 text-white text-lg font-bold">
           {avatar ? (
@@ -26,11 +24,7 @@ function ReviewCard({ avatar, name, date, rating = 5, review }) {
       <div className="flex gap-1 mb-2">
         {Array.from({ length: rating }).map((_, i) => (
           <span key={i} className="text-black text-lg">
-            <img
-              src="/public/star.png"
-              alt="rating icon"
-              className="w-4 mt-2"
-            />
+            <img src={staricon} alt="rating icon" className="w-4 mt-2" />
           </span>
         ))}
       </div>

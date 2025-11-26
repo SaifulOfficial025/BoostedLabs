@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiMail } from "react-icons/fi";
 import { FaArrowCircleLeft } from "react-icons/fa";
+import Logo from "../../../public/BoostedLabLogo.svg";
 
 function ForgetPasswordEmail() {
   const [email, setEmail] = useState("");
@@ -20,11 +21,7 @@ function ForgetPasswordEmail() {
         </div>
       </div>
       <div className="flex flex-col items-center justify-center bg-white px-4 font-sans mt-10">
-        <img
-          src="/BoostedLabLogo.svg"
-          alt="Boosted Labs Logo"
-          className="w-16 mb-6"
-        />
+        <img src={Logo} alt="Boosted Labs Logo" className="w-16 mb-6" />
         <h1 className="text-3xl font-bold text-center mb-2 text-[#222]">
           Forgot your password?
         </h1>

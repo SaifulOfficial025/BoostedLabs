@@ -1,5 +1,6 @@
 import React from "react";
 import ProductCard from "../../Shared/ProductCard";
+import dummyproduct from "../../../public/dummyproduct.png";
 
 function ChooseYourBoostedProduct() {
   const products = [
@@ -10,7 +11,7 @@ function ChooseYourBoostedProduct() {
         color: "bg-[#bee3f8]",
         textColor: "text-[#549ad8]",
       },
-      image: "/public/dummyproduct.png",
+      image: dummyproduct,
       title: "Retatrutide",
       description:
         "Next-generation weight loss support. Metabolic reset • Fat loss • Appetite control • 99% Purity • For Research Use Only",
@@ -23,7 +24,7 @@ function ChooseYourBoostedProduct() {
         color: "bg-[#bee3f8]",
         textColor: "text-[#549ad8]",
       },
-      image: "/public/dummyproduct.png",
+      image: dummyproduct,
       title: "Retatrutide",
       description:
         "Next-generation weight loss support. Metabolic reset • Fat loss • Appetite control • 99% Purity • For Research Use Only",
@@ -36,7 +37,7 @@ function ChooseYourBoostedProduct() {
         color: "bg-[#bee3f8]",
         textColor: "text-[#549ad8]",
       },
-      image: "/public/dummyproduct.png",
+      image: dummyproduct,
       title: "Retatrutide",
       description:
         "Next-generation weight loss support. Metabolic reset • Fat loss • Appetite control • 99% Purity • For Research Use Only",
@@ -49,7 +50,7 @@ function ChooseYourBoostedProduct() {
         color: "bg-[#bee3f8]",
         textColor: "text-[#549ad8]",
       },
-      image: "/public/dummyproduct.png",
+      image: dummyproduct,
       title: "Retatrutide",
       description:
         "Next-generation weight loss support. Metabolic reset • Fat loss • Appetite control • 99% Purity • For Research Use Only",

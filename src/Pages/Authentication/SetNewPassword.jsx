@@ -4,6 +4,7 @@ import { FaArrowCircleLeft } from "react-icons/fa";
 import { FiLock } from "react-icons/fi";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import Logo from "../../../public/BoostedLabLogo.svg";
 
 function SetNewPassword() {
   const navigate = useNavigate();
@@ -30,11 +31,7 @@ function SetNewPassword() {
         </button>
 
         <div className="text-center">
-          <img
-            src="/BoostedLabLogo.svg"
-            alt="logo"
-            className="w-20 mx-auto mb-6"
-          />
+          <img src={Logo} alt="logo" className="w-20 mx-auto mb-6" />
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">
             Set a password
           </h2>

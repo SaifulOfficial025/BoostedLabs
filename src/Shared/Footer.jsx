@@ -3,6 +3,9 @@ import { FaXTwitter } from "react-icons/fa6";
 import { FaFacebookF } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
+import visa from "../../public/visa.png";
+import master from "../../public/master.png";
+import amex from "../../public/amex.png";
 
 function Footer() {
   return (
@@ -82,17 +85,17 @@ function Footer() {
         <div className="flex gap-2">
           {/* Payment Logos - use placeholder images */}
           <img
-            src="/public/visa.png"
+            src={visa}
             alt="Visa"
             className="h-12 bg-white px-1 py-0.5 rounded-md"
           />
           <img
-            src="/public/master.png"
+            src={master}
             alt="Mastercard"
             className="h-12 bg-white px-1 py-0.5 rounded-md"
           />
           <img
-            src="/public/amex.png"
+            src={amex}
             alt="Amex"
             className="h-12 bg-white px-1 py-0.5 rounded-md"
           />

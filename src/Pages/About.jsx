@@ -5,6 +5,7 @@ import Footer from "../Shared/Footer";
 import { FaShieldAlt, FaFlask, FaHeart, FaBolt } from "react-icons/fa";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import herobg from "../../public/aboutherobg.png";
 
 function About() {
   return (
@@ -17,7 +18,7 @@ function About() {
         <div
           className="absolute inset-0 bg-center bg-cover flex items-center justify-center"
           style={{
-            backgroundImage: `url('/public/aboutherobg.png')`,
+            backgroundImage: `url(${herobg})`,
             minHeight: "90vh",
           }}
         >
