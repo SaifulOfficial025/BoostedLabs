@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { IoPersonOutline } from "react-icons/io5";
 import ShoppingCartModal from "./ShoppingCartModal";
 import { Link } from "react-router-dom";
+import Logo from "../../public/BoostedLabLogo.svg";
 
 function Header() {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -31,16 +32,19 @@ function Header() {
 
   return (
     <div
-      className="w-full flex items-center justify-between px-16 py-4 absolute top-0 left-0 z-20 mt-12 font-sans"
-      style={{ background: "transparent", minHeight: "56px" }}
+      className="w-full flex items-center justify-between px-16 py-4 left-0 z-30 font-sans sticky top-[48px] bg-black/35"
+      style={{ backdropFilter: "blur(10px)", minHeight: "56px" }}
     >
       {/* Logo */}
       <div className="flex items-center">
         <Link to="/">
           <img
-            src="/public/BoostedLabLogo.svg"
+            src={Logo}
             alt="Logo"
-            className="w-20 h-w-20 object-contain"
+            className="w-15 h-15 object-contain"
+            style={{
+              filter: "drop-shadow(0 0 2px white) drop-shadow(0 0 6px white)",
+            }}
           />
         </Link>
       </div>
@@ -48,17 +52,17 @@ function Header() {
       <nav className="flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2">
         <Link
           to="/"
-          className="font-bold text-black border-b-2 border-black pb-1"
+          className="font-bold text-white border-b-2 border-black pb-1"
         >
           Home
         </Link>
-        <Link to="/shop" className="text-black">
+        <Link to="/shop" className="text-white">
           Shop
         </Link>
-        <Link to="/contact-us" className="text-black">
+        <Link to="/contact-us" className="text-white">
           Contact Us
         </Link>
-        <Link to="/about" className="text-black">
+        <Link to="/about" className="text-white">
           About Us
         </Link>
       </nav>
@@ -66,7 +70,7 @@ function Header() {
       <div className="flex items-center gap-4 ml-auto ">
         {/* Search Bar */}
         <div
-          className="flex items-center bg-white rounded-full px-5 py-2 shadow-md relative"
+          className="flex items-center bg-white rounded-full px-5 py-2 shadow-md relative border border-white"
           style={{ background: "transparent", minWidth: "220px" }}
           ref={filterRef}
         >
@@ -85,7 +89,7 @@ function Header() {
           <input
             type="text"
             placeholder="Search..."
-            className="bg-transparent outline-none text-black text-md "
+            className="bg-transparent outline-none text-white text-md  placeholder-white flex-1"
           />
           <img
             src="/public/filter.png"
@@ -144,7 +148,7 @@ function Header() {
             width="22"
             height="22"
             fill="none"
-            stroke="#222"
+            stroke="#fff"
             strokeWidth="2"
             viewBox="0 0 24 24"
           >
@@ -159,7 +163,7 @@ function Header() {
         />
         {/* My Account Button */}
         <Link to="/signin">
-          <button className="flex items-center bg-black text-white px-3 py-3 rounded text-xs font-medium gap-2">
+          <button className="flex items-center bg-white text-black px-3 py-3 rounded-lg text-xs font-medium gap-2">
             <IoPersonOutline className="w-5 h-5" />
             My Account
           </button>

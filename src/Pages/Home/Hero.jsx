@@ -21,7 +21,7 @@ function Hero() {
           Science-backed peptides for healing, performance
           <br />& cosmetic wellness.
         </p>
-        <button className="bg-black text-white px-10 py-4 rounded-xl font-normal text-md w-fit flex items-center gap-2 transition-all duration-300 relative group shadow-none hover:shadow-[0_0_16px_2px_rgba(0,0,0,0.25)]">
+        <button className="mt-5 bg-black text-white px-10 py-4 rounded-xl font-normal text-md w-fit flex items-center gap-2 transition-all duration-300 relative group shadow-none hover:shadow-[0_0_16px_2px_rgba(0,0,0,0.25)]">
           <span className="transition-all duration-500 group-hover:pr-6">
             Shop Now
           </span>

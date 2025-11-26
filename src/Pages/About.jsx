@@ -13,7 +13,7 @@ function About() {
       <Headers />
 
       {/* Hero */}
-      <div className="relative w-full h-[calc(100vh-7rem)] mt-32">
+      <div className="relative w-full h-[calc(100vh-7rem)] -mt-8">
         <div
           className="absolute inset-0 bg-center bg-cover flex items-center justify-center"
           style={{
@@ -21,7 +21,7 @@ function About() {
             minHeight: "90vh",
           }}
         >
-          <div className="max-w-7xl mx-auto text-center  z-10 flex flex-col items-center justify-center w-full">
+          <div className="max-w-7xl mx-auto text-center mt-8  z-10 flex flex-col items-center justify-center w-full">
             <h1
               className="text-5xl md:text-6xl font-extrabold text-white mb-8 tracking-tight"
               style={{ lineHeight: 1.1 }}

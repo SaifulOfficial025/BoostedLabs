@@ -41,8 +41,8 @@ function Slider({ images = [] }) {
   };
 
   return (
-    <div className="max-w-7xl mx-auto mt-36 mb-10">
-      <div className="relative overflow-hidden rounded-xl border border-gray-200 shadow-sm">
+    <div className="max-w-7xl mx-auto mt-12 mb-10">
+      <div className="relative overflow-hidden rounded-xl">
         {/* Slider track: slides laid out horizontally and translated based on index */}
         <div
           className="flex w-full transition-transform duration-700 ease-in-out"

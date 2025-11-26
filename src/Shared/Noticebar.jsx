@@ -7,7 +7,7 @@ import { FaInstagram } from "react-icons/fa";
 function Noticebar() {
   return (
     <div
-      className="w-full bg-black flex items-center justify-between px-8 py-1 text-white text-md font-normal px-32 py-3 absolute top-0 left-0 z-30"
+      className="w-full bg-black flex items-center justify-between px-8 py-1 text-white text-md font-normal px-32 py-3 fixed top-0 left-0 z-40"
       style={{ minHeight: "32px" }}
     >
       <div className="flex items-center gap-2">

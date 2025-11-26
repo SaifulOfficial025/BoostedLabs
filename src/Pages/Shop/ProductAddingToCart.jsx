@@ -25,7 +25,7 @@ function ProductAddingToCart({
   const increase = () => setQty((q) => q + 1);
 
   return (
-    <div className="max-w-7xl mx-auto  py-10 mt-24 font-sans">
+    <div className="max-w-7xl mx-auto  py-10 mt-14 font-sans">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start rounded-md">
         <div className=" bg-white rounded-md border border-gray-200 shadow-sm">
           <div className="relative">
