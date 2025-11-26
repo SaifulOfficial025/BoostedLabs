@@ -72,6 +72,7 @@ function ChooseYourBoostedProduct() {
         {products.map((product, idx) => (
           <ProductCard
             key={idx}
+            productId={idx}
             badge={product.badge}
             image={product.image}
             title={product.title}

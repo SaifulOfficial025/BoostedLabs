@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { IoPersonOutline } from "react-icons/io5";
 import ShoppingCartModal from "./ShoppingCartModal";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Logo from "../../public/BoostedLabLogo.svg";
 import filtericon from "../../public/filter.png";
 
@@ -9,6 +9,13 @@ function Header() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showCartModal, setShowCartModal] = useState(false);
   const filterRef = useRef(null);
+  const location = useLocation();
+  const pathname = location?.pathname || "";
+
+  const isHome = pathname === "/";
+  const isShop = pathname === "/shop" || pathname.startsWith("/shop/");
+  const isContact = pathname === "/contact-us";
+  const isAbout = pathname === "/about";
 
   const handleFilterClick = () => {
     setShowDropdown((prev) => !prev);
@@ -53,17 +60,34 @@ function Header() {
       <nav className="flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2">
         <Link
           to="/"
-          className="font-bold text-white border-b-2 border-black pb-1"
+          className={`text-white ${
+            isHome ? "font-bold border-b-2 border-white pb-1" : ""
+          }`}
         >
           Home
         </Link>
-        <Link to="/shop" className="text-white">
+        <Link
+          to="/shop"
+          className={`text-white ${
+            isShop ? "font-bold border-b-2 border-white pb-1" : ""
+          }`}
+        >
           Shop
         </Link>
-        <Link to="/contact-us" className="text-white">
+        <Link
+          to="/contact-us"
+          className={`text-white ${
+            isContact ? "font-bold border-b-2 border-white pb-1" : ""
+          }`}
+        >
           Contact Us
         </Link>
-        <Link to="/about" className="text-white">
+        <Link
+          to="/about"
+          className={`text-white ${
+            isAbout ? "font-bold border-b-2 border-white pb-1" : ""
+          }`}
+        >
           About Us
         </Link>
       </nav>
