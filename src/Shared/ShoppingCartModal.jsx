@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import AddShippingAddressModal from "./AddShippingAddressModal";
 import SmallProductComponentWithVolumeModificationandPrice from "./SmallProductComponentWithVolumeModificationandPrice";
 
@@ -33,51 +34,74 @@ function ShoppingCartModal({ open, onClose }) {
   const modalRef = useRef(null);
   const [showAddressModal, setShowAddressModal] = useState(false);
 
+  // Local mount/visibility state so the modal can animate on mount/unmount
+  const [isMounted, setIsMounted] = useState(open);
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Manage mount + animation state
+  useEffect(() => {
+    let timeoutId;
+    if (open) {
+      setIsMounted(true);
+      // ensure the element is mounted first, then trigger the visible state
+      // so the transition from translate-x-full -> translate-x-0 runs
+      requestAnimationFrame(() => setIsVisible(true));
+    } else {
+      // start hide animation
+      setIsVisible(false);
+      // unmount after the transition duration (300ms)
+      timeoutId = setTimeout(() => setIsMounted(false), 350);
+    }
+    return () => clearTimeout(timeoutId);
+  }, [open]);
+
   useEffect(() => {
     function handleClickOutside(event) {
       // If the AddShippingAddressModal is open, clicking outside the cart
-      // (i.e. on the address modal) should NOT close the cart. So ignore
-      // closing when showAddressModal is true.
+      // (i.e. on the address modal) should NOT close the cart.
       if (showAddressModal) return;
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         onClose();
       }
     }
-    if (open && !showAddressModal) {
+    // attach listener while modal is mounted (even during closing animation)
+    if (isMounted && !showAddressModal) {
       document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [open, onClose, showAddressModal]);
+  }, [isMounted, onClose, showAddressModal]);
 
-  // Lock background scroll when modal is open
+  // Lock background scroll while modal is mounted (visible or animating)
   useEffect(() => {
-    if (!open) return undefined;
+    if (!isMounted) return undefined;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = previousOverflow || "";
     };
-  }, [open]);
+  }, [isMounted]);
 
-  return (
+  return createPortal(
     <>
       <div
-        className={`mt-12 fixed inset-0 z-50 flex justify-end items-start transition-opacity duration-300 ease-out ${
-          open ? "bg-black bg-opacity-20" : "pointer-events-none bg-opacity-0"
+        className={`mt-12 fixed inset-0 z-[9999] flex justify-end items-start transition-opacity duration-300 ease-out ${
+          isVisible
+            ? "bg-black bg-opacity-40"
+            : "pointer-events-none bg-opacity-0"
         }`}
         style={{
-          visibility: open ? "visible" : "hidden",
-          opacity: open ? 1 : 0,
+          visibility: isVisible ? "visible" : "hidden",
+          opacity: isVisible ? 1 : 0,
         }}
       >
         <div
           ref={modalRef}
-          className={`w-full max-w-md h-full bg-white shadow-2xl rounded-l-2xl overflow-y-auto transform transition-transform duration-700 ease-in-out ${
-            open ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
+          className={`w-full max-w-md h-full bg-white shadow-2xl rounded-l-2xl overflow-y-auto transform transition-transform duration-300 ease-in-out ${
+            isVisible
+              ? "translate-x-0 opacity-100"
+              : "translate-x-full opacity-0"
           }`}
           style={{ willChange: "transform, opacity" }}
         >
@@ -185,7 +209,9 @@ function ShoppingCartModal({ open, onClose }) {
           onClose={() => setShowAddressModal(false)}
         />
       )}
-    </>
+    </>,
+    // render modal at the end of document body so it escapes parent stacking contexts
+    document.body
   );
 }
 export default ShoppingCartModal;
