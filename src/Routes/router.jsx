@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import Main from "../Layout/Main";
 import Home from "../Pages/Home/Home";
 import WhatarePeptides from "../Pages/WhatarePeptides";
 import RootPage from "../Pages/Shop/RootPage";
@@ -18,62 +19,68 @@ import OrderHistory from "../Pages/Profile/OrderHistory";
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
-  },
-  {
-    path: "/what-are-peptides",
-    element: <WhatarePeptides />,
-  },
-  {
-    path: "/shop",
-    element: <RootPage />,
-  },
-  {
-    path: "/merchandise",
-    element: <MerchandiseRootPage />,
-  },
-  {
-    path: "/shop/product-details/:productId",
-    element: <RootPageProductDetails />,
-  },
-  {
-    path: "/shop/filtered-products/:category",
-    element: <FilteredProduct />,
-  },
-  {
-    path: "/contact-us",
-    element: <ContactUs />,
-  },
-  {
-    path: "/about",
-    element: <About />,
-  },
-  {
-    path: "/profile",
-    element: <Profile />,
-  },
-  {
-    path: "/order-history",
-    element: <OrderHistory />,
-  },
-  {
-    path: "/signin",
-    element: <SignIn />,
-  },
-  {
-    path: "/signup",
-    element: <SignUp />,
-  },
-  {
-    path: "/forget-password-email",
-    element: <ForgetPasswordEmail />,
-  },
-  {
-    path: "/otp-verification",
-    element: <ForgetPasswordVerification />,
-  },
-  {
-    path: "/set-new-password",
-    element: <SetNewPassword />,
+    element: <Main />,
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: "what-are-peptides",
+        element: <WhatarePeptides />,
+      },
+      {
+        path: "shop",
+        element: <RootPage />,
+      },
+      {
+        path: "merchandise",
+        element: <MerchandiseRootPage />,
+      },
+      {
+        path: "shop/product-details/:productId",
+        element: <RootPageProductDetails />,
+      },
+      {
+        path: "shop/filtered-products/:category",
+        element: <FilteredProduct />,
+      },
+      {
+        path: "contact-us",
+        element: <ContactUs />,
+      },
+      {
+        path: "about",
+        element: <About />,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
+      },
+      {
+        path: "order-history",
+        element: <OrderHistory />,
+      },
+      {
+        path: "signin",
+        element: <SignIn />,
+      },
+      {
+        path: "signup",
+        element: <SignUp />,
+      },
+      {
+        path: "forget-password-email",
+        element: <ForgetPasswordEmail />,
+      },
+      {
+        path: "otp-verification",
+        element: <ForgetPasswordVerification />,
+      },
+      {
+        path: "set-new-password",
+        element: <SetNewPassword />,
+      },
+    ],
   },
 ]);

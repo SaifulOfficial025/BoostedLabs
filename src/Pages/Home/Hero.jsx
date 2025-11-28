@@ -19,7 +19,7 @@ function Hero() {
 
   return (
     <section
-      className="w-full flex items-center justify-center sm:justify-start px-4 sm:px-8 md:px-16 py-12 sm:py-20 relative font-sans min-h-[60vh] sm:min-h-[80vh]"
+      className="w-full flex items-center justify-center sm:justify-start px-4 sm:px-8 md:px-16 py-12 sm:py-20 relative font-sans min-h-screen sm:min-h-[80vh]"
       style={{
         backgroundImage: `url('${
           isMobileBg ? "/herobgmobilescreen.png" : "/herobg.png"
@@ -29,7 +29,7 @@ function Hero() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="flex flex-col justify-center max-w-3xl z-10 mx-auto sm:ml-8 md:ml-16 px-4 sm:px-0 text-center sm:text-left">
+      <div className="flex flex-col justify-center max-w-3xl z-10 mx-auto sm:ml-8 md:ml-16 px-4 sm:px-0 text-center sm:text-left -mt-52 sm:mt-0">
         <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-black mb-4">
           Boost your body. Boost your life.
         </h1>

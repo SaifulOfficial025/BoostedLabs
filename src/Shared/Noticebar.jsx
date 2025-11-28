@@ -36,7 +36,8 @@ function Noticebar() {
       </div>
       <div className="flex-1 flex justify-end px-1 sm:px-2">
         <span className="text-white text-[10px] sm:text-xs md:text-sm lg:text-base text-right">
-          Free Shipping Worldwide When Order Above $1000
+          FREE Shipping Worldwide When Order Above $1000 & Get a FREE T-shirt
+          with any order over $1500.
         </span>
       </div>
     </div>
