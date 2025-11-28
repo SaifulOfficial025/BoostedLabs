@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MdOutlineDeleteForever } from "react-icons/md";
 
 function SmallProductComponentWithVolumeModificationandPrice({
@@ -8,6 +8,8 @@ function SmallProductComponentWithVolumeModificationandPrice({
   title = "Product Name",
   price = 0,
   quantity = 1,
+  onDecrease = () => {},
+  onIncrease = () => {},
   onRemove = () => {},
 }) {
   // Use dummy image if not provided
@@ -18,19 +20,22 @@ function SmallProductComponentWithVolumeModificationandPrice({
         ? import.meta.env.BASE_URL
         : "/"
     }dummyproduct.png`;
-  // Local state for quantity and checked
-  const [localQuantity, setLocalQuantity] = useState(quantity);
+  // Local state for checked only (quantity is controlled by parent)
   const [isChecked, setIsChecked] = useState(checked);
 
+  // keep local checked state in sync if parent updates props
+  useEffect(() => {
+    setIsChecked(checked);
+  }, [checked]);
+
   const handleDecrease = () => {
-    if (localQuantity > 1) {
-      setLocalQuantity(localQuantity - 1);
-    }
+    if (quantity > 1) onDecrease();
   };
   const handleIncrease = () => {
-    setLocalQuantity(localQuantity + 1);
+    onIncrease();
   };
   const handleCheck = (checkedVal) => {
+    // Update local checked state and notify parent
     setIsChecked(checkedVal);
     onCheck(checkedVal);
   };
@@ -83,7 +88,7 @@ function SmallProductComponentWithVolumeModificationandPrice({
               -
             </button>
             <span className="w-9 h-9 sm:w-8 sm:h-8 flex items-center justify-center text-base font-semibold bg-gray-50 border border-transparent">
-              {localQuantity}
+              {quantity}
             </span>
             <button
               className="w-9 h-9 sm:w-8 sm:h-8 border border-gray-400 rounded flex items-center justify-center text-lg font-bold bg-gray-50 hover:bg-gray-100 transition"
@@ -98,10 +103,10 @@ function SmallProductComponentWithVolumeModificationandPrice({
 
         <div className="flex flex-col sm:items-end items-center justify-between h-full mt-2 sm:mt-0 min-w-[80px]">
           <span className="font-bold text-base text-gray-900">
-            ${(price * localQuantity).toFixed(2)}
+            ${(price * quantity).toFixed(2)}
           </span>
           <span className="text-gray-400 text-xs">
-            ${price.toFixed(2)} × {localQuantity}
+            ${price.toFixed(2)} × {quantity}
           </span>
           <button
             className="mt-2 text-red-500 text-xl hover:text-red-700 transition"

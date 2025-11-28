@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import ProductCard from "../../Shared/ProductCard";
 
 function Products() {
@@ -8,7 +8,11 @@ function Products() {
     import.meta && import.meta.env && import.meta.env.BASE_URL
       ? import.meta.env.BASE_URL
       : "/";
-  const dummy = `${base}dummyproduct.png`;
+  const location = useLocation();
+  const pathname = location?.pathname || "";
+  const dummy = pathname.startsWith("/merchandise")
+    ? `${base}dummyshirt.png`
+    : `${base}dummyproduct.png`;
 
   const products = new Array(12).fill(0).map((_, i) => ({
     id: i + 1,

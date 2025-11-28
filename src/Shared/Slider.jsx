@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useLocation } from "react-router-dom";
 
 // Simple image slider/carousel. Pass an `images` prop (array of src strings).
 // If no images provided, component will show placeholder slides and you can
@@ -8,11 +9,16 @@ function Slider({ images = [] }) {
     import.meta && import.meta.env && import.meta.env.BASE_URL
       ? import.meta.env.BASE_URL
       : "/";
-  const defaultSlides = [
-    `${base}sliderdummyimage.png`,
-    `${base}sliderdummyimage.png`,
-    `${base}sliderdummyimage.png`,
-  ];
+  // choose default slides by current route (mobile/shop/merchandise etc.)
+  const location = useLocation();
+  const pathname = location?.pathname || "";
+
+  const sliderDefault = `${base}sliderdummyimage.png`;
+  const merchandiseDefault = `${base}merchandisedummyimage.png`;
+
+  const defaultSlides = pathname.startsWith("/merchandise")
+    ? [merchandiseDefault, merchandiseDefault, merchandiseDefault]
+    : [sliderDefault, sliderDefault, sliderDefault];
 
   const slides = images && images.length > 0 ? images : defaultSlides;
   const [index, setIndex] = useState(0);

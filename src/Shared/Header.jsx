@@ -18,6 +18,8 @@ function Header() {
 
   const isHome = pathname === "/";
   const isShop = pathname === "/shop" || pathname.startsWith("/shop/");
+  const isMerchandise =
+    pathname === "/merchandise" || pathname.startsWith("/merchandise/");
   const isContact = pathname === "/contact-us";
   const isAbout = pathname === "/about";
 
@@ -98,6 +100,16 @@ function Header() {
           >
             Shop
           </Link>
+
+          <Link
+            to="/merchandise"
+            className={`text-white ${
+              isMerchandise ? "font-bold border-b-2 border-white pb-1" : ""
+            }`}
+          >
+            Merchandise
+          </Link>
+
           <Link
             to="/contact-us"
             className={`text-white ${

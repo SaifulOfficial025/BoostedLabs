@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import AddShippingAddressModal from "./AddShippingAddressModal";
 import SmallProductComponentWithVolumeModificationandPrice from "./SmallProductComponentWithVolumeModificationandPrice";
+import SizeSelection from "./Sizeselection";
 
-const cartItems = [
+const initialCartItems = [
   {
     id: 1,
     image: "/product-weightloss.png",
@@ -11,6 +12,7 @@ const cartItems = [
     title: "Retatrutide",
     price: 215,
     quantity: 1,
+    checked: true,
   },
   {
     id: 2,
@@ -19,6 +21,7 @@ const cartItems = [
     title: "Retatrutide",
     price: 215,
     quantity: 1,
+    checked: true,
   },
   {
     id: 3,
@@ -27,12 +30,19 @@ const cartItems = [
     title: "Retatrutide",
     price: 215,
     quantity: 1,
+    checked: true,
   },
 ];
 
 function ShoppingCartModal({ open, onClose }) {
   const modalRef = useRef(null);
   const [showAddressModal, setShowAddressModal] = useState(false);
+
+  const [cart, setCart] = useState(initialCartItems);
+  const [selectAll, setSelectAll] = useState(() =>
+    cart.every((c) => c.checked)
+  );
+  const [recurring, setRecurring] = useState(false);
 
   // Local mount/visibility state so the modal can animate on mount/unmount
   const [isMounted, setIsMounted] = useState(open);
@@ -83,6 +93,49 @@ function ShoppingCartModal({ open, onClose }) {
     };
   }, [isMounted]);
 
+  // keep selectAll in sync when cart changes
+  useEffect(() => {
+    setSelectAll(cart.length > 0 && cart.every((c) => c.checked));
+  }, [cart]);
+
+  function toggleSelectAll() {
+    const next = !selectAll;
+    setSelectAll(next);
+    setCart((prev) => prev.map((c) => ({ ...c, checked: next })));
+  }
+
+  function toggleItemCheck(id) {
+    setCart((prev) =>
+      prev.map((c) => (c.id === id ? { ...c, checked: !c.checked } : c))
+    );
+  }
+
+  function increaseQuantity(id) {
+    setCart((prev) =>
+      prev.map((c) => (c.id === id ? { ...c, quantity: c.quantity + 1 } : c))
+    );
+  }
+
+  function decreaseQuantity(id) {
+    setCart((prev) =>
+      prev.map((c) =>
+        c.id === id ? { ...c, quantity: Math.max(1, c.quantity - 1) } : c
+      )
+    );
+  }
+
+  function removeItem(id) {
+    setCart((prev) => prev.filter((c) => c.id !== id));
+  }
+
+  const subtotal = cart.reduce(
+    (sum, c) => (c.checked ? sum + c.price * c.quantity : sum),
+    0
+  );
+  const shippingFee = subtotal > 0 ? 15 : 0;
+  const total = subtotal + shippingFee;
+  const [selectedSize, setSelectedSize] = useState("S");
+
   return createPortal(
     <>
       <div
@@ -130,45 +183,74 @@ function ShoppingCartModal({ open, onClose }) {
           </div>
           <div className="px-6 py-2">
             <label className="flex items-center gap-2 mb-4 cursor-pointer">
-              <input type="checkbox" className="form-checkbox" />
+              <input
+                type="checkbox"
+                className="form-checkbox"
+                checked={selectAll}
+                onChange={toggleSelectAll}
+              />
               <span className="text-[#222] text-sm">Select All</span>
             </label>
-            {cartItems.map((item) => (
+            {cart.length === 0 && (
+              <div className="text-center text-gray-500 py-6">
+                Your cart is empty
+              </div>
+            )}
+            {cart.map((item) => (
               <SmallProductComponentWithVolumeModificationandPrice
                 key={item.id}
-                checked={false}
-                onCheck={() => {}}
+                checked={!!item.checked}
+                onCheck={() => toggleItemCheck(item.id)}
                 image={item.image}
                 badge={item.badge}
                 title={item.title}
                 price={item.price}
                 quantity={item.quantity}
-                onDecrease={() => {}}
-                onIncrease={() => {}}
-                onRemove={() => {}}
+                onDecrease={() => decreaseQuantity(item.id)}
+                onIncrease={() => increaseQuantity(item.id)}
+                onRemove={() => removeItem(item.id)}
               />
             ))}
+          </div>
+          <div className="px-6">
+            {total >= 1500 && (
+              <div className="bg-white rounded-md border border-gray-200 p-4 mb-4">
+                <div className="text-sm text-gray-800 font-medium mb-2">
+                  You received 1 free t-shirt for your $1500+ order. Please
+                  select your size.
+                </div>
+                <SizeSelection
+                  defaultSize={selectedSize}
+                  onChange={(s) => setSelectedSize(s)}
+                />
+              </div>
+            )}
           </div>
           <div className="px-6 py-4">
             <div className="bg-[#f6fafd] rounded-xl border border-[#e5e7eb] p-4 mb-4">
               <div className="font-semibold mb-2">Billing</div>
               <div className="flex justify-between text-sm mb-1">
                 <span>Subtotal</span>
-                <span>$215</span>
+                <span>${subtotal}</span>
               </div>
               <div className="flex justify-between text-sm mb-1">
                 <span>Shipping Fee</span>
-                <span>$15</span>
+                <span>${shippingFee}</span>
               </div>
               <div className="flex justify-between text-base font-bold mb-1">
                 <span>Total</span>
-                <span>$230</span>
+                <span>${total}</span>
               </div>
               <div className="text-xs text-[#7b8ca3] mb-2">
                 Tax also included
               </div>
               <label className="flex items-center gap-2 mb-2 cursor-pointer mt-5 ">
-                <input type="checkbox" className="form-checkbox" />
+                <input
+                  type="checkbox"
+                  className="form-checkbox"
+                  checked={recurring}
+                  onChange={() => setRecurring((s) => !s)}
+                />
                 <span className="text-[#222] text-lg font-bold">
                   I want to buy every month.
                 </span>

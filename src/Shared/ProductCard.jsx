@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { FaFire } from "react-icons/fa";
 import ShoppingCartModal from "./ShoppingCartModal";
 
@@ -17,21 +17,35 @@ function ProductCard({
   onViewDetails,
   productId,
   onAddToCart,
+  hideActions = false,
 }) {
   const [showCart, setShowCart] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const pathname = location?.pathname || "";
+  const isMerch = pathname.startsWith("/merchandise");
+
+  const base =
+    import.meta && import.meta.env && import.meta.env.BASE_URL
+      ? import.meta.env.BASE_URL
+      : "/";
+  const defaultImage = isMerch
+    ? `${base}dummyshirt.png`
+    : `${base}dummyproduct.png`;
 
   return (
     <div className="bg-white rounded-2xl border border-[#e5e7eb] shadow-sm p-3 max-w-xs mx-auto sm:mx-0 font-sans">
       <div className="relative mb-4">
-        <div
-          className={`absolute flex items-center gap-2 px-3 py-1 rounded-tl-md rounded-br-md ${badge.color}`}
-        >
-          <span className={`text-lg ${badge.textColor}`}>{badge.icon}</span>
-          <span className={`text-xs font-semibold ${badge.textColor}`}>
-            {badge.text}
-          </span>
-        </div>
+        {!isMerch && (
+          <div
+            className={`absolute right-0 top-0 flex items-center gap-2 px-3 py-1 rounded-tr-md rounded-bl-md ${badge.color}`}
+          >
+            <span className={`text-lg ${badge.textColor}`}>{badge.icon}</span>
+            <span className={`text-xs font-semibold ${badge.textColor}`}>
+              {badge.text}
+            </span>
+          </div>
+        )}
         <div
           className="rounded-xl border border-[#e5e7eb] p-2 flex items-center justify-center bg-[#f8fafc] cursor-pointer min-h-[140px] sm:min-h-[180px]"
           onClick={() => {
@@ -42,9 +56,14 @@ function ProductCard({
           }}
         >
           <img
-            src={image}
+            src={image || defaultImage}
             alt={title}
             className="max-h-20 sm:max-h-28 object-contain "
+            onError={(e) => {
+              const fallback = defaultImage;
+              if (e.currentTarget.src !== fallback)
+                e.currentTarget.src = fallback;
+            }}
           />
         </div>
       </div>
@@ -66,30 +85,32 @@ function ProductCard({
       <div className="text-xl sm:text-2xl font-bold text-[#222] mb-4 mt-5 text-center sm:text-left">
         ${price}
       </div>
-      <div className="flex flex-col sm:flex-row gap-3">
-        <button
-          className="w-full sm:flex-1 border border-[#222] rounded-lg py-2 text-[#222] bg-white font-semibold text-base hover:bg-gray-50 transition"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (onViewDetails) onViewDetails();
-            if (productId !== undefined)
-              navigate(`/shop/product-details/${productId}`);
-          }}
-        >
-          View Details
-        </button>
-        <button
-          className="w-full sm:flex-1 rounded-lg py-2 text-white bg-black font-semibold text-base hover:bg-gray-900 hover:shadow-lg active:scale-95 transition-all duration-300 ease-in-out"
-          onClick={(e) => {
-            // prevent parent click handlers
-            e.stopPropagation();
-            onAddToCart();
-            setShowCart(true);
-          }}
-        >
-          Add To Cart
-        </button>
-      </div>
+      {!hideActions && (
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button
+            className="w-full sm:flex-1 border border-[#222] rounded-lg py-2 text-[#222] bg-white font-semibold text-base hover:bg-gray-50 transition"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onViewDetails) onViewDetails();
+              if (productId !== undefined)
+                navigate(`/shop/product-details/${productId}`);
+            }}
+          >
+            View Details
+          </button>
+          <button
+            className="w-full sm:flex-1 rounded-lg py-2 text-white bg-black font-semibold text-base hover:bg-gray-900 hover:shadow-lg active:scale-95 transition-all duration-300 ease-in-out"
+            onClick={(e) => {
+              // prevent parent click handlers
+              e.stopPropagation();
+              onAddToCart();
+              setShowCart(true);
+            }}
+          >
+            Add To Cart
+          </button>
+        </div>
+      )}
       {showCart && (
         <ShoppingCartModal open={showCart} onClose={() => setShowCart(false)} />
       )}
