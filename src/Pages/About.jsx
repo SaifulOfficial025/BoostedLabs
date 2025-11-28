@@ -14,7 +14,7 @@ function About() {
       <Headers />
 
       {/* Hero */}
-      <div className="relative w-full h-[100vh] sm:h-[calc(100vh-7rem)] -mt-8">
+      <div className="relative w-full h-[100vh] sm:h-[calc(100vh-7rem)] -mt-6 sm:-mt-16">
         <div
           className="absolute inset-0 bg-top sm:bg-center bg-cover flex items-center justify-center"
           style={{

@@ -53,7 +53,7 @@ function Header() {
   return (
     <>
       <div
-        className="w-full flex items-center justify-between px-2 sm:px-4 md:px-16 py-2 md:py-4 left-0 z-30 font-sans sticky top-[32px] sm:top-[40px] md:top-[48px] bg-black/35"
+        className="w-full flex items-center justify-between px-2 sm:px-4 md:px-16 py-2 md:py-4 left-0 z-50 font-sans sticky top-[53px] sm:top-[44px] md:top-[48px] bg-black/35 sm:mt-10 "
         style={{ backdropFilter: "blur(10px)", minHeight: "56px" }}
       >
         {/* Logo */}
@@ -298,6 +298,15 @@ function Header() {
               onClick={() => setShowMobileMenu(false)}
             >
               Shop
+            </Link>
+            <Link
+              to="/merchandise"
+              className={`text-white py-3 px-4 rounded ${
+                isMerchandise ? "font-bold bg-white/10" : ""
+              }`}
+              onClick={() => setShowMobileMenu(false)}
+            >
+              Merchandise
             </Link>
             <Link
               to="/contact-us"

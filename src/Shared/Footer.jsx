@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaFacebookF } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa";
@@ -46,19 +47,22 @@ function Footer() {
         </div>
         {/* Account */}
         <div className="flex flex-col gap-2 min-w-[120px] items-center sm:items-start">
-          <span className="font-bold text-xl mb-2">Account</span>
-          <a href="#" className="text-md text-[#cbd5e1] mt-2">
+          <span className="font-bold text-xl mb-2">Menu</span>
+          <Link to="/" className="text-md text-[#cbd5e1] mt-2">
+            Home
+          </Link>
+          <Link to="/shop" className="text-md text-[#cbd5e1] mt-2">
             Shop
-          </a>
-          <a href="#" className="text-md text-[#cbd5e1] mt-2">
-            Products
-          </a>
-          <a href="#" className="text-md text-[#cbd5e1] mt-2">
+          </Link>
+          <Link to="/merchandise" className="text-md text-[#cbd5e1] mt-2">
+            Merchandise
+          </Link>
+          <Link to="/contact-us" className="text-md text-[#cbd5e1] mt-2">
             Contact Us
-          </a>
-          <a href="#" className="text-md text-[#cbd5e1] mt-2">
+          </Link>
+          <Link to="/about" className="text-md text-[#cbd5e1] mt-2">
             About Us
-          </a>
+          </Link>
         </div>
         {/* Help Center */}
         <div className="flex flex-col gap-2 min-w-[120px] items-center sm:items-start">
@@ -71,9 +75,6 @@ function Footer() {
           </a>
           <a href="#" className="text-md text-[#cbd5e1] mt-2">
             Exchange
-          </a>
-          <a href="#" className="text-md text-[#cbd5e1] mt-2">
-            Track Order
           </a>
         </div>
       </div>
