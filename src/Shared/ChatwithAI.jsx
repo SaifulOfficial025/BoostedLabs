@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { FaPaperPlane, FaPlus } from "react-icons/fa";
+import chatailogo from "../../public/chatwithailogo.png";
 
 function ChatBubble({ text, from = "bot" }) {
   const isUser = from === "user";
@@ -92,15 +93,15 @@ function ChatwithAI({ open = false, onClose }) {
       >
         <div className="w-[92vw] max-w-[360px] sm:w-[420px] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
           <div className="px-4 py-3 border-b flex items-center gap-3">
-            <div className="w-8 h-8 bg-black/5 rounded flex items-center justify-center text-black font-semibold">
-              🤖
+            <div className="w-8 h-">
+              <img src={chatailogo} alt="Chat AI Logo" className=" " />
             </div>
             <div className="flex-1">
               <div className="text-sm font-semibold">Chat with AI</div>
             </div>
             <button
               onClick={() => onClose && onClose()}
-              className="text-gray-500 hover:text-gray-800 p-1 rounded"
+              className="text-red-600 hover:text-gray-800 p-1 rounded  text-xl font-bold"
               aria-label="Close chat"
             >
               ×

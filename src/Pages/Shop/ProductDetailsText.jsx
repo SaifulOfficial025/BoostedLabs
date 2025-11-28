@@ -2,7 +2,7 @@ import React from "react";
 
 function ProductDetailsText() {
   return (
-    <div className="max-w-7xl mx-auto my-6 font-sans px-4 sm:px-6">
+    <div className="max-w-7xl mx-auto my-6 font-sans px-4 sm:px-6 font-sans">
       <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-gray-800">Product Details</h2>
 

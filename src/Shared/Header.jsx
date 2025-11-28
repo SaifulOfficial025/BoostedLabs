@@ -6,6 +6,7 @@ import ShoppingCartModal from "./ShoppingCartModal";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "../../public/BoostedLabLogo.svg";
 import filtericon from "../../public/filter.png";
+import { LuShoppingCart } from "react-icons/lu";
 
 function Header() {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -159,49 +160,71 @@ function Header() {
               onClick={handleFilterClick}
             />
             {showDropdown && (
-              <div className="absolute top-10 right-0 bg-[#f6fafd] border border-gray-400 rounded-xl shadow-lg w-46 py-4 px-6 z-50 flex flex-col gap-4">
-                <Link
-                  to="/shop/filtered-products/weight-loss"
-                  className="hover:bg-gray-200 rounded px-2 transition-colors "
-                >
-                  <span className="text-xl text-[#64748b]">Weight loss</span>
-                </Link>
-                <Link
-                  to="/shop/filtered-products/cosmetic"
-                  className="hover:bg-gray-200 rounded px-2 transition-colors "
-                >
-                  <span className="text-xl text-[#64748b]">Cosmetic</span>
-                </Link>
-                <Link
-                  to="/shop/filtered-products/performance"
-                  className="hover:bg-gray-200 rounded px-2 transition-colors "
-                >
-                  <span className="text-xl text-[#64748b]">Performance</span>
-                </Link>
-                <Link
-                  to="/shop/filtered-products/energy"
-                  className="hover:bg-gray-200 rounded px-2 transition-colors "
-                >
-                  <span className="text-xl text-[#64748b]">Energy</span>
-                </Link>
-                <Link
-                  to="/shop/filtered-products/metabolic"
-                  className="hover:bg-gray-200 rounded px-2 transition-colors "
-                >
-                  <span className="text-xl text-[#64748b]">Metabolic</span>
-                </Link>
-                <Link
-                  to="/shop/filtered-products/healing"
-                  className="hover:bg-gray-200 rounded px-2 transition-colors "
-                >
-                  <span className="text-xl text-[#64748b]">Healing</span>
-                </Link>
+              <div className="absolute top-12 right-0 z-50 w-56 bg-white rounded-xl shadow-xl ring-1 ring-black/5 overflow-hidden">
+                <div className="py-2">
+                  <Link
+                    to="/shop/filtered-products/weight-loss"
+                    className="flex items-center px-4 py-2 hover:bg-gray-200 transition-colors"
+                  >
+                    <span className="text-sm font-medium text-gray-700">
+                      Weight loss
+                    </span>
+                  </Link>
+
+                  <Link
+                    to="/shop/filtered-products/cosmetic"
+                    className="flex items-center px-4 py-2 hover:bg-gray-200 transition-colors"
+                  >
+                    <span className="text-sm font-medium text-gray-700">
+                      Cosmetic
+                    </span>
+                  </Link>
+
+                  <Link
+                    to="/shop/filtered-products/performance"
+                    className="flex items-center px-4 py-2 hover:bg-gray-200 transition-colors"
+                  >
+                    <span className="text-sm font-medium text-gray-700">
+                      Performance
+                    </span>
+                  </Link>
+
+                  <Link
+                    to="/shop/filtered-products/energy"
+                    className="flex items-center px-4 py-2 hover:bg-gray-200 transition-colors"
+                  >
+                    <span className="text-sm font-medium text-gray-700">
+                      Energy
+                    </span>
+                  </Link>
+
+                  <Link
+                    to="/shop/filtered-products/metabolic"
+                    className="flex items-center px-4 py-2 hover:bg-gray-200 transition-colors"
+                  >
+                    <span className="text-sm font-medium text-gray-700">
+                      Metabolic
+                    </span>
+                  </Link>
+
+                  <Link
+                    to="/shop/filtered-products/healing"
+                    className="flex items-center px-4 py-2 hover:bg-gray-200 transition-colors"
+                  >
+                    <span className="text-sm font-medium text-gray-700">
+                      Healing
+                    </span>
+                  </Link>
+                </div>
+                <div className="border-t border-gray-100 px-3 py-2 bg-gray-200 text-xs text-gray-500">
+                  Quick filters to narrow products
+                </div>
               </div>
             )}
           </div>
           {/* Cart Icon */}
           <button
-            className="bg-transparent p-1.5 md:p-2 rounded hover:bg-gray-100 hover:shadow-sm active:scale-95 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200"
+            className="group bg-transparent p-1.5 md:p-2 rounded hover:bg-gray-100 hover:shadow-sm active:scale-95 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200"
             onClick={handleCartClick}
             aria-label="Open shopping cart"
           >
@@ -212,12 +235,13 @@ function Header() {
               stroke="#fff"
               strokeWidth="2"
               viewBox="0 0 24 24"
-              className="md:w-[22px] md:h-[22px]"
+              className="w-5 h-5 md:w-[22px] md:h-[22px] block group-hover:hidden"
             >
               <circle cx="9" cy="21" r="1" />
               <circle cx="20" cy="21" r="1" />
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
             </svg>
+            <LuShoppingCart className="w-5 h-5 md:w-[22px] md:h-[22px] text-black hidden group-hover:block" />
           </button>
           <ShoppingCartModal
             open={showCartModal}

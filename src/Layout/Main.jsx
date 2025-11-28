@@ -13,13 +13,13 @@ const Main = () => {
       <button
         aria-label="Open AI chat"
         onClick={() => setChatOpen(true)}
-        className="fixed right-4 bottom-4 sm:right-6 sm:bottom-6 w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-2xl bg-red-500 hover:bg-red-600 text-white flex items-center justify-center p-2 transition-all transform hover:scale-105 border-4 border-yellow-400 overflow-hidden"
+        className="fixed right-4 bottom-4 sm:right-6 sm:bottom-6 w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-2xl bg-[#fff] hover:bg-[#bee3f8] text-white flex items-center justify-center p-2 transition-all transform hover:scale-105 border-4 border-[#549ada] overflow-hidden"
         style={{ zIndex: 99999, position: "fixed" }}
       >
         <img
           src="/aichaticon.png"
           alt="Chat"
-          className="w-8 h-8 object-contain"
+          className="w-10 h-10 object-contain"
           onError={(e) => {
             e.currentTarget.style.display = "none";
             const fallback =
@@ -27,7 +27,7 @@ const Main = () => {
             if (fallback) fallback.style.display = "block";
           }}
         />
-        <span className="chat-fallback hidden text-2xl">🤖</span>
+        {/* <span className="chat-fallback hidden text-2xl">🤖</span> */}
       </button>
 
       <ChatwithAI open={chatOpen} onClose={() => setChatOpen(false)} />

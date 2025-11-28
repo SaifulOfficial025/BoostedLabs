@@ -34,7 +34,7 @@ function ProductCard({
     : `${base}dummyproduct.png`;
 
   return (
-    <div className="bg-white rounded-2xl border border-[#e5e7eb] shadow-sm p-3 max-w-xs mx-auto sm:mx-0 font-sans">
+    <div className="bg-white rounded-2xl border border-[#e5e7eb] shadow-sm p-3 max-w-xs mx-auto sm:mx-0 font-sans hover:shadow-lg transform hover:scale-105 transition duration-300">
       <div className="relative mb-4">
         {!isMerch && (
           <div
@@ -88,7 +88,7 @@ function ProductCard({
       {!hideActions && (
         <div className="flex flex-col sm:flex-row gap-3">
           <button
-            className="w-full sm:flex-1 border border-[#222] rounded-lg py-2 text-[#222] bg-white font-semibold text-base hover:bg-gray-50 transition"
+            className="w-full sm:flex-1 border border-[#222] rounded-lg py-2 text-[#222] bg-white font-semibold text-base hover:bg-gray-200 transition"
             onClick={(e) => {
               e.stopPropagation();
               if (onViewDetails) onViewDetails();

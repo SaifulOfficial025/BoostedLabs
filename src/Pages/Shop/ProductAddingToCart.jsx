@@ -73,7 +73,7 @@ function ProductAddingToCart({
             <div className="flex items-center gap-2">
               <button
                 onClick={decrease}
-                className="w-8 h-8 flex items-center justify-center border rounded"
+                className="w-8 h-8 text-xl font-bold flex items-center justify-center border rounded"
               >
                 -
               </button>
@@ -82,7 +82,7 @@ function ProductAddingToCart({
               </div>
               <button
                 onClick={increase}
-                className="w-8 h-8 flex items-center justify-center border rounded"
+                className="w-8 h-8 text-xl flex items-center justify-center border rounded"
               >
                 +
               </button>

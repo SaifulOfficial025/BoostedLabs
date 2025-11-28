@@ -20,7 +20,7 @@ function SetNewPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-start justify-center bg-white px-4 sm:px-6 py-8 sm:py-12 font-sans">
+    <div className="min-h-screen flex items-start justify-center bg-white px-4 sm:px-6 py-8 sm:py-12 font-sans md:mt-24">
       <div className="w-full max-w-lg">
         <button
           onClick={() => navigate(-1)}
