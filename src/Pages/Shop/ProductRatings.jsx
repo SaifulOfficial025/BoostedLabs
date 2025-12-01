@@ -25,7 +25,7 @@ function ProductRatings({
   const max = sampleBars.reduce((s, b) => s + b.count, 0) || 1;
 
   return (
-    <div className="max-w-7xl mx-auto my-6 font-sans px-4 sm:px-6 mt-16">
+    <div className="max-w-7xl mx-auto my-6 font-sans px-4 sm:px-6 mt-10">
       <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 shadow-sm">
         <div className="grid grid-cols-1 lg:grid-cols-3 ">
           {/* Left: bars and reviews */}
@@ -58,7 +58,7 @@ function ProductRatings({
             </div>
           </div>
           {/* Right: summary */}
-          <div className="flex flex-col items-center justify-start">
+          <div className="flex flex-col items-center justify-start text-justify">
             <div className="mt-0 w-full text-center flex flex-col items-center">
               <div className="mt-16 w-full text-center flex flex-col items-center">
                 <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">

@@ -34,7 +34,7 @@ function ProductCard({
     : `${base}dummyproduct.png`;
 
   return (
-    <div className="bg-white rounded-2xl border border-[#e5e7eb] shadow-sm p-3 max-w-xs mx-auto sm:mx-0 font-sans hover:shadow-lg transform hover:scale-105 transition duration-300">
+    <div className="bg-white rounded-2xl border border-[#e5e7eb] shadow-sm p-3 max-w-xs mx-auto sm:mx-0 mt-5 font-sans hover:shadow-lg transform hover:scale-105 transition duration-300">
       <div className="relative mb-4">
         {!isMerch && (
           <div
@@ -47,7 +47,7 @@ function ProductCard({
           </div>
         )}
         <div
-          className="rounded-xl border border-[#e5e7eb] p-2 flex items-center justify-center bg-[#f8fafc] cursor-pointer min-h-[140px] sm:min-h-[180px]"
+          className="rounded-xl  flex items-center justify-center  cursor-pointer min-h-[140px] sm:min-h-[180px]"
           onClick={() => {
             // navigate to product details when clicking image area
             if (productId !== undefined)
@@ -58,7 +58,7 @@ function ProductCard({
           <img
             src={image || defaultImage}
             alt={title}
-            className="max-h-20 sm:max-h-28 object-contain "
+            className="object-contain "
             onError={(e) => {
               const fallback = defaultImage;
               if (e.currentTarget.src !== fallback)

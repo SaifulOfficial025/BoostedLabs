@@ -6,7 +6,7 @@ function ProductDetailsText() {
       <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-gray-800">Product Details</h2>
 
-        <div className="mt-4 text-sm text-gray-700 space-y-4">
+        <div className="mt-4 text-sm text-gray-700 space-y-4 text-justify">
           <p>
             Step into a realm of unparalleled off-duty style with these grey
             acid wash joggers that effortlessly marry fashion with comfort.

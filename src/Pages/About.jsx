@@ -6,6 +6,7 @@ import { FaShieldAlt, FaFlask, FaHeart, FaBolt } from "react-icons/fa";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import herobg from "../../public/aboutherobg.png";
+import Disclaimer from "../Shared/Disclaimer";
 
 function About() {
   return (
@@ -67,7 +68,7 @@ function About() {
       </div>
 
       {/* Our Values */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 mt-8 sm:mt-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 mt-8 sm:mt-16">
         <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8">
           OUR VALUES
         </h2>
@@ -124,7 +125,7 @@ function About() {
       </div>
 
       {/* Who we serve */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16 mt-10">
         <h3 className="text-lg sm:text-xl font-bold text-center mb-5 sm:mb-6">
           WHO WE SERVE
         </h3>
@@ -158,6 +159,8 @@ function About() {
           </div>
         </div>
       </div>
+
+      <Disclaimer />
 
       <Footer />
     </section>
