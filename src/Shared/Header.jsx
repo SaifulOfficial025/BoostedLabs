@@ -219,7 +219,7 @@ function Header() {
                       className="flex items-center px-4 py-2 hover:bg-gray-200 transition-colors"
                     >
                       <span className="text-sm font-medium text-gray-700">
-                        Weight loss
+                        Boosted Weight loss
                       </span>
                     </Link>
 
@@ -228,7 +228,7 @@ function Header() {
                       className="flex items-center px-4 py-2 hover:bg-gray-200 transition-colors"
                     >
                       <span className="text-sm font-medium text-gray-700">
-                        Cosmetic
+                        Boosted Cosmetic
                       </span>
                     </Link>
 
@@ -237,7 +237,7 @@ function Header() {
                       className="flex items-center px-4 py-2 hover:bg-gray-200 transition-colors"
                     >
                       <span className="text-sm font-medium text-gray-700">
-                        Performance
+                        Boosted Performance
                       </span>
                     </Link>
 
@@ -246,7 +246,7 @@ function Header() {
                       className="flex items-center px-4 py-2 hover:bg-gray-200 transition-colors"
                     >
                       <span className="text-sm font-medium text-gray-700">
-                        Energy
+                        Boosted Energy
                       </span>
                     </Link>
 
@@ -255,7 +255,7 @@ function Header() {
                       className="flex items-center px-4 py-2 hover:bg-gray-200 transition-colors"
                     >
                       <span className="text-sm font-medium text-gray-700">
-                        Metabolic
+                        Boosted Metabolic
                       </span>
                     </Link>
 
@@ -264,7 +264,7 @@ function Header() {
                       className="flex items-center px-4 py-2 hover:bg-gray-200 transition-colors"
                     >
                       <span className="text-sm font-medium text-gray-700">
-                        Healing
+                        Boosted Healing
                       </span>
                     </Link>
                   </div>
@@ -436,6 +436,26 @@ function Header() {
             </Link>
 
             <Link
+              to="/usage-guide"
+              className={`text-white py-3 px-4 rounded ${
+                isUsageGuide ? "font-bold bg-white/10" : ""
+              }`}
+              onClick={() => setShowMobileMenu(false)}
+            >
+              Usage Guide
+            </Link>
+
+            <Link
+              to="/reconstitute"
+              className={`text-white py-3 px-4 rounded ${
+                isReconstitute ? "font-bold bg-white/10" : ""
+              }`}
+              onClick={() => setShowMobileMenu(false)}
+            >
+              Reconstitute
+            </Link>
+
+            <Link
               to="/about"
               className={`text-white py-3 px-4 rounded ${
                 isAbout ? "font-bold bg-white/10" : ""
@@ -485,7 +505,9 @@ function Header() {
                       setShowFilter(false);
                     }}
                   >
-                    <span className="text-lg text-[#64748b]">Weight loss</span>
+                    <span className="text-lg text-[#64748b]">
+                      Boosted Weight loss
+                    </span>
                   </Link>
                   <Link
                     to="/shop/filtered-products/cosmetic"
@@ -495,7 +517,9 @@ function Header() {
                       setShowFilter(false);
                     }}
                   >
-                    <span className="text-lg text-[#64748b]">Cosmetic</span>
+                    <span className="text-lg text-[#64748b]">
+                      Boosted Cosmetic
+                    </span>
                   </Link>
                   <Link
                     to="/shop/filtered-products/performance"
@@ -505,7 +529,9 @@ function Header() {
                       setShowFilter(false);
                     }}
                   >
-                    <span className="text-lg text-[#64748b]">Performance</span>
+                    <span className="text-lg text-[#64748b]">
+                      Boosted Performance
+                    </span>
                   </Link>
                   <Link
                     to="/shop/filtered-products/energy"
@@ -515,7 +541,9 @@ function Header() {
                       setShowFilter(false);
                     }}
                   >
-                    <span className="text-lg text-[#64748b]">Energy</span>
+                    <span className="text-lg text-[#64748b]">
+                      Boosted Energy
+                    </span>
                   </Link>
                   <Link
                     to="/shop/filtered-products/metabolic"
@@ -525,7 +553,9 @@ function Header() {
                       setShowFilter(false);
                     }}
                   >
-                    <span className="text-lg text-[#64748b]">Metabolic</span>
+                    <span className="text-lg text-[#64748b]">
+                      Boosted Metabolic
+                    </span>
                   </Link>
                   <Link
                     to="/shop/filtered-products/healing"
@@ -535,7 +565,9 @@ function Header() {
                       setShowFilter(false);
                     }}
                   >
-                    <span className="text-lg text-[#64748b]">Healing</span>
+                    <span className="text-lg text-[#64748b]">
+                      Boosted Healing
+                    </span>
                   </Link>
                 </div>
               )}
