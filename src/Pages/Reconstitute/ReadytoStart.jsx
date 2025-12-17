@@ -10,7 +10,7 @@ function ReadytoStart() {
         Now that your pen is ready, check out our detailed usage guides for your
         specific product.
       </p>
-      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-xs sm:max-w-none">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-xs sm:max-w-none justify-center items-center mx-auto">
         <button className="w-full sm:w-auto bg-[#FF7A3D] hover:bg-[#ff9a6a] text-white font-semibold py-3 px-7 rounded-lg shadow transition-colors duration-200 text-base sm:text-lg">
           View Usage Guides &rarr;
         </button>
