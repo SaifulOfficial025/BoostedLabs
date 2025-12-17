@@ -19,42 +19,42 @@ function ReconstitutionVolumes() {
           </thead>
           <tbody className="text-gray-700 text-base">
             <tr className="bg-white">
-              <td className="py-2 px-4">Peak Wolverine™</td>
+              <td className="py-2 px-4">Boosted Wolverine™</td>
               <td className="py-2 px-4">3.0 mL</td>
               <td className="py-2 px-4">300 clicks</td>
             </tr>
             <tr className="bg-white">
-              <td className="py-2 px-4">Peak Glow™</td>
+              <td className="py-2 px-4">Boosted Glow™</td>
               <td className="py-2 px-4">3.0 mL</td>
               <td className="py-2 px-4">300 clicks</td>
             </tr>
             <tr className="bg-white">
-              <td className="py-2 px-4">Peak Health™</td>
+              <td className="py-2 px-4">Boosted Health™</td>
               <td className="py-2 px-4">3.0 mL</td>
               <td className="py-2 px-4">300 clicks</td>
             </tr>
             <tr className="bg-white">
-              <td className="py-2 px-4">Peak Libido™</td>
+              <td className="py-2 px-4">Boosted Libido™</td>
               <td className="py-2 px-4">3.0 mL</td>
               <td className="py-2 px-4">300 clicks</td>
             </tr>
             <tr className="bg-white">
-              <td className="py-2 px-4">Peak Sun™</td>
+              <td className="py-2 px-4">Boosted Sun™</td>
               <td className="py-2 px-4">3.0 mL</td>
               <td className="py-2 px-4">300 clicks</td>
             </tr>
             <tr className="bg-white">
-              <td className="py-2 px-4">Peak Rewind™</td>
+              <td className="py-2 px-4">Boosted Rewind™</td>
               <td className="py-2 px-4">3.0 mL</td>
               <td className="py-2 px-4">300 clicks</td>
             </tr>
             <tr className="bg-white">
-              <td className="py-2 px-4">Peak Youth™</td>
+              <td className="py-2 px-4">Boosted Youth™</td>
               <td className="py-2 px-4">2.0 mL</td>
               <td className="py-2 px-4">200 clicks</td>
             </tr>
             <tr className="bg-white">
-              <td className="py-2 px-4">Peak Burn™</td>
+              <td className="py-2 px-4">Boosted Burn™</td>
               <td className="py-2 px-4">2.0 mL</td>
               <td className="py-2 px-4">200 clicks</td>
             </tr>

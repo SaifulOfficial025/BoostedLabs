@@ -13,7 +13,7 @@ function Steps() {
           Step-by-Step Universal Reconstitution Guide
         </h1>
         <p className="text-lg md:text-xl text-gray-600">
-          All Peak pens follow this same process with different volumes.
+          All Boosted pens follow this same process with different volumes.
         </p>
       </div>
       <Step1 />

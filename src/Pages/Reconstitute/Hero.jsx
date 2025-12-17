@@ -7,7 +7,7 @@ function Hero() {
     <section className="bg-[#fcfcfd] pb-8 pt-8 mt-20 md:mt-2 md:pt-20 lg:mt-2 ">
       <div className="max-w-3xl mx-auto text-center px-4">
         <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-[#16213e] mb-3 sm:mb-4 leading-tight">
-          How to Reconstitute Your Peak
+          How to Reconstitute Your Boosted
           <br className="hidden sm:block" /> Peptide Pen
         </h1>
         <p className="text-gray-600 text-base sm:text-lg mb-4 sm:mb-6">

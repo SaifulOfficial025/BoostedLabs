@@ -4,21 +4,21 @@ function TabswithInfo() {
   const [activeTab, setActiveTab] = useState("wolverine");
 
   const tabs = [
-    { id: "wolverine", name: "Peak Wolverine™" },
-    { id: "glow", name: "Peak Glow™" },
-    { id: "youth", name: "Peak Youth™" },
-    { id: "health", name: "Peak Health™" },
-    { id: "burn", name: "Peak Burn™" },
-    { id: "sun", name: "Peak Sun™" },
-    { id: "libido", name: "Peak Libido™" },
-    { id: "rewind", name: "Peak Rewind™" },
+    { id: "wolverine", name: "Boosted Wolverine™" },
+    { id: "glow", name: "Boosted Glow™" },
+    { id: "youth", name: "Boosted Youth™" },
+    { id: "health", name: "Boosted Health™" },
+    { id: "burn", name: "Boosted Burn™" },
+    { id: "sun", name: "Boosted Sun™" },
+    { id: "libido", name: "Boosted Libido™" },
+    { id: "rewind", name: "Boosted Rewind™" },
   ];
 
   const content = {
     wolverine: {
-      title: "Peak Wolverine™ Usage Guide",
+      title: "Boosted Wolverine™ Usage Guide",
       overview: {
-        title: "Peak Wolverine™ Usage Overview",
+        title: "Boosted Wolverine™ Usage Overview",
         points: [
           "Daily-use peptide for tendon, ligament, joint and connective tissue repair",
           "Each pen contains: 100 mg GHK-Cu, 10 mg BPC-157, 10 mg TB-500",
@@ -28,7 +28,7 @@ function TabswithInfo() {
           "Store in refrigerator after mixing",
         ],
         highlight:
-          "Peak Wolverine™ delivers significantly better results when taken EVERY single day — consistency is critical for tissue repair.",
+          "Boosted Wolverine™ delivers significantly better results when taken EVERY single day — consistency is critical for tissue repair.",
       },
       steps: [
         {
@@ -105,9 +105,9 @@ function TabswithInfo() {
       ],
     },
     glow: {
-      title: "Peak Glow™ Usage Guide",
+      title: "Boosted Glow™ Usage Guide",
       overview: {
-        title: "Peak Glow™ Usage Overview",
+        title: "Boosted Glow™ Usage Overview",
         points: [
           "Daily-use peptide pen designed for skin tightening, collagen support, and anti-aging",
           "Each pen contains: 100 mg GHK-Cu, 50 mg Epitalon, 10 mg Ipamorelin, 10 mg CJC-1295",
@@ -117,7 +117,7 @@ function TabswithInfo() {
           "Store in refrigerator after mixing",
         ],
         highlight:
-          "Peak Glow™ works cumulatively — daily use produces dramatically better skin, collagen, and anti-aging results.",
+          "Boosted Glow™ works cumulatively — daily use produces dramatically better skin, collagen, and anti-aging results.",
       },
       steps: [
         {
@@ -188,17 +188,17 @@ function TabswithInfo() {
         },
       ],
       importantNotes: [
-        "Peak Glow works BEST with daily consistency — collagen production requires repeated signaling",
+        "Boosted Glow works BEST with daily consistency — collagen production requires repeated signaling",
         "Most users notice visible improvements in Weeks 3–6",
         "Full anti-aging benefits occur in Weeks 6–12",
-        "Works synergistically with: Peak Youth™ (GH release → collagen boost), Peak Rewind™ (NAD+ → cell repair), Red light therapy, Collagen + vitamin C supplementation",
+        "Works synergistically with: Boosted Youth™ (GH release → collagen boost), Boosted Rewind™ (NAD+ → cell repair), Red light therapy, Collagen + vitamin C supplementation",
         "Consistency is everything. Daily dosing produces exponentially better results in collagen density, firmness, and wrinkle reduction.",
       ],
     },
     youth: {
-      title: "Peak Youth™ Usage Guide",
+      title: "Boosted Youth™ Usage Guide",
       overview: {
-        title: "Peak Youth™ Usage Overview",
+        title: "Boosted Youth™ Usage Overview",
         points: [
           "Once-weekly peptide pen for GH support, recovery, deep sleep, vitality, and anti-aging",
           "Each pen contains: 8 mg CJC-1295 DAC",
@@ -290,9 +290,9 @@ function TabswithInfo() {
       ],
     },
     health: {
-      title: "Peak Health™ Usage Guide",
+      title: "Boosted Health™ Usage Guide",
       overview: {
-        title: "Peak Health™ Usage Overview",
+        title: "Boosted Health™ Usage Overview",
         points: [
           "Daily-use peptide pen designed for muscle growth, body composition, recovery, sleep quality, and overall vitality",
           "Each pen contains: 100 IU total",
@@ -302,7 +302,7 @@ function TabswithInfo() {
           "Store refrigerated after mixing",
         ],
         highlight:
-          "Peak Health™ works cumulatively. Daily dosing is essential for stable IGF-1 and recovery benefits.",
+          "Boosted Health™ works cumulatively. Daily dosing is essential for stable IGF-1 and recovery benefits.",
       },
       steps: [
         {
@@ -333,7 +333,7 @@ function TabswithInfo() {
           title: "Step 3",
           subtitle: "Understanding Your Daily Dose (Exact IU Math)",
           intro:
-            "The Peak Health™ pen contains 100 IU total across ≈300 clicks.",
+            "The Boosted Health™ pen contains 100 IU total across ≈300 clicks.",
           calculation: "100 IU ÷ 300 = 0.333 IU per click",
           table: {
             options: [
@@ -380,15 +380,15 @@ function TabswithInfo() {
       importantNotes: [
         "Daily consistency maximizes the anabolic and recovery benefits",
         "Best effects appear between Weeks 3–8",
-        "Works synergistically with: Peak Youth™ (sleep + GH synergy), Peak Wolverine™ (recovery acceleration), Peak Burn™ (fat loss + recomposition synergy)",
+        "Works synergistically with: Boosted Youth™ (sleep + GH synergy), Boosted Wolverine™ (recovery acceleration), Boosted Burn™ (fat loss + recomposition synergy)",
         "Do not exceed dosage unless guided by a medical professional",
-        "Daily dosing = predictable IGF-1 response. Consistency is the #1 factor in achieving muscle growth, fat loss, and better recovery with Peak Health™.",
+        "Daily dosing = predictable IGF-1 response. Consistency is the #1 factor in achieving muscle growth, fat loss, and better recovery with Boosted Health™.",
       ],
     },
     burn: {
-      title: "Peak Burn™ Usage Guide",
+      title: "Boosted Burn™ Usage Guide",
       overview: {
-        title: "Peak Burn™ Usage Overview",
+        title: "Boosted Burn™ Usage Overview",
         points: [
           "Once-weekly GLP-1/GIP/Glucagon triple-pathway peptide for fat loss and metabolic reset",
           "Each pen contains: Month 1 Pen: 6 mg total • Month 2 Pen: 18 mg total • Month 3+ Pen: 32 mg total",
@@ -398,7 +398,7 @@ function TabswithInfo() {
           "Store refrigerated after mixing",
         ],
         highlight:
-          "Peak Burn™ works BEST when doses are taken weekly, at the same time, with no skipped weeks.",
+          "Boosted Burn™ works BEST when doses are taken weekly, at the same time, with no skipped weeks.",
       },
       steps: [
         {
@@ -429,7 +429,7 @@ function TabswithInfo() {
           title: "Step 3",
           subtitle: "Understanding Your Dose",
           intro:
-            "Each Peak Burn™ pen contains 2.0 mL = 200 clicks. The mg per pen varies by month:",
+            "Each Boosted Burn™ pen contains 2.0 mL = 200 clicks. The mg per pen varies by month:",
           perClick: [
             "Month 1 Pen (6 mg): 6 mg ÷ 200 = 0.03 mg per click",
             "Month 2 Pen (18 mg): 18 mg ÷ 200 = 0.09 mg per click",
@@ -483,7 +483,7 @@ function TabswithInfo() {
             "Do NOT skip weeks — titration requires progression",
             "Do not exceed assigned weekly dose",
           ],
-          note: "Peak Burn™ results are dose-dependent and consistency-dependent. Weekly doses MUST be taken on schedule for the metabolic reset to occur.",
+          note: "Boosted Burn™ results are dose-dependent and consistency-dependent. Weekly doses MUST be taken on schedule for the metabolic reset to occur.",
         },
         {
           title: "Step 6",
@@ -515,13 +515,13 @@ function TabswithInfo() {
         'Week 10–12 is the metabolic "reset window"',
         "Stay hydrated and eat protein-forward meals",
         "Works synergistically with Health™, Youth™, and Sun™",
-        "Peak Burn™ results are dose-dependent and consistency-dependent. Weekly doses MUST be taken on schedule for the metabolic reset to occur.",
+        "Boosted Burn™ results are dose-dependent and consistency-dependent. Weekly doses MUST be taken on schedule for the metabolic reset to occur.",
       ],
     },
     sun: {
-      title: "Peak Sun™ Usage Guide",
+      title: "Boosted Sun™ Usage Guide",
       overview: {
-        title: "Peak Sun™ Usage Overview",
+        title: "Boosted Sun™ Usage Overview",
         points: [
           "Melanotan II peptide pen for tanning, pigment activation, and UV protection support",
           "Each pen contains: 30 mg MT2 total",
@@ -531,7 +531,7 @@ function TabswithInfo() {
           "Loading phase: daily injections • Maintenance phase: 2–3× weekly",
         ],
         highlight:
-          "Peak Sun™ works fastest when loading doses are taken consistently for the first 5–7 days.",
+          "Boosted Sun™ works fastest when loading doses are taken consistently for the first 5–7 days.",
       },
       steps: [
         {
@@ -561,7 +561,7 @@ function TabswithInfo() {
           title: "Step 3",
           subtitle: "Understanding Your Dose",
           intro:
-            "Each Peak Sun™ pen contains 30 mg MT2 in 3.0 mL = 300 clicks.",
+            "Each Boosted Sun™ pen contains 30 mg MT2 in 3.0 mL = 300 clicks.",
           calculation: "30 mg ÷ 300 = 0.1 mg (100 mcg) per click",
           table: {
             phases: [
@@ -620,14 +620,14 @@ function TabswithInfo() {
         "Do not exceed recommended amounts",
         "Hydrate and take short, controlled sun exposures",
         "Stop loading if excessive nausea occurs",
-        "Stacks well with Peak Glow™ for skin tone",
-        "Peak Sun™ delivers the best results with consistent dosing PLUS controlled sun exposure.",
+        "Stacks well with Boosted Glow™ for skin tone",
+        "Boosted Sun™ delivers the best results with consistent dosing PLUS controlled sun exposure.",
       ],
     },
     libido: {
-      title: "Peak Libido™ Usage Guide",
+      title: "Boosted Libido™ Usage Guide",
       overview: {
-        title: "Peak Libido™ Usage Overview",
+        title: "Boosted Libido™ Usage Overview",
         points: [
           "HCG-based peptide pen for libido, mood, energy and hormone support",
           "Total HCG per pen: 20,000 IU",
@@ -667,7 +667,7 @@ function TabswithInfo() {
           title: "Step 3",
           subtitle: "Understanding Your Dose",
           intro:
-            "Each Peak Libido™ pen contains 20,000 IU HCG in 3.0 mL = 300 clicks.",
+            "Each Boosted Libido™ pen contains 20,000 IU HCG in 3.0 mL = 300 clicks.",
           calculation: "20,000 IU ÷ 300 = 66.67 IU per click",
           table: {
             dosing: [
@@ -720,9 +720,9 @@ function TabswithInfo() {
       ],
     },
     rewind: {
-      title: "Peak Rewind™ Usage Guide",
+      title: "Boosted Rewind™ Usage Guide",
       overview: {
-        title: "Peak Rewind™ Usage Overview",
+        title: "Boosted Rewind™ Usage Overview",
         points: [
           "High-dose NAD+ delivery system for energy, cognition, longevity and cellular repair",
           "Total NAD+ per pen: 500 mg",
@@ -762,7 +762,7 @@ function TabswithInfo() {
           title: "Step 3",
           subtitle: "Understanding Your Dose",
           intro:
-            "Each Peak Rewind™ pen contains 500 mg NAD+ in 3.0 mL = 300 clicks.",
+            "Each Boosted Rewind™ pen contains 500 mg NAD+ in 3.0 mL = 300 clicks.",
           calculation: "500 mg ÷ 300 = 1.666 mg per click",
           table: {
             options: [
@@ -822,7 +822,7 @@ function TabswithInfo() {
       {/* Heading and Subheading */}
       <div className="text-center my-8">
         <h1 className="text-3xl md:text-4xl font-bold mb-2">
-          How to Use Your Peak Peptide Pen
+          How to Use Your Boosted Peptide Pen
         </h1>
         <p className="text-lg md:text-xl text-gray-600">
           Select your product to see precise step-by-step instructions.
