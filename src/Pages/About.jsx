@@ -5,8 +5,10 @@ import Footer from "../Shared/Footer";
 import { FaShieldAlt, FaFlask, FaHeart, FaBolt } from "react-icons/fa";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useCallback } from "react";
 import herobg from "../../public/aboutherobg.png";
 import Disclaimer from "../Shared/Disclaimer";
+import ContactUs from "./ContactUs";
 
 function About() {
   return (
@@ -52,16 +54,26 @@ function About() {
             <div className="text-xs sm:text-base text-white mb-4 sm:mb-8">
               Just clean, reliable science — delivered with purpose.
             </div>
-            <Link to="/contact-us">
-              <button className="bg-white text-black px-5 sm:px-10 py-2.5 sm:py-4 rounded-xl font-normal text-sm sm:text-md w-fit mx-auto flex items-center gap-2 transition-all duration-300 relative group shadow-none hover:shadow-[0_0_16px_2px_rgba(0,0,0,0.25)]">
-                <span className="transition-all duration-500 group-hover:pr-6">
-                  Contact Us
-                </span>
-                <span className="absolute right-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-2 transition-all duration-500 flex items-center">
-                  <FaLongArrowAltRight className="text-black text-xl sm:text-2xl" />
-                </span>
-              </button>
-            </Link>
+            <button
+              type="button"
+              onClick={useCallback(() => {
+                const el = document.getElementById("contact-section");
+                if (el) {
+                  el.scrollIntoView({ behavior: "smooth", block: "start" });
+                } else {
+                  // fallback to route if the section isn't present
+                  window.location.pathname = "/contact-us";
+                }
+              }, [])}
+              className="bg-white text-black px-5 sm:px-10 py-2.5 sm:py-4 rounded-xl font-normal text-sm sm:text-md w-fit mx-auto flex items-center gap-2 transition-all duration-300 relative group shadow-none hover:shadow-[0_0_16px_2px_rgba(0,0,0,0.25)]"
+            >
+              <span className="transition-all duration-500 group-hover:pr-6">
+                Contact Us
+              </span>
+              <span className="absolute right-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-2 transition-all duration-500 flex items-center">
+                <FaLongArrowAltRight className="text-black text-xl sm:text-2xl" />
+              </span>
+            </button>
           </div>
           <div className="absolute inset-0 bg-black opacity-30 pointer-events-none z-0" />
         </div>
@@ -161,6 +173,8 @@ function About() {
       </div>
 
       <Disclaimer />
+
+      <ContactUs />
 
       <Footer />
     </section>

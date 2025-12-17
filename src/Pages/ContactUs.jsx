@@ -16,11 +16,9 @@ function ContactUs() {
       : "/";
 
   return (
-    <section>
-      <Noticebar />
-      <Headers />
-      <div className="max-w-7xl mx-auto px-6 py-12 font-sans mt-14">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+    <section id="contact-section">
+      <div className="max-w-7xl mx-auto px-6 py-12 font-sans">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start mt-32">
           {/* Left: contact info */}
           <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-3">

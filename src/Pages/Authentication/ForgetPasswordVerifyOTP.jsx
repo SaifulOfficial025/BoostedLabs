@@ -1,5 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { verifyEmail } from "../../Redux/Auth";
 import { Link } from "react-router-dom";
 import { FaArrowCircleLeft } from "react-icons/fa";
 import Logo from "../../../public/BoostedLabLogo.svg";
@@ -7,8 +10,17 @@ import Logo from "../../../public/BoostedLabLogo.svg";
 function ForgetPasswordVerifyOTP() {
   const navigate = useNavigate();
   const [values, setValues] = useState(["", "", "", ""]);
+  const [email, setEmail] = useState(() => {
+    try {
+      return localStorage.getItem("otpEmail") || "";
+    } catch (e) {
+      return "";
+    }
+  });
   const inputsRef = useRef([]);
   const [secondsLeft, setSecondsLeft] = useState(120);
+  const dispatch = useDispatch();
+  const { loading } = useSelector((s) => s.auth || { loading: false });
 
   useEffect(() => {
     // start countdown
@@ -63,8 +75,25 @@ function ForgetPasswordVerifyOTP() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const code = values.join("");
-    console.log("Submitted code:", code);
-    // TODO: verify OTP via API then navigate
+    if (!email) {
+      toast.error("Please enter your email to verify.");
+      return;
+    }
+    (async () => {
+      try {
+        const result = await dispatch(verifyEmail({ email, code })).unwrap();
+        const msg =
+          result.message || result.detail || "Email verified successfully";
+        toast.success(String(msg));
+        navigate("/signin");
+      } catch (err) {
+        const msg =
+          (err && (err.detail || err.message)) ||
+          JSON.stringify(err) ||
+          "Verification failed";
+        toast.error(String(msg));
+      }
+    })();
   };
 
   const formatTime = (s) => {
@@ -134,16 +163,17 @@ function ForgetPasswordVerifyOTP() {
             </button>
           </div>
 
-          <Link to="/set-new-password">
-            <div className="flex justify-center">
-              <button
-                type="submit"
-                className="w-full bg-black text-white py-2 sm:py-3 rounded-lg font-semibold text-base sm:text-lg mt-2 mb-2 hover:bg-gray-900 transition"
-              >
-                Submit
-              </button>
-            </div>
-          </Link>
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full bg-black text-white py-2 sm:py-3 rounded-lg font-semibold text-base sm:text-lg mt-2 mb-2 hover:bg-gray-900 transition ${
+                loading ? "opacity-60 cursor-not-allowed" : ""
+              }`}
+            >
+              {loading ? "Verifying..." : "Submit"}
+            </button>
+          </div>
         </form>
       </div>
     </div>

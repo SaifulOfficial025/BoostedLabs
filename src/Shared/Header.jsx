@@ -1,21 +1,53 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { IoPersonOutline } from "react-icons/io5";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
 import ShoppingCartModal from "./ShoppingCartModal";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../Redux/Auth";
 import Logo from "../../public/BoostedLabLogo.svg";
 import filtericon from "../../public/filter.png";
 import { LuShoppingCart } from "react-icons/lu";
+import ChangePasswordModal from "../Pages/Profile/ChangePasswordModal";
+import RecurringProductModal from "../Pages/Profile/RecurringProductModal";
 
 function Header() {
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
+  const [showAccount, setShowAccount] = useState(false);
   const [showCartModal, setShowCartModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const filterRef = useRef(null);
+  const accountRef = useRef(null);
   const mobileFilterRef = useRef(null);
   const location = useLocation();
   const pathname = location?.pathname || "";
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [showRecurring, setShowRecurring] = useState(false);
+
+  const [storedAuth, setStoredAuth] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("auth")) || null;
+    } catch (e) {
+      return null;
+    }
+  });
+
+  useEffect(() => {
+    function onStorage() {
+      try {
+        setStoredAuth(JSON.parse(localStorage.getItem("auth")) || null);
+      } catch (e) {
+        setStoredAuth(null);
+      }
+    }
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
 
   const isHome = pathname === "/";
   const isShop = pathname === "/shop" || pathname.startsWith("/shop/");
@@ -23,9 +55,11 @@ function Header() {
     pathname === "/merchandise" || pathname.startsWith("/merchandise/");
   const isContact = pathname === "/contact-us";
   const isAbout = pathname === "/about";
+  const isUsageGuide = pathname === "/usage-guide";
+  const isReconstitute = pathname === "/reconstitute";
 
   const handleFilterClick = () => {
-    setShowDropdown((prev) => !prev);
+    setShowFilter((prev) => !prev);
   };
 
   const handleCartClick = () => {
@@ -35,14 +69,20 @@ function Header() {
   // Close dropdown when clicking outside
   React.useEffect(() => {
     function handleClickOutside(event) {
-      // If click is inside desktop filter OR inside mobile filter, do nothing
-      const clickedInsideDesktop =
+      const clickedInsideFilter =
         filterRef.current && filterRef.current.contains(event.target);
-      const clickedInsideMobile =
+      const clickedInsideMobileFilter =
         mobileFilterRef.current &&
         mobileFilterRef.current.contains(event.target);
-      if (clickedInsideDesktop || clickedInsideMobile) return;
-      setShowDropdown(false);
+      const clickedInsideAccount =
+        accountRef.current && accountRef.current.contains(event.target);
+
+      if (!clickedInsideFilter && !clickedInsideMobileFilter) {
+        setShowFilter(false);
+      }
+      if (!clickedInsideAccount) {
+        setShowAccount(false);
+      }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -114,13 +154,23 @@ function Header() {
             </Link>
 
             <Link
-              to="/contact-us"
+              to="/usage-guide"
               className={`text-white ${
-                isContact ? "font-bold border-b-2 border-white pb-1" : ""
+                isUsageGuide ? "font-bold border-b-2 border-white pb-1" : ""
               }`}
             >
-              Contact Us
+              Usage Guide
             </Link>
+
+            <Link
+              to="/reconstitute"
+              className={`text-white ${
+                isReconstitute ? "font-bold border-b-2 border-white pb-1" : ""
+              }`}
+            >
+              Reconstitute
+            </Link>
+
             <Link
               to="/about"
               className={`text-white ${
@@ -161,7 +211,7 @@ function Header() {
                 className="w-4 md:w-5 cursor-pointer"
                 onClick={handleFilterClick}
               />
-              {showDropdown && (
+              {showFilter && (
                 <div className="absolute top-12 right-0 z-50 w-56 bg-white rounded-xl shadow-xl ring-1 ring-black/5 overflow-hidden">
                   <div className="py-2">
                     <Link
@@ -249,13 +299,86 @@ function Header() {
               open={showCartModal}
               onClose={() => setShowCartModal(false)}
             />
-            {/* My Account Button */}
-            <Link to="/signin">
-              <button className="flex items-center bg-white text-black px-2 py-2 sm:px-3 sm:py-3 md:px-3 md:py-3 rounded-lg text-xs font-medium gap-1 sm:gap-2">
-                <IoPersonOutline className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span className="hidden sm:inline">My Account</span>
-              </button>
-            </Link>
+            {/* Account - show profile if logged in */}
+            {storedAuth && storedAuth.data ? (
+              <div className="relative" ref={accountRef}>
+                <button
+                  onClick={() => setShowAccount((s) => !s)}
+                  className="flex items-center bg-white text-black px-2 py-2 sm:px-3 sm:py-3 md:px-3 md:py-3 rounded-lg text-xs font-medium gap-2"
+                >
+                  {storedAuth.data.image ? (
+                    <img
+                      src={storedAuth.data.image}
+                      alt="avatar"
+                      className="w-6 h-6 rounded-full object-cover"
+                    />
+                  ) : (
+                    <IoPersonOutline className="w-5 h-5" />
+                  )}
+                  <span className="hidden sm:inline">
+                    {storedAuth.data.first_name || storedAuth.data.email}
+                  </span>
+                </button>
+                {showAccount && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg overflow-hidden z-50">
+                    <Link
+                      to="/profile"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setShowAccount(false)}
+                    >
+                      View Profile
+                    </Link>
+                    <button
+                      type="button"
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => {
+                        setShowAccount(false);
+                        setShowChangePassword(true);
+                      }}
+                    >
+                      Change Password
+                    </button>
+                    <button
+                      type="button"
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => {
+                        setShowAccount(false);
+                        setShowRecurring(true);
+                      }}
+                    >
+                      Recurring Product List
+                    </button>
+                    <Link
+                      to="/order-history"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setShowAccount(false)}
+                    >
+                      Order History
+                    </Link>
+                    <button
+                      onClick={() => {
+                        try {
+                          dispatch(logout());
+                        } catch (e) {}
+                        setShowAccount(false);
+                        setStoredAuth(null);
+                        navigate("/signin");
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link to="/signin">
+                <button className="flex items-center bg-white text-black px-2 py-2 sm:px-3 sm:py-3 md:px-3 md:py-3 rounded-lg text-xs font-medium gap-1 sm:gap-2">
+                  <IoPersonOutline className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="hidden sm:inline">My Account</span>
+                </button>
+              </Link>
+            )}
           </div>
 
           {/* Cart Icon - Mobile Only */}
@@ -311,15 +434,7 @@ function Header() {
             >
               Merchandise
             </Link>
-            <Link
-              to="/contact-us"
-              className={`text-white py-3 px-4 rounded ${
-                isContact ? "font-bold bg-white/10" : ""
-              }`}
-              onClick={() => setShowMobileMenu(false)}
-            >
-              Contact Us
-            </Link>
+
             <Link
               to="/about"
               className={`text-white py-3 px-4 rounded ${
@@ -357,7 +472,7 @@ function Header() {
                   onClick={handleFilterClick}
                 />
               </div>
-              {showDropdown && (
+              {showFilter && (
                 <div
                   ref={mobileFilterRef}
                   className="mt-2 bg-[#f6fafd] border border-gray-400 rounded-xl shadow-lg py-4 px-6 flex flex-col gap-4 z-50"
@@ -367,7 +482,7 @@ function Header() {
                     className="hover:bg-gray-200 rounded px-2 transition-colors"
                     onClick={() => {
                       setShowMobileMenu(false);
-                      setShowDropdown(false);
+                      setShowFilter(false);
                     }}
                   >
                     <span className="text-lg text-[#64748b]">Weight loss</span>
@@ -377,7 +492,7 @@ function Header() {
                     className="hover:bg-gray-200 rounded px-2 transition-colors"
                     onClick={() => {
                       setShowMobileMenu(false);
-                      setShowDropdown(false);
+                      setShowFilter(false);
                     }}
                   >
                     <span className="text-lg text-[#64748b]">Cosmetic</span>
@@ -387,7 +502,7 @@ function Header() {
                     className="hover:bg-gray-200 rounded px-2 transition-colors"
                     onClick={() => {
                       setShowMobileMenu(false);
-                      setShowDropdown(false);
+                      setShowFilter(false);
                     }}
                   >
                     <span className="text-lg text-[#64748b]">Performance</span>
@@ -397,7 +512,7 @@ function Header() {
                     className="hover:bg-gray-200 rounded px-2 transition-colors"
                     onClick={() => {
                       setShowMobileMenu(false);
-                      setShowDropdown(false);
+                      setShowFilter(false);
                     }}
                   >
                     <span className="text-lg text-[#64748b]">Energy</span>
@@ -407,7 +522,7 @@ function Header() {
                     className="hover:bg-gray-200 rounded px-2 transition-colors"
                     onClick={() => {
                       setShowMobileMenu(false);
-                      setShowDropdown(false);
+                      setShowFilter(false);
                     }}
                   >
                     <span className="text-lg text-[#64748b]">Metabolic</span>
@@ -417,7 +532,7 @@ function Header() {
                     className="hover:bg-gray-200 rounded px-2 transition-colors"
                     onClick={() => {
                       setShowMobileMenu(false);
-                      setShowDropdown(false);
+                      setShowFilter(false);
                     }}
                   >
                     <span className="text-lg text-[#64748b]">Healing</span>
@@ -426,15 +541,105 @@ function Header() {
               )}
             </div>
 
-            {/* My Account Button - Mobile */}
-            <Link to="/signin" onClick={() => setShowMobileMenu(false)}>
-              <button className="w-full flex items-center justify-center bg-white text-black px-4 py-3 rounded-lg text-sm font-medium gap-2 mt-2">
-                <IoPersonOutline className="w-5 h-5" />
-                My Account
-              </button>
-            </Link>
+            {/* My Account - Mobile */}
+            {storedAuth && storedAuth.data ? (
+              <div className="px-4 py-3 border-t border-gray-700">
+                <div className="flex items-center gap-3">
+                  {storedAuth.data.image ? (
+                    <img
+                      src={storedAuth.data.image}
+                      alt="avatar"
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                  ) : (
+                    <IoPersonOutline className="w-10 h-10" />
+                  )}
+                  <div>
+                    <div className="text-white font-medium">
+                      {storedAuth.data.first_name || storedAuth.data.email}
+                    </div>
+                    <div className="text-gray-300 text-sm">
+                      View and manage your account
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 flex flex-col gap-2">
+                  <Link
+                    to="/profile"
+                    onClick={() => setShowMobileMenu(false)}
+                    className="text-white"
+                  >
+                    View Profile
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowMobileMenu(false);
+                      setShowChangePassword(true);
+                    }}
+                    className="text-white text-left"
+                  >
+                    Change Password
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowMobileMenu(false);
+                      setShowRecurring(true);
+                    }}
+                    className="text-white text-left"
+                  >
+                    Recurring Product List
+                  </button>
+                  <Link
+                    to="/order-history"
+                    onClick={() => setShowMobileMenu(false)}
+                    className="text-white"
+                  >
+                    Order History
+                  </Link>
+                  <button
+                    onClick={() => {
+                      try {
+                        dispatch(logout());
+                      } catch (e) {}
+                      try {
+                        localStorage.removeItem("auth");
+                        localStorage.removeItem("auth_verify");
+                        localStorage.removeItem("otpEmail");
+                      } catch (e) {}
+                      setShowMobileMenu(false);
+                      setStoredAuth(null);
+                      navigate("/signin");
+                    }}
+                    className="text-left text-white"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <Link to="/signin" onClick={() => setShowMobileMenu(false)}>
+                <button className="w-full flex items-center justify-center bg-white text-black px-4 py-3 rounded-lg text-sm font-medium gap-2 mt-2">
+                  <IoPersonOutline className="w-5 h-5" />
+                  My Account
+                </button>
+              </Link>
+            )}
           </nav>
         </div>
+      )}
+      {showChangePassword && (
+        <ChangePasswordModal
+          onBack={() => setShowChangePassword(false)}
+          onConfirm={() => setShowChangePassword(false)}
+        />
+      )}
+      {showRecurring && (
+        <RecurringProductModal
+          open={true}
+          onClose={() => setShowRecurring(false)}
+        />
       )}
     </>
   );

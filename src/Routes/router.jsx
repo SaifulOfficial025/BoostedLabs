@@ -15,6 +15,8 @@ import ForgetPasswordVerification from "../Pages/Authentication/ForgetPasswordVe
 import SetNewPassword from "../Pages/Authentication/SetNewPassword";
 import MerchandiseRootPage from "../Pages/MerchandiseRootPage";
 import OrderHistory from "../Pages/Profile/OrderHistory";
+import UsageRootPage from "../Pages/UsageGuide/RootPage";
+import ReconstituteRootPage from "../Pages/Reconstitute/RootPage";
 
 export const router = createBrowserRouter([
   {
@@ -44,10 +46,6 @@ export const router = createBrowserRouter([
       {
         path: "shop/filtered-products/:category",
         element: <FilteredProduct />,
-      },
-      {
-        path: "contact-us",
-        element: <ContactUs />,
       },
       {
         path: "about",
@@ -81,6 +79,8 @@ export const router = createBrowserRouter([
         path: "set-new-password",
         element: <SetNewPassword />,
       },
+      { path: "usage-guide", element: <UsageRootPage /> },
+      { path: "reconstitute", element: <ReconstituteRootPage /> },
     ],
   },
 ]);

@@ -5,6 +5,9 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { FaArrowCircleLeft } from "react-icons/fa";
 import GoogleImg from "../../../public/google.png";
 import Logo from "../../../public/BoostedLabLogo.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../../Redux/Auth";
+import { toast } from "react-toastify";
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
@@ -15,6 +18,37 @@ function SignUp() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading } = useSelector((s) => s.auth || { loading: false });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await dispatch(
+        register({
+          first_name: firstName,
+          last_name: lastName,
+          email,
+          password,
+          confirm_password: confirmPassword,
+        })
+      ).unwrap();
+      const successMsg =
+        result.message || result.detail || "Registration successful";
+      toast.success(String(successMsg));
+      // save email for OTP verification page, then navigate
+      try {
+        localStorage.setItem("otpEmail", email);
+      } catch (e) {}
+      navigate("/otp-verification");
+    } catch (err) {
+      const msg =
+        (err && (err.detail || err.message)) ||
+        JSON.stringify(err) ||
+        "Registration failed";
+      toast.error(String(msg));
+    }
+  };
 
   return (
     <section>
@@ -42,7 +76,10 @@ function SignUp() {
           Please Enter Your Details Below to Sign up
         </p>
 
-        <form className="w-full max-w-xl flex flex-col gap-4">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full max-w-xl flex flex-col gap-4"
+        >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -86,7 +123,7 @@ function SignUp() {
             </div>
           </div>
 
-          {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Password
@@ -135,16 +172,17 @@ function SignUp() {
                 </button>
               </div>
             </div>
-          </div> */}
+          </div>
 
-          <Link to="/otp-verification">
-            <button
-              type="submit"
-              className="w-full bg-black text-white py-2 sm:py-3 rounded-lg font-semibold text-base sm:text-lg mt-2 mb-2 hover:bg-gray-900 transition"
-            >
-              Sign Up
-            </button>
-          </Link>
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full bg-black text-white py-2 sm:py-3 rounded-lg font-semibold text-base sm:text-lg mt-2 mb-2 hover:bg-gray-900 transition ${
+              loading ? "opacity-60 cursor-not-allowed" : ""
+            }`}
+          >
+            {loading ? "Signing Up..." : "Sign Up"}
+          </button>
 
           <div className="flex items-center my-4">
             <div className="flex-1 h-px bg-gray-200" />

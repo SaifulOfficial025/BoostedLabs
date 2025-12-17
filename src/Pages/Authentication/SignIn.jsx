@@ -6,11 +6,38 @@ import { FaArrowCircleLeft } from "react-icons/fa";
 import GoogleImg from "../../../public/google.png";
 
 import Logo from "../../../public/BoostedLabLogo.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../Redux/Auth";
+import { toast } from "react-toastify";
 
 function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.auth || { loading: false });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await dispatch(login({ email, password })).unwrap();
+      // show success message; try to pick human-friendly fields
+      const successMsg =
+        result.message || result.detail || "Signed in successfully";
+      toast.success(String(successMsg));
+      // navigate after successful login if needed
+      navigate("/");
+    } catch (err) {
+      // err may be an object with detail or an array of errors
+      const msg =
+        (err && (err.detail || err.message)) ||
+        JSON.stringify(err) ||
+        "Login failed";
+      toast.error(String(msg));
+    }
+  };
   return (
     <section>
       <div className="flex items-start justify-center bg-white py-5 font-sans mt-10 px-4 sm:px-6">
@@ -37,7 +64,10 @@ function SignIn() {
         <p className="text-gray-500 text-center mb-8 text-sm sm:text-base">
           Please Enter Your Details Below to Continue
         </p>
-        <form className="w-full max-w-md flex flex-col gap-4">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full max-w-md flex flex-col gap-4"
+        >
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email
@@ -47,7 +77,10 @@ function SignIn() {
               <input
                 type="email"
                 placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="bg-transparent outline-none flex-1 text-gray-700"
+                required
               />
             </div>
           </div>
@@ -60,7 +93,10 @@ function SignIn() {
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="bg-transparent outline-none flex-1 text-gray-700"
+                required
               />
               <button
                 type="button"
@@ -88,14 +124,15 @@ function SignIn() {
               Forgot Password?
             </Link>
           </div>
-          <Link to="/">
-            <button
-              type="submit"
-              className="w-full bg-black text-white py-2 rounded-lg font-semibold text-base sm:text-lg mt-2 mb-2 hover:bg-gray-900 transition"
-            >
-              Sign In
-            </button>
-          </Link>
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full bg-black text-white py-2 rounded-lg font-semibold text-base sm:text-lg mt-2 mb-2 hover:bg-gray-900 transition ${
+              loading ? "opacity-60 cursor-not-allowed" : ""
+            }`}
+          >
+            {loading ? "Signing In..." : "Sign In"}
+          </button>
           <div className="flex items-center my-4">
             <div className="flex-1 h-px bg-gray-200" />
             <span className="mx-3 text-gray-400 text-sm">Or</span>
