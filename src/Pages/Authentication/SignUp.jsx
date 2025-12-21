@@ -40,7 +40,7 @@ function SignUp() {
       try {
         localStorage.setItem("otpEmail", email);
       } catch (e) {}
-      navigate("/otp-verification");
+      navigate("/registering-otp-verification");
     } catch (err) {
       const msg =
         (err && (err.detail || err.message)) ||

@@ -11,6 +11,7 @@ import filtericon from "../../public/filter.png";
 import { LuShoppingCart } from "react-icons/lu";
 import ChangePasswordModal from "../Pages/Profile/ChangePasswordModal";
 import RecurringProductModal from "../Pages/Profile/RecurringProductModal";
+import { BASE_URL } from "../Redux/baseUrl";
 
 function Header() {
   const [showFilter, setShowFilter] = useState(false);
@@ -48,6 +49,17 @@ function Header() {
     window.addEventListener("storage", onStorage);
     return () => window.removeEventListener("storage", onStorage);
   }, []);
+
+  // Resolve user image URL (prepend BASE_URL if path is relative)
+  const userImageSrc = (() => {
+    try {
+      const img = storedAuth && storedAuth.data && storedAuth.data.image;
+      if (!img) return null;
+      return img.startsWith("http") ? img : `${BASE_URL}${img}`;
+    } catch (e) {
+      return null;
+    }
+  })();
 
   const isHome = pathname === "/";
   const isShop = pathname === "/shop" || pathname.startsWith("/shop/");
@@ -306,9 +318,9 @@ function Header() {
                   onClick={() => setShowAccount((s) => !s)}
                   className="flex items-center bg-white text-black px-2 py-2 sm:px-3 sm:py-3 md:px-3 md:py-3 rounded-lg text-xs font-medium gap-2"
                 >
-                  {storedAuth.data.image ? (
+                  {userImageSrc ? (
                     <img
-                      src={storedAuth.data.image}
+                      src={userImageSrc}
                       alt="avatar"
                       className="w-6 h-6 rounded-full object-cover"
                     />
@@ -577,9 +589,9 @@ function Header() {
             {storedAuth && storedAuth.data ? (
               <div className="px-4 py-3 border-t border-gray-700">
                 <div className="flex items-center gap-3">
-                  {storedAuth.data.image ? (
+                  {userImageSrc ? (
                     <img
-                      src={storedAuth.data.image}
+                      src={userImageSrc}
                       alt="avatar"
                       className="w-10 h-10 rounded-full object-cover"
                     />

@@ -1,48 +1,48 @@
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { useDispatch, useSelector } from "react-redux";
 import AddShippingAddressModal from "./AddShippingAddressModal";
 import SmallProductComponentWithVolumeModificationandPrice from "./SmallProductComponentWithVolumeModificationandPrice";
 import SizeSelection from "./Sizeselection";
-
-const initialCartItems = [
-  {
-    id: 1,
-    image: "/product-weightloss.png",
-    badge: "WEIGHT LOSS",
-    title: "Retatrutide",
-    price: 215,
-    quantity: 1,
-    checked: true,
-  },
-  {
-    id: 2,
-    image: "/product-weightloss.png",
-    badge: "WEIGHT LOSS",
-    title: "Retatrutide",
-    price: 215,
-    quantity: 1,
-    checked: true,
-  },
-  {
-    id: 3,
-    image: "/product-weightloss.png",
-    badge: "WEIGHT LOSS",
-    title: "Retatrutide",
-    price: 215,
-    quantity: 1,
-    checked: true,
-  },
-];
+import {
+  fetchCart,
+  removeCartItem,
+  increaseQuantity,
+  decreaseQuantity,
+} from "../Redux/Cart";
+import { BASE_URL } from "../Redux/baseUrl";
 
 function ShoppingCartModal({ open, onClose }) {
   const modalRef = useRef(null);
+  const dispatch = useDispatch();
   const [showAddressModal, setShowAddressModal] = useState(false);
 
-  const [cart, setCart] = useState(initialCartItems);
-  const [selectAll, setSelectAll] = useState(() =>
-    cart.every((c) => c.checked)
+  const { items, subtotal, shippingFee, total, loading } = useSelector(
+    (state) => state.cart
   );
+
+  const [selectAll, setSelectAll] = useState(false);
   const [recurring, setRecurring] = useState(false);
+  const [checkedItems, setCheckedItems] = useState({});
+
+  // Fetch cart data when modal opens
+  useEffect(() => {
+    if (open) {
+      dispatch(fetchCart());
+    }
+  }, [open, dispatch]);
+
+  // Initialize checked items when items change
+  useEffect(() => {
+    if (items.length > 0) {
+      const initialChecked = {};
+      items.forEach((item) => {
+        initialChecked[item.id] = true;
+      });
+      setCheckedItems(initialChecked);
+      setSelectAll(true);
+    }
+  }, [items]);
 
   // Local mount/visibility state so the modal can animate on mount/unmount
   const [isMounted, setIsMounted] = useState(open);
@@ -93,47 +93,54 @@ function ShoppingCartModal({ open, onClose }) {
     };
   }, [isMounted]);
 
-  // keep selectAll in sync when cart changes
+  // keep selectAll in sync when checkedItems changes
   useEffect(() => {
-    setSelectAll(cart.length > 0 && cart.every((c) => c.checked));
-  }, [cart]);
+    const allChecked =
+      items.length > 0 && items.every((item) => checkedItems[item.id] === true);
+    setSelectAll(allChecked);
+  }, [checkedItems, items]);
 
   function toggleSelectAll() {
     const next = !selectAll;
     setSelectAll(next);
-    setCart((prev) => prev.map((c) => ({ ...c, checked: next })));
+    const newChecked = {};
+    items.forEach((item) => {
+      newChecked[item.id] = next;
+    });
+    setCheckedItems(newChecked);
   }
 
   function toggleItemCheck(id) {
-    setCart((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, checked: !c.checked } : c))
-    );
+    setCheckedItems((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
   }
 
-  function increaseQuantity(id) {
-    setCart((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, quantity: c.quantity + 1 } : c))
-    );
+  function handleIncreaseQuantity(id) {
+    dispatch(increaseQuantity(id));
   }
 
-  function decreaseQuantity(id) {
-    setCart((prev) =>
-      prev.map((c) =>
-        c.id === id ? { ...c, quantity: Math.max(1, c.quantity - 1) } : c
-      )
-    );
+  function handleDecreaseQuantity(id) {
+    dispatch(decreaseQuantity(id));
   }
 
-  function removeItem(id) {
-    setCart((prev) => prev.filter((c) => c.id !== id));
+  function handleRemoveItem(id) {
+    dispatch(removeCartItem(id));
   }
 
-  const subtotal = cart.reduce(
-    (sum, c) => (c.checked ? sum + c.price * c.quantity : sum),
-    0
-  );
-  const shippingFee = subtotal > 0 ? 15 : 0;
-  const total = subtotal + shippingFee;
+  const selectedSubtotal = items.reduce((sum, item) => {
+    if (checkedItems[item.id]) {
+      const price = parseFloat(
+        item.product.discounted_price || item.product.initial_price
+      );
+      return sum + price * item.quantity;
+    }
+    return sum;
+  }, 0);
+
+  const selectedShippingFee = selectedSubtotal > 0 ? shippingFee : 0;
+  const selectedTotal = selectedSubtotal + selectedShippingFee;
   const [selectedSize, setSelectedSize] = useState("S");
 
   return createPortal(
@@ -191,29 +198,44 @@ function ShoppingCartModal({ open, onClose }) {
               />
               <span className="text-[#222] text-sm">Select All</span>
             </label>
-            {cart.length === 0 && (
+            {loading && (
+              <div className="text-center text-gray-500 py-6">
+                Loading cart...
+              </div>
+            )}
+            {!loading && items.length === 0 && (
               <div className="text-center text-gray-500 py-6">
                 Your cart is empty
               </div>
             )}
-            {cart.map((item) => (
-              <SmallProductComponentWithVolumeModificationandPrice
-                key={item.id}
-                checked={!!item.checked}
-                onCheck={() => toggleItemCheck(item.id)}
-                image={item.image}
-                badge={item.badge}
-                title={item.title}
-                price={item.price}
-                quantity={item.quantity}
-                onDecrease={() => decreaseQuantity(item.id)}
-                onIncrease={() => increaseQuantity(item.id)}
-                onRemove={() => removeItem(item.id)}
-              />
-            ))}
+            {!loading &&
+              items.map((item) => {
+                const imageUrl = item.product.logo
+                  ? `${BASE_URL}${item.product.logo}`
+                  : "/product-weightloss.png";
+                const price = parseFloat(
+                  item.product.discounted_price || item.product.initial_price
+                );
+
+                return (
+                  <SmallProductComponentWithVolumeModificationandPrice
+                    key={item.id}
+                    checked={!!checkedItems[item.id]}
+                    onCheck={() => toggleItemCheck(item.id)}
+                    image={imageUrl}
+                    badge={item.product.category || ""}
+                    title={item.product.name}
+                    price={price}
+                    quantity={item.quantity}
+                    onDecrease={() => handleDecreaseQuantity(item.id)}
+                    onIncrease={() => handleIncreaseQuantity(item.id)}
+                    onRemove={() => handleRemoveItem(item.id)}
+                  />
+                );
+              })}
           </div>
           <div className="px-6">
-            {total >= 1500 && (
+            {selectedTotal >= 1500 && (
               <div className="bg-white rounded-md border border-gray-200 p-4 mb-4">
                 <div className="text-sm text-gray-800 font-medium mb-2">
                   You received 1 free t-shirt for your $1500+ order. Please
@@ -231,15 +253,15 @@ function ShoppingCartModal({ open, onClose }) {
               <div className="font-semibold mb-2">Billing</div>
               <div className="flex justify-between text-sm mb-1">
                 <span>Subtotal</span>
-                <span>${subtotal}</span>
+                <span>${selectedSubtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-sm mb-1">
                 <span>Shipping Fee</span>
-                <span>${shippingFee}</span>
+                <span>${selectedShippingFee.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-base font-bold mb-1">
                 <span>Total</span>
-                <span>${total}</span>
+                <span>${selectedTotal.toFixed(2)}</span>
               </div>
               <div className="text-xs text-[#7b8ca3] mb-2">
                 Tax also included
@@ -289,6 +311,7 @@ function ShoppingCartModal({ open, onClose }) {
         <AddShippingAddressModal
           open={showAddressModal}
           onClose={() => setShowAddressModal(false)}
+          isSubscription={recurring}
         />
       )}
     </>,

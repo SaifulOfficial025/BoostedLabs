@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { FaFire } from "react-icons/fa";
 import ShoppingCartModal from "./ShoppingCartModal";
+import { addToCart, fetchCart } from "../Redux/Cart";
 
 function ProductCard({
   badge = {
@@ -22,8 +24,24 @@ function ProductCard({
   const [showCart, setShowCart] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const pathname = location?.pathname || "";
   const isMerch = pathname.startsWith("/merchandise");
+
+  const handleAddToCart = async () => {
+    if (productId !== undefined) {
+      const result = await dispatch(addToCart(productId));
+      if (result.type === "cart/addToCart/fulfilled") {
+        // Fetch updated cart data
+        await dispatch(fetchCart());
+        setShowCart(true);
+      }
+    } else {
+      // Fallback if no productId
+      if (onAddToCart) onAddToCart();
+      setShowCart(true);
+    }
+  };
 
   const base =
     import.meta && import.meta.env && import.meta.env.BASE_URL
@@ -103,8 +121,7 @@ function ProductCard({
             onClick={(e) => {
               // prevent parent click handlers
               e.stopPropagation();
-              onAddToCart();
-              setShowCart(true);
+              handleAddToCart();
             }}
           >
             Add To Cart

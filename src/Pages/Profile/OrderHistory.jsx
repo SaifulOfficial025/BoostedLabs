@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Noticebar from "../../Shared/Noticebar";
 import Header from "../../Shared/Header";
 import Footer from "../../Shared/Footer";
@@ -6,41 +7,76 @@ import ProductCard from "../../Shared/ProductCard";
 import ShareYourFeedbackModal from "../../Shared/ShareYourFeedbackModal";
 import { Link, useNavigate } from "react-router-dom";
 import { FaLongArrowAltLeft } from "react-icons/fa";
-
-const sampleOrders = [
-  { id: 1, status: "Active", price: 550 },
-  { id: 2, status: "Cancelled", price: 550 },
-  { id: 3, status: "Completed", price: 550 },
-  { id: 4, status: "Completed", price: 550 },
-];
+import {
+  fetchOrders,
+  confirmDelivery,
+  cancelOrder,
+  submitReview,
+} from "../../Redux/OrderHistory";
+import { BASE_URL } from "../../Redux/baseUrl";
 
 function OrderHistory() {
   const [filter, setFilter] = useState("All");
   const [feedbackOpen, setFeedbackOpen] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedOrderItem, setSelectedOrderItem] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const filtered = sampleOrders.filter((o) =>
-    filter === "All"
-      ? true
-      : filter === "Active"
-      ? o.status === "Active"
-      : filter === "Delivered"
-      ? o.status === "Completed"
-      : filter === "Cancelled"
-      ? o.status === "Cancelled"
-      : true
-  );
+  const { orders, loading, error } = useSelector((state) => state.orderHistory);
+
+  useEffect(() => {
+    dispatch(fetchOrders());
+  }, [dispatch]);
+
+  const handleConfirmDelivery = async (orderId) => {
+    await dispatch(confirmDelivery(orderId));
+  };
+
+  const handleCancelOrder = async (orderId) => {
+    await dispatch(cancelOrder(orderId));
+  };
+
+  const handleSubmitReview = async ({ rating, feedback }) => {
+    if (selectedOrderItem) {
+      await dispatch(
+        submitReview({
+          productId: selectedOrderItem.productId,
+          rating,
+          comment: feedback,
+        })
+      );
+      setFeedbackOpen(false);
+      setSelectedOrderItem(null);
+    }
+  };
+
+  // Map status from API to filter
+  const normalizeStatus = (status) => {
+    if (status === "Pending") return "Active";
+    if (status === "Delivered") return "Delivered";
+    if (status === "Cancelled") return "Cancelled";
+    return "Active";
+  };
+
+  const filtered = orders.filter((o) => {
+    const normalizedStatus = normalizeStatus(o.status);
+    if (filter === "All") return true;
+    if (filter === "Active") return normalizedStatus === "Active";
+    if (filter === "Delivered") return normalizedStatus === "Delivered";
+    if (filter === "Cancelled") return normalizedStatus === "Cancelled";
+    return true;
+  });
 
   const badgeFor = (status) => {
-    if (status === "Active")
+    const normalizedStatus = normalizeStatus(status);
+    if (normalizedStatus === "Active")
       return {
         icon: null,
         text: "Active",
         color: "bg-blue-100",
         textColor: "text-blue-700",
       };
-    if (status === "Cancelled")
+    if (normalizedStatus === "Cancelled")
       return {
         icon: null,
         text: "Cancelled",
@@ -88,60 +124,107 @@ function OrderHistory() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
-          {filtered.map((o) => (
-            <div key={o.id} className="">
-              <ProductCard
-                hideActions
-                badge={badgeFor(o.status)}
-                image={undefined}
-                title={"Retatrutide"}
-                description={
-                  "Next-generation weight loss support. Metabolic reset • Fat loss • Appetite control • 99% Purity • For Research Use Only"
-                }
-                price={o.price}
-                onViewDetails={() => navigate(`/shop/product-details/${o.id}`)}
-                onAddToCart={() => console.log("order again", o.id)}
-              />
-
-              <div className="mt-4">
-                {o.status === "Active" && (
-                  <button
-                    disabled
-                    className="w-full bg-gray-300 text-white py-2 rounded-lg"
-                  >
-                    Rate this product
-                  </button>
-                )}
-                {o.status === "Cancelled" && (
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => navigate(`/shop/product-details/${o.id}`)}
-                      className="flex-1 border border-gray-400 py-2 rounded-md"
-                    >
-                      View Details
-                    </button>
-                    <button
-                      onClick={() => console.log("order again", o.id)}
-                      className="flex-1 bg-black text-white py-2 rounded-md"
-                    >
-                      Order again
-                    </button>
-                  </div>
-                )}
-                {o.status === "Completed" && (
-                  <button
-                    onClick={() => {
-                      setSelectedOrder(o.id);
-                      setFeedbackOpen(true);
-                    }}
-                    className="w-full bg-black text-white py-2 rounded-lg"
-                  >
-                    Rate this product
-                  </button>
-                )}
-              </div>
+          {loading && (
+            <div className="col-span-full text-center py-12">
+              <p className="text-lg text-gray-600">Loading orders...</p>
             </div>
-          ))}
+          )}
+          {!loading && error && (
+            <div className="col-span-full text-center py-12">
+              <p className="text-lg text-red-600">Error: {error}</p>
+            </div>
+          )}
+          {!loading && !error && filtered.length === 0 && (
+            <div className="col-span-full text-center py-12">
+              <p className="text-lg text-gray-600">No orders found</p>
+            </div>
+          )}
+          {!loading &&
+            !error &&
+            filtered.map((order) => {
+              // Get first item for display (orders can have multiple items)
+              const firstItem = order.items && order.items[0];
+              if (!firstItem) return null;
+
+              const product = firstItem.product;
+              const imageUrl = product.logo
+                ? `${BASE_URL}${product.logo}`
+                : product.images && product.images.length > 0
+                ? product.images[0]
+                : undefined;
+              const normalizedStatus = normalizeStatus(order.status);
+
+              return (
+                <div key={order.id} className="">
+                  <ProductCard
+                    hideActions
+                    badge={badgeFor(order.status)}
+                    image={imageUrl}
+                    title={product.name}
+                    description={
+                      product.description || "No description available"
+                    }
+                    price={parseFloat(order.total_price)}
+                    onViewDetails={() =>
+                      navigate(`/shop/product-details/${product.id}`)
+                    }
+                    onAddToCart={() => console.log("order again", order.id)}
+                  />
+                  <div className="mt-4">
+                    {normalizedStatus === "Active" && (
+                      <div className="flex gap-3">
+                        <button
+                          onClick={() => handleConfirmDelivery(order.id)}
+                          className="flex-1 bg-black text-white py-2 rounded-md hover:bg-green-700 transition"
+                        >
+                          Mark as Delivered
+                        </button>
+                        <button
+                          onClick={() => handleCancelOrder(order.id)}
+                          className="flex-1 bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition"
+                        >
+                          Cancel Order
+                        </button>
+                      </div>
+                    )}
+                    {normalizedStatus === "Cancelled" && (
+                      <div className="flex gap-3">
+                        <button
+                          onClick={() =>
+                            navigate(`/shop/product-details/${product.id}`)
+                          }
+                          className="flex-1 border border-gray-400 py-2 rounded-md"
+                        >
+                          View Details
+                        </button>
+                        <button
+                          onClick={() => console.log("order again", order.id)}
+                          className="flex-1 bg-black text-white py-2 rounded-md"
+                        >
+                          Order again
+                        </button>
+                      </div>
+                    )}
+                    {normalizedStatus === "Delivered" && (
+                      <button
+                        onClick={() => {
+                          setSelectedOrderItem({
+                            orderId: order.id,
+                            productId: product.id,
+                            productName: product.name,
+                          });
+                          setFeedbackOpen(true);
+                        }}
+                        className="w-full bg-black text-white py-2 rounded-lg"
+                      >
+                        Rate this product
+                      </button>
+                    )}
+                  </div>
+
+                </div>
+              );
+            })}
         </div>
       </div>
 
@@ -151,16 +234,9 @@ function OrderHistory() {
         open={feedbackOpen}
         onClose={() => {
           setFeedbackOpen(false);
-          setSelectedOrder(null);
+          setSelectedOrderItem(null);
         }}
-        onSubmit={({ rating, feedback }) => {
-          // simple handler: log and close (replace with API call as needed)
-          console.log("feedback-submitted", {
-            orderId: selectedOrder,
-            rating,
-            feedback,
-          });
-        }}
+        onSubmit={handleSubmitReview}
       />
     </div>
   );

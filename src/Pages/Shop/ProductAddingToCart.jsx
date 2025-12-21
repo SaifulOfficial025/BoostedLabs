@@ -4,6 +4,8 @@ import { LuShoppingCart } from "react-icons/lu";
 import ShoppingCartModal from "../../Shared/ShoppingCartModal";
 
 function ProductAddingToCart({
+  product,
+  stats,
   image,
   title = "Retatrutide",
   rating = 4.5,
@@ -17,7 +19,20 @@ function ProductAddingToCart({
     import.meta && import.meta.env && import.meta.env.BASE_URL
       ? import.meta.env.BASE_URL
       : "/";
-  const productImage = image || `${base}dummyproduct.png`;
+
+  // Use product data from props, with fallbacks
+  const productImage =
+    product?.images?.[0] || product?.logo || image || `${base}dummyproduct.png`;
+  const productTitle = product?.name || title;
+  const productPrice = product?.discounted_price || price;
+  const productOldPrice = product?.initial_price || oldPrice;
+  const productBadge =
+    product?.type?.name?.toUpperCase() ||
+    product?.category?.toUpperCase() ||
+    badge;
+  const averageRating = stats?.average_rating || rating;
+  const totalReviews = stats?.total_reviews || reviews;
+
   const [qty, setQty] = useState(1);
   const [showCart, setShowCart] = useState(false);
 
@@ -29,15 +44,15 @@ function ProductAddingToCart({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start rounded-md">
         <div className="bg-white rounded-md border border-gray-200 shadow-sm">
           <div className="relative">
-            {badge && (
+            {productBadge && (
               <div className="absolute  bg-blue-100 text-blue-700 text-md px-2 py-1 rounded-tl-md rounded-br-md">
-                {badge}
+                {productBadge}
               </div>
             )}
             <div className="flex items-center justify-center p-6 bg-[#f8fafc] rounded-lg min-h-[320px] sm:min-h-[420px]">
               <img
                 src={productImage}
-                alt={title}
+                alt={productTitle}
                 className="object-contain max-h-80 sm:max-h-[360px]"
               />
             </div>
@@ -48,18 +63,23 @@ function ProductAddingToCart({
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-                {title}
+                {productTitle}
               </h1>
               <div className="flex items-center gap-3 mt-3">
                 <div className="flex items-center text-yellow-500">
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
-                  <FaStar className="text-gray-300" />
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar
+                      key={i}
+                      className={
+                        i < Math.floor(averageRating)
+                          ? "text-yellow-500"
+                          : "text-gray-300"
+                      }
+                    />
+                  ))}
                 </div>
                 <div className="text-sm text-gray-600">
-                  {rating} ({reviews} reviews)
+                  {averageRating} ({totalReviews} reviews)
                 </div>
               </div>
             </div>
@@ -92,10 +112,10 @@ function ProductAddingToCart({
           <div className="mt-6">
             <div className="flex items-baseline gap-4">
               <div className="text-2xl font-bold text-gray-900">
-                ${(price * qty).toFixed(2)}
+                ${(parseFloat(productPrice) * qty).toFixed(2)}
               </div>
               <div className="text-sm text-gray-400 line-through">
-                ${oldPrice.toFixed(2)}
+                ${parseFloat(productOldPrice).toFixed(2)}
               </div>
             </div>
           </div>

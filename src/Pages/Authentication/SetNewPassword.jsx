@@ -1,22 +1,75 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import { FaArrowCircleLeft } from "react-icons/fa";
 import { FiLock } from "react-icons/fi";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import Logo from "../../../public/BoostedLabLogo.svg";
+import { setNewPassword } from "../../Redux/ForgetPassword";
 
 function SetNewPassword() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [validationError, setValidationError] = useState("");
+  const [email, setEmail] = useState(() => {
+    try {
+      return localStorage.getItem("forgetPasswordEmail") || "";
+    } catch (e) {
+      return "";
+    }
+  });
+
+  const { loading, error, success, successMessage } = useSelector(
+    (state) => state.forgetPassword
+  );
+
+  // Navigate to sign in on success
+  useEffect(() => {
+    if (success) {
+      toast.success(successMessage || "Password reset successfully");
+      localStorage.removeItem("forgetPasswordEmail");
+      setTimeout(() => {
+        navigate("/signin");
+      }, 2000);
+    }
+  }, [success, successMessage, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: handle password reset logic
-    console.log("Set password:", password, confirmPassword);
+    setValidationError("");
+
+    // Validation
+    if (!email) {
+      setValidationError("Email not found. Please start the process again.");
+      return;
+    }
+    if (!password.trim()) {
+      setValidationError("Password is required");
+      return;
+    }
+    if (password.length < 6) {
+      setValidationError("Password must be at least 6 characters");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setValidationError("Passwords do not match");
+      return;
+    }
+
+    // Dispatch action
+    dispatch(
+      setNewPassword({
+        email,
+        new_password: password,
+        confirm_password: confirmPassword,
+      })
+    );
   };
 
   return (
@@ -41,6 +94,20 @@ function SetNewPassword() {
           </p>
         </div>
 
+        {error && (
+          <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+            {error.detail ||
+              error.new_password?.[0] ||
+              "Failed to reset password"}
+          </div>
+        )}
+
+        {validationError && (
+          <div className="mb-4 p-4 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded">
+            {validationError}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="bg-white flex flex-col gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -54,6 +121,8 @@ function SetNewPassword() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
                 className="bg-transparent outline-none flex-1 text-gray-700"
+                disabled={loading}
+                required
               />
               <button
                 type="button"
@@ -76,6 +145,8 @@ function SetNewPassword() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Password"
                 className="bg-transparent outline-none flex-1 text-gray-700"
+                disabled={loading}
+                required
               />
               <button
                 type="button"
@@ -90,14 +161,13 @@ function SetNewPassword() {
               </button>
             </div>
           </div>
-          <Link to="/signin">
-            <button
-              type="submit"
-              className="w-full bg-black text-white py-2 sm:py-3 rounded-lg font-semibold text-base sm:text-lg mt-2 mb-2 hover:bg-gray-900 transition"
-            >
-              Set password
-            </button>
-          </Link>
+          <button
+            type="submit"
+            className="w-full bg-black text-white py-2 sm:py-3 rounded-lg font-semibold text-base sm:text-lg mt-2 mb-2 hover:bg-gray-900 transition disabled:opacity-50"
+            disabled={loading}
+          >
+            {loading ? "Setting password..." : "Set password"}
+          </button>
         </form>
       </div>
     </div>

@@ -11,12 +11,13 @@ import FilteredProduct from "../Pages/Home/FilteredProduct";
 import SignIn from "../Pages/Authentication/SignIn";
 import SignUp from "../Pages/Authentication/SignUp";
 import ForgetPasswordEmail from "../Pages/Authentication/ForgetPasswordEmail";
-import ForgetPasswordVerification from "../Pages/Authentication/ForgetPasswordVerifyOTP";
+import RegisteringOTP from "../Pages/Authentication/ForgetPasswordVerifyOTP";
 import SetNewPassword from "../Pages/Authentication/SetNewPassword";
 import MerchandiseRootPage from "../Pages/MerchandiseRootPage";
 import OrderHistory from "../Pages/Profile/OrderHistory";
 import UsageRootPage from "../Pages/UsageGuide/RootPage";
 import ReconstituteRootPage from "../Pages/Reconstitute/RootPage";
+import ForgetPasswordOTP from "../Pages/Authentication/ForgetPasswordVerifyOTP";
 
 export const router = createBrowserRouter([
   {
@@ -72,8 +73,12 @@ export const router = createBrowserRouter([
         element: <ForgetPasswordEmail />,
       },
       {
-        path: "otp-verification",
-        element: <ForgetPasswordVerification />,
+        path: "registering-otp-verification",
+        element: <RegisteringOTP />,
+      },
+      {
+        path: "forget-password-otp",
+        element: <ForgetPasswordOTP />,
       },
       {
         path: "set-new-password",

@@ -1,8 +1,49 @@
 import React, { useEffect, useRef, useState } from "react";
 import ReviewCard from "../../Shared/ReviewCard";
+import { BASE_URL } from "../../Redux/baseUrl";
 
 function RealResult() {
-  const reviews = [
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch reviews from backend
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`${BASE_URL}/shop/home/`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch reviews");
+        }
+        const data = await response.json();
+        // Transform API reviews to match ReviewCard props
+        const transformedReviews = data.reviews.map((review) => ({
+          id: review.id,
+          name: `User ${review.user_name}`,
+          date: new Date(review.created_at).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          }),
+          rating: review.rating,
+          avatar: "",
+          review: review.comment,
+        }));
+        setReviews(transformedReviews);
+        setError(null);
+      } catch (err) {
+        setError(err.message);
+        setReviews([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReviews();
+  }, []);
+
+  const fallbackReviews = [
     {
       name: "Emma Robinson",
       date: "Nov 18, 2025",
@@ -53,7 +94,8 @@ function RealResult() {
     },
   ];
 
-  const total = reviews.length;
+  const displayedReviews = loading || error ? fallbackReviews : reviews;
+  const total = displayedReviews.length;
   const [visibleCount, setVisibleCount] = useState(3);
   const [index, setIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -127,7 +169,7 @@ function RealResult() {
             className="flex transition-transform duration-500 ease-in-out"
             style={{ transform: `translateX(-${percentShift}%)` }}
           >
-            {reviews.map((r, i) => (
+            {displayedReviews.map((r, i) => (
               <div
                 key={i}
                 className="px-3 py-2"

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaLongArrowAltRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 function Hero() {
   const [isMobileBg, setIsMobileBg] = useState(false);
@@ -40,9 +41,11 @@ function Hero() {
             &amp; cosmetic wellness.
           </p>
           <button className="mt-44 sm:mt-5 bg-black text-white  border-2  border-white px-4 sm:px-10 py-2 sm:py-4 rounded-xl font-normal text-sm sm:text-md w-fit mx-auto sm:mx-0 flex items-center gap-2 transition-all duration-300 relative group  hover:shadow-[0_0_16px_2px_rgba(0,0,0,0.25)]  hover:shadow-white ">
-            <span className="transition-all duration-500 group-hover:pr-6">
-              Shop Now
-            </span>
+            <Link to="/shop">
+              <span className="transition-all duration-500 group-hover:pr-6">
+                Shop Now
+              </span>
+            </Link>
             <span className="absolute right-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-2 transition-all duration-500 flex items-center">
               <FaLongArrowAltRight className="text-white text-xl sm:text-2xl" />
             </span>

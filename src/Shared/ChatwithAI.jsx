@@ -1,7 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { FaPaperPlane, FaPlus } from "react-icons/fa";
 import chatailogo from "../../public/chatwithailogo.png";
+import {
+  connectWebSocket,
+  disconnectWebSocket,
+  sendMessage as sendWSMessage,
+  clearMessages,
+} from "../Redux/Chat";
 
 function ChatBubble({ text, from = "bot" }) {
   const isUser = from === "user";
@@ -21,25 +28,31 @@ function ChatBubble({ text, from = "bot" }) {
 }
 
 function ChatwithAI({ open = false, onClose }) {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      from: "bot",
-      text: "ype and scrambled it to make a type specimen book. It has sured not only five centuries, but also",
-    },
-    { id: 2, from: "user", text: "ype and scrambl" },
-    {
-      id: 3,
-      from: "bot",
-      text: "ype and scrambled it to make a type specimen book. It has sured not only five centuries, but also",
-    },
-  ]);
   const [value, setValue] = useState("");
   const listRef = useRef(null);
+  const dispatch = useDispatch();
+
+  const { messages, connected, error, loading } = useSelector(
+    (state) => state.chat
+  );
 
   // animation mount/visible states so closing animates out
   const [isMounted, setIsMounted] = useState(open);
   const [isVisible, setIsVisible] = useState(false);
+
+  // Connect to WebSocket when chat opens
+  useEffect(() => {
+    if (open && !connected) {
+      dispatch(connectWebSocket());
+    }
+  }, [open, connected, dispatch]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      dispatch(disconnectWebSocket());
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     if (listRef.current) {
@@ -62,20 +75,15 @@ function ChatwithAI({ open = false, onClose }) {
   function handleSend(e) {
     e.preventDefault();
     if (!value.trim()) return;
-    const userMsg = { id: Date.now(), from: "user", text: value.trim() };
-    setMessages((m) => [...m, userMsg]);
-    setValue("");
 
-    setTimeout(() => {
-      setMessages((m) => [
-        ...m,
-        {
-          id: Date.now() + 1,
-          from: "bot",
-          text: "This is a preview reply. The AI can make mistakes. Check important info.",
-        },
-      ]);
-    }, 700);
+    if (!connected) {
+      console.error("WebSocket is not connected");
+      return;
+    }
+
+    // Send message through WebSocket
+    dispatch(sendWSMessage(value.trim()));
+    setValue("");
   }
 
   if (!isMounted) return null;
@@ -98,6 +106,12 @@ function ChatwithAI({ open = false, onClose }) {
             </div>
             <div className="flex-1">
               <div className="text-sm font-semibold">Chat with AI</div>
+              {connected && (
+                <div className="text-xs text-green-600">Connected</div>
+              )}
+              {!connected && (
+                <div className="text-xs text-gray-500">Connecting...</div>
+              )}
             </div>
             <button
               onClick={() => onClose && onClose()}
@@ -112,19 +126,44 @@ function ChatwithAI({ open = false, onClose }) {
             className="p-4 h-[60vh] sm:h-[360px] overflow-y-auto space-y-3 bg-white"
             ref={listRef}
           >
+            {messages.length === 0 && (
+              <div className="text-center text-gray-500 py-8">
+                <p className="text-sm">Start a conversation with AI</p>
+                <p className="text-xs mt-2">Ask about our peptide products!</p>
+              </div>
+            )}
             {messages.map((m) => (
               <ChatBubble key={m.id} from={m.from} text={m.text} />
             ))}
+            {loading && (
+              <div className="flex justify-start">
+                <div className="max-w-[80%] px-4 py-3 rounded-xl shadow-sm bg-gray-100 text-gray-800 rounded-bl-none">
+                  <div className="flex items-center gap-1">
+                    <div
+                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                      style={{ animationDelay: "0ms" }}
+                    ></div>
+                    <div
+                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                      style={{ animationDelay: "150ms" }}
+                    ></div>
+                    <div
+                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                      style={{ animationDelay: "300ms" }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            )}
+            {error && (
+              <div className="text-center text-red-500 text-xs py-2">
+                {error}
+              </div>
+            )}
           </div>
 
           <div className="px-4 py-3 border-t bg-white mb-10">
             <form onSubmit={handleSend} className="flex items-center gap-3">
-              <button
-                type="button"
-                className="p-2 rounded-md bg-white border border-gray-200"
-              >
-                <FaPlus />
-              </button>
               <input
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
@@ -133,7 +172,12 @@ function ChatwithAI({ open = false, onClose }) {
               />
               <button
                 type="submit"
-                className="ml-1 bg-black text-white p-2 rounded-lg flex items-center justify-center"
+                disabled={!connected}
+                className={`ml-1 p-2 rounded-lg flex items-center justify-center ${
+                  connected
+                    ? "bg-black text-white"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
               >
                 <FaPaperPlane />
               </button>

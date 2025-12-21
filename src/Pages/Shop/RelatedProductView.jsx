@@ -1,7 +1,7 @@
 import React from "react";
 import ProductCard from "../../Shared/ProductCard";
 
-function ProductRecentView() {
+function RelatedProductView() {
   const base =
     import.meta && import.meta.env && import.meta.env.BASE_URL
       ? import.meta.env.BASE_URL
@@ -65,7 +65,7 @@ function ProductRecentView() {
   return (
     <div className="max-w-7xl mx-auto mt-10 mb-16 py-10 px-4 sm:px-6">
       <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">
-        Recent View
+        Related Products
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
         {recentProducts.map((p) => (
@@ -85,4 +85,4 @@ function ProductRecentView() {
   );
 }
 
-export default ProductRecentView;
+export default RelatedProductView;

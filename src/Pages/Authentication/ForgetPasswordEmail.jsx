@@ -1,12 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { FiMail } from "react-icons/fi";
 import { FaArrowCircleLeft } from "react-icons/fa";
 import Logo from "../../../public/BoostedLabLogo.svg";
+import {
+  sendForgetPasswordEmail,
+  clearForgetPasswordError,
+} from "../../Redux/ForgetPassword";
 
 function ForgetPasswordEmail() {
   const [email, setEmail] = useState("");
+  const [validationError, setValidationError] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading, error, success, successMessage } = useSelector(
+    (state) => state.forgetPassword
+  );
+
+  // Navigate to OTP page on success
+  useEffect(() => {
+    if (success) {
+      // Store email in localStorage for next steps
+      localStorage.setItem("forgetPasswordEmail", email);
+      setTimeout(() => {
+        navigate("/forget-password-otp");
+      }, 1500);
+    }
+  }, [success, email, navigate]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setValidationError("");
+
+    // Validate email
+    if (!email.trim()) {
+      setValidationError("Email is required");
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setValidationError("Please enter a valid email address");
+      return;
+    }
+
+    // Dispatch action
+    dispatch(sendForgetPasswordEmail({ email }));
+  };
   return (
     <section>
       <div className="flex items-start justify-center bg-white py-5 font-sans mt-10 px-4 sm:px-6">
@@ -49,7 +89,7 @@ function ForgetPasswordEmail() {
               />
             </div>
           </div>
-          <Link to="/otp-verification">
+          <Link to="/forget-password-otp">
             <button
               type="submit"
               className="w-full bg-black text-white py-3 rounded-lg font-semibold text-lg mt-2 mb-2 hover:bg-gray-900 transition"

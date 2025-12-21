@@ -1,9 +1,31 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { FaHome } from "react-icons/fa";
 import { PiBagBold } from "react-icons/pi";
+import { checkout, clearCheckoutData } from "../Redux/Cart";
 
-function AddShippingAddressModal({ open, onClose }) {
+function AddShippingAddressModal({ open, onClose, isSubscription = false }) {
   const modalRef = useRef(null);
+  const dispatch = useDispatch();
+  const { checkoutData, loading } = useSelector((state) => state.cart);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    address: "",
+    type: "home",
+  });
+
+  // Handle checkout success
+  useEffect(() => {
+    if (checkoutData && checkoutData.checkout_url) {
+      // Open checkout URL in a new tab
+      window.open(checkoutData.checkout_url, "_blank");
+      // Clear checkout data and close modal
+      dispatch(clearCheckoutData());
+      onClose();
+    }
+  }, [checkoutData, dispatch, onClose]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -30,6 +52,31 @@ function AddShippingAddressModal({ open, onClose }) {
     };
   }, [open]);
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleTypeChange = (type) => {
+    setFormData((prev) => ({
+      ...prev,
+      type,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(
+      checkout({
+        address: formData,
+        isSubscription,
+      })
+    );
+  };
+
   if (!open) return null;
 
   return (
@@ -43,13 +90,16 @@ function AddShippingAddressModal({ open, onClose }) {
         <div className="text-xl font-bold mb-6 text-gray-900">
           Add Shipping Address
         </div>
-        <form className="space-y-5">
+        <form className="space-y-5" onSubmit={handleSubmit}>
           <div>
             <label className="block text-sm font-semibold mb-1 text-gray-700">
               Full Name<span className="text-red-500">*</span>
             </label>
             <input
               type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
               className="w-full border border-gray-300 rounded-lg px-4 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Jubayer Ahmad"
               required
@@ -61,6 +111,9 @@ function AddShippingAddressModal({ open, onClose }) {
             </label>
             <input
               type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
               className="w-full border border-gray-300 rounded-lg px-4 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="+880 1757976790"
               required
@@ -73,6 +126,9 @@ function AddShippingAddressModal({ open, onClose }) {
             <div className="flex gap-2">
               <input
                 type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleInputChange}
                 className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Aqua Tower, Mohakhali, Dhaka"
                 required
@@ -103,14 +159,24 @@ function AddShippingAddressModal({ open, onClose }) {
             <div className="flex gap-2 mt-2">
               <button
                 type="button"
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg font-semibold bg-gray-100 text-gray-900 focus:bg-black focus:text-white focus:border-black transition"
+                onClick={() => handleTypeChange("home")}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg font-semibold transition ${
+                  formData.type === "home"
+                    ? "bg-black text-white border-black"
+                    : "bg-gray-100 text-gray-900"
+                }`}
               >
                 <FaHome className="w-5 h-5" />
                 Home
               </button>
               <button
                 type="button"
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg font-semibold bg-white text-gray-900 focus:bg-black focus:text-white focus:border-black transition"
+                onClick={() => handleTypeChange("office")}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg font-semibold transition ${
+                  formData.type === "office"
+                    ? "bg-black text-white border-black"
+                    : "bg-white text-gray-900"
+                }`}
               >
                 <PiBagBold className="w-5 h-5" />
                 Office
@@ -119,9 +185,10 @@ function AddShippingAddressModal({ open, onClose }) {
           </div>
           <button
             type="submit"
-            className="w-full bg-black text-white py-2 rounded-lg font-semibold text-base mt-2 mb-2 transition-all hover:shadow-[0_0_16px_2px_rgba(0,0,0,0.25)]"
+            disabled={loading}
+            className="w-full bg-black text-white py-2 rounded-lg font-semibold text-base mt-2 mb-2 transition-all hover:shadow-[0_0_16px_2px_rgba(0,0,0,0.25)] disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Save
+            {loading ? "Processing..." : "Go for Payment"}
           </button>
         </form>
         <button

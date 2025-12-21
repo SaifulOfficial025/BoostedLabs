@@ -2,17 +2,17 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { verifyPasswordCode } from "../../Redux/ForgetPassword";
+import { verifyEmail } from "../../Redux/Auth";
 import { Link } from "react-router-dom";
 import { FaArrowCircleLeft } from "react-icons/fa";
 import Logo from "../../../public/BoostedLabLogo.svg";
 
-function ForgetPasswordVerifyOTP() {
+function RegisteringOTP() {
   const navigate = useNavigate();
   const [values, setValues] = useState(["", "", "", ""]);
   const [email, setEmail] = useState(() => {
     try {
-      return localStorage.getItem("forgetPasswordEmail") || "";
+      return localStorage.getItem("otpEmail") || "";
     } catch (e) {
       return "";
     }
@@ -20,9 +20,7 @@ function ForgetPasswordVerifyOTP() {
   const inputsRef = useRef([]);
   const [secondsLeft, setSecondsLeft] = useState(120);
   const dispatch = useDispatch();
-  const { loading, error, success } = useSelector(
-    (s) => s.forgetPassword || { loading: false }
-  );
+  const { loading } = useSelector((s) => s.auth || { loading: false });
 
   useEffect(() => {
     // start countdown
@@ -81,23 +79,13 @@ function ForgetPasswordVerifyOTP() {
       toast.error("Please enter your email to verify.");
       return;
     }
-    if (code.length !== 4) {
-      toast.error("Please enter the complete 4-digit code.");
-      return;
-    }
     (async () => {
       try {
-        const result = await dispatch(
-          verifyPasswordCode({ email, code })
-        ).unwrap();
+        const result = await dispatch(verifyEmail({ email, code })).unwrap();
         const msg =
-          result.message || result.detail || "Code verified successfully";
+          result.message || result.detail || "Email verified successfully";
         toast.success(String(msg));
-        // Store email for next step
-        localStorage.setItem("forgetPasswordEmail", email);
-        setTimeout(() => {
-          navigate("/set-new-password");
-        }, 1500);
+        navigate("/signin");
       } catch (err) {
         const msg =
           (err && (err.detail || err.message)) ||
@@ -192,4 +180,4 @@ function ForgetPasswordVerifyOTP() {
   );
 }
 
-export default ForgetPasswordVerifyOTP;
+export default RegisteringOTP;

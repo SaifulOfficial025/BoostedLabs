@@ -1,62 +1,77 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ProductCard from "../../Shared/ProductCard";
-import dummyproduct from "../../../public/dummyproduct.png";
+import { fetchHomeProducts } from "../../Redux/ChooseYourBoostedProduct";
 
 function ChooseYourBoostedProduct() {
-  const products = [
-    {
-      badge: {
-        icon: "",
-        text: "WEIGHT LOSS",
-        color: "bg-[#bee3f8]",
-        textColor: "text-[#549ad8]",
-      },
-      image: dummyproduct,
-      title: "Retatrutide",
-      description:
-        "Next-generation weight loss support. Metabolic reset • Fat loss • Appetite control • 99% Purity • For Research Use Only",
-      price: 550,
+  const dispatch = useDispatch();
+  const { products, loading, error } = useSelector(
+    (state) => state.chooseYourBoostedProduct
+  );
+
+  useEffect(() => {
+    dispatch(fetchHomeProducts());
+  }, [dispatch]);
+
+  // Map API data to ProductCard props
+  const transformedProducts = products.map((product) => ({
+    id: product.id,
+    badge: {
+      icon: "",
+      text:
+        product.type?.name?.toUpperCase() ||
+        product.category?.toUpperCase() ||
+        "PRODUCT",
+      color: "bg-[#bee3f8]",
+      textColor: "text-[#549ad8]",
     },
-    {
-      badge: {
-        icon: "",
-        text: "COSMETIC",
-        color: "bg-[#bee3f8]",
-        textColor: "text-[#549ad8]",
-      },
-      image: dummyproduct,
-      title: "Retatrutide",
-      description:
-        "Next-generation weight loss support. Metabolic reset • Fat loss • Appetite control • 99% Purity • For Research Use Only",
-      price: 550,
-    },
-    {
-      badge: {
-        icon: "",
-        text: "PERFORMANCE",
-        color: "bg-[#bee3f8]",
-        textColor: "text-[#549ad8]",
-      },
-      image: dummyproduct,
-      title: "Retatrutide",
-      description:
-        "Next-generation weight loss support. Metabolic reset • Fat loss • Appetite control • 99% Purity • For Research Use Only",
-      price: 550,
-    },
-    {
-      badge: {
-        icon: "",
-        text: "ENERGY",
-        color: "bg-[#bee3f8]",
-        textColor: "text-[#549ad8]",
-      },
-      image: dummyproduct,
-      title: "Retatrutide",
-      description:
-        "Next-generation weight loss support. Metabolic reset • Fat loss • Appetite control • 99% Purity • For Research Use Only",
-      price: 550,
-    },
-  ];
+    image:
+      product.images && product.images.length > 0
+        ? product.images[0]
+        : product.logo || "https://via.placeholder.com/300x300?text=No+Image",
+    title: product.name,
+    description: product.description || "No description available",
+    price: product.discounted_price || product.initial_price || 0,
+  }));
+
+  if (loading) {
+    return (
+      <section className="max-w-[1536px] mx-auto py-10 font-sans mt-16">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-black mb-2">
+            CHOOSE YOUR BOOSTED PRODUCTS
+          </h2>
+          <p className="text-base text-[#222]">
+            Recovery. Glow. Performance. Our boosted stacks help you reach your
+            best.
+          </p>
+        </div>
+        <div className="flex justify-center items-center py-12">
+          <p className="text-lg text-gray-600">Loading products...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="max-w-[1536px] mx-auto py-10 font-sans mt-16">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-black mb-2">
+            CHOOSE YOUR BOOSTED PRODUCTS
+          </h2>
+          <p className="text-base text-[#222]">
+            Recovery. Glow. Performance. Our boosted stacks help you reach your
+            best.
+          </p>
+        </div>
+        <div className="flex justify-center items-center py-12">
+          <p className="text-lg text-red-600">Error: {error}</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="max-w-[1536px] mx-auto py-10 font-sans mt-16">
       <div className="text-center mb-8">
@@ -69,10 +84,10 @@ function ChooseYourBoostedProduct() {
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 justify-center">
-        {products.map((product, idx) => (
+        {transformedProducts.map((product) => (
           <ProductCard
-            key={idx}
-            productId={idx}
+            key={product.id}
+            productId={product.id}
             badge={product.badge}
             image={product.image}
             title={product.title}
