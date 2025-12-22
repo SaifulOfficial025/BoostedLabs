@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiMail, FiLock } from "react-icons/fi";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
@@ -8,6 +8,7 @@ import GoogleImg from "../../../public/google.png";
 import Logo from "../../../public/BoostedLabLogo.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../Redux/Auth";
+import { socialLogin } from "../../Redux/SocialLogin";
 import { toast } from "react-toastify";
 
 function SignIn() {
@@ -18,6 +19,61 @@ function SignIn() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.auth || { loading: false });
+  const { loading: socialLoading } = useSelector(
+    (state) => state.socialLogin || { loading: false }
+  );
+
+  // Initialize Google Sign-In
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+
+    script.onload = () => {
+      if (window.google) {
+        window.google.accounts.id.initialize({
+          client_id: "YOUR_GOOGLE_CLIENT_ID", // Replace with your actual Google Client ID
+          callback: handleGoogleResponse,
+        });
+      }
+    };
+
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
+
+  const handleGoogleResponse = async (response) => {
+    if (response.credential) {
+      try {
+        // Decode JWT to get user email
+        const base64Url = response.credential.split(".")[1];
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split("")
+            .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+            .join("")
+        );
+        const decoded = JSON.parse(jsonPayload);
+        const userEmail = decoded.email;
+
+        // Send email to backend social login
+        const result = await dispatch(
+          socialLogin({ email: userEmail })
+        ).unwrap();
+
+        navigate("/");
+      } catch (err) {
+        console.error("Google sign-in error:", err);
+        toast.error("Google sign-in failed");
+      }
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,6 +94,21 @@ function SignIn() {
       toast.error(String(msg));
     }
   };
+
+  const handleGoogleClick = () => {
+    if (window.google) {
+      window.google.accounts.id.renderButton(
+        document.getElementById("google-signin-btn"),
+        {
+          type: "standard",
+          size: "large",
+          theme: "outline",
+          text: "signin_with",
+        }
+      );
+    }
+  };
+
   return (
     <section>
       <div className="flex items-start justify-center bg-white py-5 font-sans mt-10 px-4 sm:px-6">
@@ -140,11 +211,16 @@ function SignIn() {
           </div>
           <button
             type="button"
-            className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-2 bg-white hover:bg-gray-50 transition"
+            onClick={handleGoogleClick}
+            disabled={socialLoading}
+            className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-2 bg-white hover:bg-gray-50 transition disabled:opacity-60"
           >
             <img src={GoogleImg} alt="Google" className="w-5 h-5" />
-            <span className="font-medium text-gray-700">Google</span>
+            <span className="font-medium text-gray-700">
+              {socialLoading ? "Signing in..." : "Google"}
+            </span>
           </button>
+          <div id="google-signin-btn" className="hidden"></div>
         </form>
         <p className="text-gray-500 text-xs sm:text-sm mt-8 text-center mb-10">
           Don't have an account yet?{" "}

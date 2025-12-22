@@ -87,7 +87,7 @@ function Products() {
             title={p.title}
             description={p.description}
             price={p.price}
-            onViewDetails={() => navigate(`/shop/product-details/${p.id}`)}
+            onViewDetails={() => navigate(`/product-details/${p.id}`)}
             onAddToCart={() => console.log("add", p.id)}
           />
         ))}

@@ -1,6 +1,39 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { BASE_URL } from "./baseUrl";
 
 const WS_BASE_URL = "ws://10.10.13.61:8002";
+
+// Fetch chat history
+export const fetchChatHistory = createAsyncThunk(
+  "chat/fetchHistory",
+  async (_, { rejectWithValue }) => {
+    try {
+      const authData = localStorage.getItem("auth");
+      const token = authData ? JSON.parse(authData).access : null;
+
+      if (!token) {
+        return rejectWithValue("No access token found");
+      }
+
+      const response = await fetch(`${BASE_URL}/chat/history/`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        return rejectWithValue("Failed to fetch chat history");
+      }
+
+      const data = await response.json();
+      return data.messages || [];
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 const initialState = {
   messages: [],
@@ -8,6 +41,7 @@ const initialState = {
   error: null,
   websocket: null,
   loading: false,
+  historyLoading: false,
 };
 
 const chatSlice = createSlice({
@@ -36,6 +70,28 @@ const chatSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchChatHistory.pending, (state) => {
+        state.historyLoading = true;
+      })
+      .addCase(fetchChatHistory.fulfilled, (state, action) => {
+        state.historyLoading = false;
+        // Transform API response to component format
+        // API returns messages in reverse chronological order (newest first)
+        // We need to reverse and format them
+        const formattedMessages = action.payload.reverse().map((msg) => ({
+          id: msg.id,
+          from: msg.sender_type === "user" ? "user" : "bot",
+          text: msg.message,
+          sender: msg.sender_name,
+        }));
+        state.messages = formattedMessages;
+      })
+      .addCase(fetchChatHistory.rejected, (state) => {
+        state.historyLoading = false;
+      });
   },
 });
 

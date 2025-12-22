@@ -69,7 +69,7 @@ function ProductCard({
           onClick={() => {
             // navigate to product details when clicking image area
             if (productId !== undefined)
-              navigate(`/shop/product-details/${productId}`);
+              navigate(`/product-details/${productId}`);
             if (onViewDetails) onViewDetails();
           }}
         >
@@ -90,7 +90,7 @@ function ProductCard({
           className="text-lg sm:text-xl font-bold text-[#222] mb-1 cursor-pointer text-center sm:text-left"
           onClick={() => {
             if (productId !== undefined)
-              navigate(`/shop/product-details/${productId}`);
+              navigate(`/product-details/${productId}`);
             if (onViewDetails) onViewDetails();
           }}
         >
@@ -111,7 +111,7 @@ function ProductCard({
               e.stopPropagation();
               if (onViewDetails) onViewDetails();
               if (productId !== undefined)
-                navigate(`/shop/product-details/${productId}`);
+                navigate(`/product-details/${productId}`);
             }}
           >
             View Details

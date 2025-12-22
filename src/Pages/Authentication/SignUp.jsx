@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiMail, FiLock } from "react-icons/fi";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
@@ -7,6 +7,7 @@ import GoogleImg from "../../../public/google.png";
 import Logo from "../../../public/BoostedLabLogo.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../../Redux/Auth";
+import { socialLogin } from "../../Redux/SocialLogin";
 import { toast } from "react-toastify";
 
 function SignUp() {
@@ -20,9 +21,70 @@ function SignUp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading } = useSelector((s) => s.auth || { loading: false });
+  const { loading: socialLoading } = useSelector(
+    (s) => s.socialLogin || { loading: false }
+  );
+
+  // Initialize Google Sign-In
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+
+    script.onload = () => {
+      if (window.google) {
+        window.google.accounts.id.initialize({
+          client_id: "YOUR_GOOGLE_CLIENT_ID", // Replace with your actual Google Client ID
+          callback: handleGoogleResponse,
+        });
+      }
+    };
+
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
+
+  const handleGoogleResponse = async (response) => {
+    if (response.credential) {
+      try {
+        // Decode JWT to get user email
+        const base64Url = response.credential.split(".")[1];
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split("")
+            .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+            .join("")
+        );
+        const decoded = JSON.parse(jsonPayload);
+        const userEmail = decoded.email;
+
+        // Send email to backend social login
+        const result = await dispatch(
+          socialLogin({ email: userEmail })
+        ).unwrap();
+
+        toast.success("Account created with Google successfully");
+        navigate("/");
+      } catch (err) {
+        console.error("Google sign-up error:", err);
+        toast.error("Google sign-up failed");
+      }
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Save email BEFORE registration to ensure it's available
+    console.log("Saving email to localStorage:", email);
+    localStorage.setItem("otpEmail", email);
+
     try {
       const result = await dispatch(
         register({
@@ -36,10 +98,8 @@ function SignUp() {
       const successMsg =
         result.message || result.detail || "Registration successful";
       toast.success(String(successMsg));
-      // save email for OTP verification page, then navigate
-      try {
-        localStorage.setItem("otpEmail", email);
-      } catch (e) {}
+
+      // Navigate to OTP page
       navigate("/registering-otp-verification");
     } catch (err) {
       const msg =
@@ -47,6 +107,20 @@ function SignUp() {
         JSON.stringify(err) ||
         "Registration failed";
       toast.error(String(msg));
+    }
+  };
+
+  const handleGoogleClick = () => {
+    if (window.google) {
+      window.google.accounts.id.renderButton(
+        document.getElementById("google-signup-btn"),
+        {
+          type: "standard",
+          size: "large",
+          theme: "outline",
+          text: "signup_with",
+        }
+      );
     }
   };
 
@@ -192,11 +266,16 @@ function SignUp() {
 
           <button
             type="button"
-            className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-2 bg-white hover:bg-gray-50 transition"
+            onClick={handleGoogleClick}
+            disabled={socialLoading}
+            className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-2 bg-white hover:bg-gray-50 transition disabled:opacity-60"
           >
             <img src={GoogleImg} alt="Google" className="w-5 h-5" />
-            <span className="font-medium text-gray-700">Google</span>
+            <span className="font-medium text-gray-700">
+              {socialLoading ? "Signing up..." : "Google"}
+            </span>
           </button>
+          <div id="google-signup-btn" className="hidden"></div>
         </form>
 
         <p className="text-gray-500 text-xs sm:text-sm mt-8 text-center mb-10">

@@ -8,6 +8,7 @@ import {
   disconnectWebSocket,
   sendMessage as sendWSMessage,
   clearMessages,
+  fetchChatHistory,
 } from "../Redux/Chat";
 
 function ChatBubble({ text, from = "bot" }) {
@@ -32,7 +33,7 @@ function ChatwithAI({ open = false, onClose }) {
   const listRef = useRef(null);
   const dispatch = useDispatch();
 
-  const { messages, connected, error, loading } = useSelector(
+  const { messages, connected, error, loading, historyLoading } = useSelector(
     (state) => state.chat
   );
 
@@ -46,6 +47,13 @@ function ChatwithAI({ open = false, onClose }) {
       dispatch(connectWebSocket());
     }
   }, [open, connected, dispatch]);
+
+  // Fetch chat history when chat opens
+  useEffect(() => {
+    if (open) {
+      dispatch(fetchChatHistory());
+    }
+  }, [open, dispatch]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -126,7 +134,12 @@ function ChatwithAI({ open = false, onClose }) {
             className="p-4 h-[60vh] sm:h-[360px] overflow-y-auto space-y-3 bg-white"
             ref={listRef}
           >
-            {messages.length === 0 && (
+            {historyLoading && (
+              <div className="text-center text-gray-500 py-8">
+                <p className="text-sm">Loading chat history...</p>
+              </div>
+            )}
+            {!historyLoading && messages.length === 0 && (
               <div className="text-center text-gray-500 py-8">
                 <p className="text-sm">Start a conversation with AI</p>
                 <p className="text-xs mt-2">Ask about our peptide products!</p>

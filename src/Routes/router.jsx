@@ -11,7 +11,7 @@ import FilteredProduct from "../Pages/Home/FilteredProduct";
 import SignIn from "../Pages/Authentication/SignIn";
 import SignUp from "../Pages/Authentication/SignUp";
 import ForgetPasswordEmail from "../Pages/Authentication/ForgetPasswordEmail";
-import RegisteringOTP from "../Pages/Authentication/ForgetPasswordVerifyOTP";
+import RegisteringOTP from "../Pages/Authentication/RegisteringOTP";
 import SetNewPassword from "../Pages/Authentication/SetNewPassword";
 import MerchandiseRootPage from "../Pages/MerchandiseRootPage";
 import OrderHistory from "../Pages/Profile/OrderHistory";
@@ -41,7 +41,7 @@ export const router = createBrowserRouter([
         element: <MerchandiseRootPage />,
       },
       {
-        path: "shop/product-details/:productId",
+        path: "product-details/:productId",
         element: <RootPageProductDetails />,
       },
       {

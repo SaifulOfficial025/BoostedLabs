@@ -166,7 +166,7 @@ function OrderHistory() {
                     }
                     price={parseFloat(order.total_price)}
                     onViewDetails={() =>
-                      navigate(`/shop/product-details/${product.id}`)
+                      navigate(`/product-details/${product.id}`)
                     }
                     onAddToCart={() => console.log("order again", order.id)}
                   />
@@ -191,7 +191,7 @@ function OrderHistory() {
                       <div className="flex gap-3">
                         <button
                           onClick={() =>
-                            navigate(`/shop/product-details/${product.id}`)
+                            navigate(`/product-details/${product.id}`)
                           }
                           className="flex-1 border border-gray-400 py-2 rounded-md"
                         >
@@ -221,7 +221,6 @@ function OrderHistory() {
                       </button>
                     )}
                   </div>
-
                 </div>
               );
             })}

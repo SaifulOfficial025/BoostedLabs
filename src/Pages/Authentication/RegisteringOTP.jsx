@@ -12,8 +12,11 @@ function RegisteringOTP() {
   const [values, setValues] = useState(["", "", "", ""]);
   const [email, setEmail] = useState(() => {
     try {
-      return localStorage.getItem("otpEmail") || "";
+      const storedEmail = localStorage.getItem("otpEmail") || "";
+      console.log("Retrieved email from localStorage:", storedEmail);
+      return storedEmail;
     } catch (e) {
+      console.error("Error retrieving email:", e);
       return "";
     }
   });
@@ -75,10 +78,20 @@ function RegisteringOTP() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const code = values.join("");
+
+    console.log("Submitting with email:", email, "code:", code);
+
     if (!email) {
-      toast.error("Please enter your email to verify.");
+      toast.error("Email not found. Please sign up again.");
+      navigate("/signup");
       return;
     }
+
+    if (code.length !== 4) {
+      toast.error("Please enter the complete 4-digit code.");
+      return;
+    }
+
     (async () => {
       try {
         const result = await dispatch(verifyEmail({ email, code })).unwrap();
@@ -116,9 +129,17 @@ function RegisteringOTP() {
         <div className="text-center">
           <img src={Logo} alt="logo" className="w-16 sm:w-20 mx-auto mb-6" />
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">Verify code</h2>
-          <p className="text-gray-500 mb-8">
+          <p className="text-gray-500 mb-2">
             An authentication code has been sent to your email.
           </p>
+          {email && (
+            <p className="text-sm text-gray-600 mb-6 font-medium">{email}</p>
+          )}
+          {!email && (
+            <p className="text-sm text-red-600 mb-6">
+              Email not found. Please sign up again.
+            </p>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white">

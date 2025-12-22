@@ -12,6 +12,8 @@ import forgetPasswordReducer from "./ForgetPassword";
 import cartReducer from "./Cart";
 import orderHistoryReducer from "./OrderHistory";
 import chatReducer from "./Chat";
+import recurringProductReducer from "./RecurringProduct";
+import socialLoginReducer from "./SocialLogin";
 
 export const store = configureStore({
   reducer: {
@@ -28,5 +30,7 @@ export const store = configureStore({
     cart: cartReducer,
     orderHistory: orderHistoryReducer,
     chat: chatReducer,
+    recurringProduct: recurringProductReducer,
+    socialLogin: socialLoginReducer,
   },
 });
