@@ -82,7 +82,6 @@ function Profile() {
   if (loading && !profileData) {
     return (
       <section>
-        <Noticebar />
         <Headers />
         <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 md:px-8 font-sans mt-20">
           <div className="flex items-center justify-center h-64">
@@ -96,7 +95,6 @@ function Profile() {
 
   return (
     <section>
-      <Noticebar />
       <Headers />
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 md:px-8 font-sans mt-20">
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-9">

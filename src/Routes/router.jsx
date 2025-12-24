@@ -18,6 +18,7 @@ import OrderHistory from "../Pages/Profile/OrderHistory";
 import UsageRootPage from "../Pages/UsageGuide/RootPage";
 import ReconstituteRootPage from "../Pages/Reconstitute/RootPage";
 import ForgetPasswordOTP from "../Pages/Authentication/ForgetPasswordVerifyOTP";
+import SizeandColor from "../Pages/Shop/SizeandColor";
 
 export const router = createBrowserRouter([
   {
@@ -86,6 +87,10 @@ export const router = createBrowserRouter([
       },
       { path: "usage-guide", element: <UsageRootPage /> },
       { path: "reconstitute", element: <ReconstituteRootPage /> },
+      {
+        path: "test",
+        element: <SizeandColor />,
+      },
     ],
   },
 ]);

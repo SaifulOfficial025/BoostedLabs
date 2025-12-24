@@ -7,7 +7,6 @@ import TabswithInfo from "./TabswithInfo";
 function RootPage() {
   return (
     <div>
-      <Noticebar />
       <Header />
       <TabswithInfo />
       <Footer />

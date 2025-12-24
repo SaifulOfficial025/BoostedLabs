@@ -93,7 +93,6 @@ function OrderHistory() {
 
   return (
     <div>
-      <Noticebar />
       <Header />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 mt-10 font-sans mb-16">
@@ -123,7 +122,7 @@ function OrderHistory() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10 items-start">
           {loading && (
             <div className="col-span-full text-center py-12">
               <p className="text-lg text-gray-600">Loading orders...</p>
@@ -155,7 +154,7 @@ function OrderHistory() {
               const normalizedStatus = normalizeStatus(order.status);
 
               return (
-                <div key={order.id} className="">
+                <div key={order.id} className="w-full">
                   <ProductCard
                     hideActions
                     badge={badgeFor(order.status)}

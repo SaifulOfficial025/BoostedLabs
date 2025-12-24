@@ -8,6 +8,9 @@ function SmallProductComponentWithVolumeModificationandPrice({
   title = "Product Name",
   price = 0,
   quantity = 1,
+  selectedSize = null,
+  selectedColorHex = null,
+  selectedColorName = null,
   onDecrease = () => {},
   onIncrease = () => {},
   onRemove = () => {},
@@ -78,6 +81,23 @@ function SmallProductComponentWithVolumeModificationandPrice({
           <div className="font-semibold text-base text-gray-900 mb-1 truncate">
             {title}
           </div>
+          {(selectedSize || selectedColorName) && (
+            <div className="flex items-center justify-center sm:justify-start gap-2 text-xs text-gray-600 mb-1">
+              {selectedSize && <span>Size: {selectedSize}</span>}
+              {selectedSize && selectedColorName && <span>•</span>}
+              {selectedColorName && (
+                <span className="flex items-center gap-1">
+                  Color: {selectedColorName}
+                  {selectedColorHex && (
+                    <span
+                      className="inline-block w-3 h-3 rounded-full border border-gray-300"
+                      style={{ backgroundColor: selectedColorHex }}
+                    />
+                  )}
+                </span>
+              )}
+            </div>
+          )}
           <div className="flex items-center justify-center sm:justify-start gap-2 mt-2">
             <button
               className="w-9 h-9 sm:w-8 sm:h-8 border border-gray-400 rounded flex items-center justify-center text-lg font-bold bg-gray-50 hover:bg-gray-100 transition"

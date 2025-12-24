@@ -13,7 +13,6 @@ import ReadytoStart from "./ReadytoStart";
 function RootPage() {
   return (
     <div>
-      <Noticebar />
       <Header />
       <Hero />
       <Steps />

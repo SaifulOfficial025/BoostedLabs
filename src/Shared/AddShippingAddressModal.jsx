@@ -4,7 +4,12 @@ import { FaHome } from "react-icons/fa";
 import { PiBagBold } from "react-icons/pi";
 import { checkout, clearCheckoutData } from "../Redux/Cart";
 
-function AddShippingAddressModal({ open, onClose, isSubscription = false }) {
+function AddShippingAddressModal({
+  open,
+  onClose,
+  isSubscription = false,
+  freeTshirtSize = null,
+}) {
   const modalRef = useRef(null);
   const dispatch = useDispatch();
   const { checkoutData, loading } = useSelector((state) => state.cart);
@@ -73,6 +78,7 @@ function AddShippingAddressModal({ open, onClose, isSubscription = false }) {
       checkout({
         address: formData,
         isSubscription,
+        freeTshirtSize,
       })
     );
   };

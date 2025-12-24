@@ -13,6 +13,11 @@ import ChangePasswordModal from "../Pages/Profile/ChangePasswordModal";
 import RecurringProductModal from "../Pages/Profile/RecurringProductModal";
 import { BASE_URL } from "../Redux/baseUrl";
 
+import { FaXTwitter } from "react-icons/fa6";
+import { FaFacebookF } from "react-icons/fa";
+import { FaLinkedinIn } from "react-icons/fa";
+import { FaInstagram } from "react-icons/fa";
+
 function Header() {
   const [showFilter, setShowFilter] = useState(false);
   const [showAccount, setShowAccount] = useState(false);
@@ -53,7 +58,10 @@ function Header() {
   // Resolve user image URL (prepend BASE_URL if path is relative)
   const userImageSrc = (() => {
     try {
-      const img = storedAuth && storedAuth.data && storedAuth.data.image;
+      // Check regular login (data object) first, then social login (user object)
+      const img =
+        (storedAuth && storedAuth.data && storedAuth.data.image) ||
+        (storedAuth && storedAuth.user && storedAuth.user.image);
       if (!img) return null;
       return img.startsWith("http") ? img : `${BASE_URL}${img}`;
     } catch (e) {
@@ -105,17 +113,73 @@ function Header() {
   return (
     <>
       <div
-        className="w-full flex items-center justify-between px-2 sm:px-4 md:px-16 py-2 md:py-4 left-0 z-50 font-sans sticky top-[53px] sm:top-[44px] md:top-[48px] bg-black/35 sm:mt-10 "
+        className="w-full bg-black flex items-center justify-between px-2 sm:px-4 md:px-8 lg:px-32 py-1.5 sm:py-2 md:py-3 text-white text-xs sm:text-sm md:text-md font-normal fixed top-0 left-0 z-40"
+        style={{ minHeight: "32px" }}
+      >
+        <section className="max-w-[1536px] mx-auto flex items-center w-full relative">
+          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+            <span className="hidden sm:inline text-[10px] sm:text-xs md:text-sm">
+              Follow Us On:
+            </span>
+            <span className="sm:hidden text-[9px]">Follow:</span>
+            <a
+              href="#"
+              className="hover:text-gray-400 transition-all"
+              aria-label="Twitter"
+            >
+              <span className="bg-white rounded-full flex items-center justify-center w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7">
+                <FaXTwitter className="text-black text-[8px] sm:text-[12px] md:text-[15px]" />
+              </span>
+            </a>
+            <a
+              href="#"
+              className="hover:text-gray-400 transition-all"
+              aria-label="Facebook"
+            >
+              <span className="bg-white rounded-full flex items-center justify-center w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7">
+                <FaFacebookF className="text-black text-[8px] sm:text-[12px] md:text-[15px]" />
+              </span>
+            </a>
+            <a
+              href="#"
+              className="hover:text-gray-400 transition-all"
+              aria-label="LinkedIn"
+            >
+              <span className="bg-white rounded-full flex items-center justify-center w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7">
+                <FaLinkedinIn className="text-black text-[8px] sm:text-[12px] md:text-[15px]" />
+              </span>
+            </a>
+            <a
+              href="#"
+              className="hover:text-gray-400 transition-all"
+              aria-label="Instagram"
+            >
+              <span className="bg-white rounded-full flex items-center justify-center w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7">
+                <FaInstagram className="text-black text-[8px] sm:text-[12px] md:text-[15px]" />
+              </span>
+            </a>
+          </div>
+          <div className="flex-1 flex justify-end px-1 sm:px-2 min-w-0 overflow-hidden">
+            <span className="text-white text-[8px] sm:text-xs md:text-sm lg:text-base text-right truncate">
+              FREE Shipping in Australia When Order Above $200
+              {/* & Get a FREE
+                T-shirt with any order over $1500. */}
+            </span>
+          </div>
+        </section>
+      </div>
+      <div
+        className="w-full flex items-center justify-between px-2 sm:px-4 md:px-16 py-2 md:py-4 left-0 z-50 font-sans sticky top-[32px] sm:top-[44px] md:top-[48px] bg-black/35 "
         style={{ backdropFilter: "blur(10px)", minHeight: "56px" }}
       >
         <section className="max-w-[1536px] mx-auto flex items-center w-full relative">
           {/* Logo */}
-          <div className="flex items-center">
+          <div className="flex items-center flex-shrink-0">
             <Link to="/">
               <img
                 src={Logo}
                 alt="Logo"
-                className="w-10 h-10 sm:w-12 sm:h-12 md:w-15 md:h-15 object-contain"
+                className="w-8 h-8 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-15 lg:h-15 object-contain"
                 style={{
                   filter:
                     "drop-shadow(0 0 2px white) drop-shadow(0 0 6px white)",
@@ -126,22 +190,22 @@ function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden text-white p-2"
+            className="xl:hidden text-white p-2 ml-2 touch-manipulation active:scale-95 transition-transform"
             onClick={() => setShowMobileMenu(!showMobileMenu)}
             aria-label="Toggle menu"
           >
             {showMobileMenu ? (
-              <IoClose className="w-6 h-6" />
+              <IoClose className="w-5 h-5 sm:w-6 sm:h-6" />
             ) : (
-              <HiMenuAlt3 className="w-6 h-6" />
+              <HiMenuAlt3 className="w-5 h-5 sm:w-6 sm:h-6" />
             )}
           </button>
 
           {/* Navigation - Desktop */}
-          <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2">
+          <nav className="hidden xl:flex items-center gap-4 2xl:gap-8 absolute left-1/2 transform -translate-x-1/2">
             <Link
               to="/"
-              className={`text-white ${
+              className={`text-white text-sm 2xl:text-base ${
                 isHome ? "font-bold border-b-2 border-white pb-1" : ""
               }`}
             >
@@ -149,7 +213,7 @@ function Header() {
             </Link>
             <Link
               to="/shop"
-              className={`text-white ${
+              className={`text-white text-sm 2xl:text-base ${
                 isShop ? "font-bold border-b-2 border-white pb-1" : ""
               }`}
             >
@@ -158,7 +222,7 @@ function Header() {
 
             <Link
               to="/merchandise"
-              className={`text-white ${
+              className={`text-white text-sm 2xl:text-base ${
                 isMerchandise ? "font-bold border-b-2 border-white pb-1" : ""
               }`}
             >
@@ -167,7 +231,7 @@ function Header() {
 
             <Link
               to="/usage-guide"
-              className={`text-white ${
+              className={`text-white text-sm 2xl:text-base ${
                 isUsageGuide ? "font-bold border-b-2 border-white pb-1" : ""
               }`}
             >
@@ -176,7 +240,7 @@ function Header() {
 
             <Link
               to="/reconstitute"
-              className={`text-white ${
+              className={`text-white text-sm 2xl:text-base ${
                 isReconstitute ? "font-bold border-b-2 border-white pb-1" : ""
               }`}
             >
@@ -185,7 +249,7 @@ function Header() {
 
             <Link
               to="/about"
-              className={`text-white ${
+              className={`text-white text-sm 2xl:text-base ${
                 isAbout ? "font-bold border-b-2 border-white pb-1" : ""
               }`}
             >
@@ -193,11 +257,15 @@ function Header() {
             </Link>
           </nav>
           {/* Search, Cart, Account - Desktop */}
-          <div className="hidden lg:flex items-center gap-1 sm:gap-2 md:gap-4 ml-auto">
+          <div className="hidden xl:flex items-center gap-2 2xl:gap-4 ml-auto">
             {/* Search Bar */}
             <div
-              className="flex items-center bg-white rounded-full px-3 md:px-5 py-1.5 md:py-2 shadow-md relative border border-white"
-              style={{ background: "transparent", minWidth: "150px" }}
+              className="flex items-center bg-white rounded-full px-3 2xl:px-5 py-1.5 2xl:py-2 shadow-md relative border border-white"
+              style={{
+                background: "transparent",
+                minWidth: "120px",
+                maxWidth: "200px",
+              }}
               ref={filterRef}
             >
               <svg
@@ -215,7 +283,7 @@ function Header() {
               <input
                 type="text"
                 placeholder="Search..."
-                className="bg-transparent outline-none text-white text-sm md:text-md placeholder-white flex-1"
+                className="bg-transparent outline-none text-white text-xs 2xl:text-sm placeholder-white flex-1"
               />
               <img
                 src={filtericon}
@@ -312,7 +380,7 @@ function Header() {
               onClose={() => setShowCartModal(false)}
             />
             {/* Account - show profile if logged in */}
-            {storedAuth && storedAuth.data ? (
+            {storedAuth && (storedAuth.data || storedAuth.user) ? (
               <div className="relative" ref={accountRef}>
                 <button
                   onClick={() => setShowAccount((s) => !s)}
@@ -328,7 +396,10 @@ function Header() {
                     <IoPersonOutline className="w-5 h-5" />
                   )}
                   <span className="hidden sm:inline">
-                    {storedAuth.data.first_name || storedAuth.data.email}
+                    {storedAuth.data?.first_name ||
+                      storedAuth.user?.first_name ||
+                      storedAuth.data?.email ||
+                      storedAuth.user?.email}
                   </span>
                 </button>
                 {showAccount && (
@@ -395,17 +466,18 @@ function Header() {
 
           {/* Cart Icon - Mobile Only */}
           <button
-            className="lg:hidden text-white p-2 absolute right-12"
+            className="xl:hidden text-white p-2 ml-auto mr-2 touch-manipulation active:scale-95 transition-transform"
             onClick={handleCartClick}
             aria-label="Open shopping cart"
           >
             <svg
-              width="20"
-              height="20"
+              width="18"
+              height="18"
               fill="none"
               stroke="#fff"
               strokeWidth="2"
               viewBox="0 0 24 24"
+              className="sm:w-5 sm:h-5"
             >
               <circle cx="9" cy="21" r="1" />
               <circle cx="20" cy="21" r="1" />
@@ -417,11 +489,11 @@ function Header() {
 
       {/* Mobile Menu */}
       {showMobileMenu && (
-        <div className="lg:hidden fixed top-[88px] sm:top-[96px] left-0 right-0 bg-black/95 backdrop-blur-lg z-40 border-t border-gray-700">
-          <nav className="flex flex-col p-4">
+        <div className="xl:hidden fixed top-[88px] sm:top-[96px] left-0 right-0 bg-black/95 backdrop-blur-lg z-40 border-t border-gray-700 max-h-[calc(100vh-88px)] sm:max-h-[calc(100vh-96px)] overflow-y-auto">
+          <nav className="flex flex-col p-3 sm:p-4">
             <Link
               to="/"
-              className={`text-white py-3 px-4 rounded ${
+              className={`text-white py-2.5 px-3 sm:py-3 sm:px-4 rounded text-sm sm:text-base touch-manipulation ${
                 isHome ? "font-bold bg-white/10" : ""
               }`}
               onClick={() => setShowMobileMenu(false)}
@@ -430,7 +502,7 @@ function Header() {
             </Link>
             <Link
               to="/shop"
-              className={`text-white py-3 px-4 rounded ${
+              className={`text-white py-2.5 px-3 sm:py-3 sm:px-4 rounded text-sm sm:text-base touch-manipulation ${
                 isShop ? "font-bold bg-white/10" : ""
               }`}
               onClick={() => setShowMobileMenu(false)}
@@ -439,7 +511,7 @@ function Header() {
             </Link>
             <Link
               to="/merchandise"
-              className={`text-white py-3 px-4 rounded ${
+              className={`text-white py-2.5 px-3 sm:py-3 sm:px-4 rounded text-sm sm:text-base touch-manipulation ${
                 isMerchandise ? "font-bold bg-white/10" : ""
               }`}
               onClick={() => setShowMobileMenu(false)}
@@ -449,7 +521,7 @@ function Header() {
 
             <Link
               to="/usage-guide"
-              className={`text-white py-3 px-4 rounded ${
+              className={`text-white py-2.5 px-3 sm:py-3 sm:px-4 rounded text-sm sm:text-base touch-manipulation ${
                 isUsageGuide ? "font-bold bg-white/10" : ""
               }`}
               onClick={() => setShowMobileMenu(false)}
@@ -459,7 +531,7 @@ function Header() {
 
             <Link
               to="/reconstitute"
-              className={`text-white py-3 px-4 rounded ${
+              className={`text-white py-2.5 px-3 sm:py-3 sm:px-4 rounded text-sm sm:text-base touch-manipulation ${
                 isReconstitute ? "font-bold bg-white/10" : ""
               }`}
               onClick={() => setShowMobileMenu(false)}
@@ -469,7 +541,7 @@ function Header() {
 
             <Link
               to="/about"
-              className={`text-white py-3 px-4 rounded ${
+              className={`text-white py-2.5 px-3 sm:py-3 sm:px-4 rounded text-sm sm:text-base touch-manipulation ${
                 isAbout ? "font-bold bg-white/10" : ""
               }`}
               onClick={() => setShowMobileMenu(false)}
@@ -478,16 +550,16 @@ function Header() {
             </Link>
 
             {/* Search Bar - Mobile */}
-            <div className="mt-4 mb-2">
-              <div className="flex items-center bg-transparent rounded-full px-4 py-2 border border-white">
+            <div className="mt-3 mb-2 sm:mt-4">
+              <div className="flex items-center bg-transparent rounded-full px-3 py-2 sm:px-4 border border-white">
                 <svg
-                  width="16"
-                  height="16"
+                  width="14"
+                  height="14"
                   fill="none"
                   stroke="#fff"
                   strokeWidth="2"
                   viewBox="0 0 24 24"
-                  className="mr-2"
+                  className="mr-2 flex-shrink-0 sm:w-4 sm:h-4"
                 >
                   <circle cx="11" cy="11" r="8" />
                   <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -495,89 +567,89 @@ function Header() {
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="bg-transparent outline-none text-white text-sm placeholder-white flex-1"
+                  className="bg-transparent outline-none text-white text-xs sm:text-sm placeholder-white flex-1 min-w-0"
                 />
                 <img
                   src={filtericon}
                   alt="Filter"
-                  className="w-4 cursor-pointer"
+                  className="w-3.5 sm:w-4 cursor-pointer flex-shrink-0 touch-manipulation"
                   onClick={handleFilterClick}
                 />
               </div>
               {showFilter && (
                 <div
                   ref={mobileFilterRef}
-                  className="mt-2 bg-[#f6fafd] border border-gray-400 rounded-xl shadow-lg py-4 px-6 flex flex-col gap-4 z-50"
+                  className="mt-2 bg-[#f6fafd] border border-gray-400 rounded-xl shadow-lg py-3 px-4 sm:py-4 sm:px-6 flex flex-col gap-3 sm:gap-4 z-50"
                 >
                   <Link
                     to="/shop/filtered-products/weight-loss"
-                    className="hover:bg-gray-200 rounded px-2 transition-colors"
+                    className="hover:bg-gray-200 rounded px-2 py-1 transition-colors touch-manipulation"
                     onClick={() => {
                       setShowMobileMenu(false);
                       setShowFilter(false);
                     }}
                   >
-                    <span className="text-lg text-[#64748b]">
+                    <span className="text-sm sm:text-lg text-[#64748b]">
                       Boosted Weight loss
                     </span>
                   </Link>
                   <Link
                     to="/shop/filtered-products/cosmetic"
-                    className="hover:bg-gray-200 rounded px-2 transition-colors"
+                    className="hover:bg-gray-200 rounded px-2 py-1 transition-colors touch-manipulation"
                     onClick={() => {
                       setShowMobileMenu(false);
                       setShowFilter(false);
                     }}
                   >
-                    <span className="text-lg text-[#64748b]">
+                    <span className="text-sm sm:text-lg text-[#64748b]">
                       Boosted Cosmetic
                     </span>
                   </Link>
                   <Link
                     to="/shop/filtered-products/performance"
-                    className="hover:bg-gray-200 rounded px-2 transition-colors"
+                    className="hover:bg-gray-200 rounded px-2 py-1 transition-colors touch-manipulation"
                     onClick={() => {
                       setShowMobileMenu(false);
                       setShowFilter(false);
                     }}
                   >
-                    <span className="text-lg text-[#64748b]">
+                    <span className="text-sm sm:text-lg text-[#64748b]">
                       Boosted Performance
                     </span>
                   </Link>
                   <Link
                     to="/shop/filtered-products/energy"
-                    className="hover:bg-gray-200 rounded px-2 transition-colors"
+                    className="hover:bg-gray-200 rounded px-2 py-1 transition-colors touch-manipulation"
                     onClick={() => {
                       setShowMobileMenu(false);
                       setShowFilter(false);
                     }}
                   >
-                    <span className="text-lg text-[#64748b]">
+                    <span className="text-sm sm:text-lg text-[#64748b]">
                       Boosted Energy
                     </span>
                   </Link>
                   <Link
                     to="/shop/filtered-products/metabolic"
-                    className="hover:bg-gray-200 rounded px-2 transition-colors"
+                    className="hover:bg-gray-200 rounded px-2 py-1 transition-colors touch-manipulation"
                     onClick={() => {
                       setShowMobileMenu(false);
                       setShowFilter(false);
                     }}
                   >
-                    <span className="text-lg text-[#64748b]">
+                    <span className="text-sm sm:text-lg text-[#64748b]">
                       Boosted Metabolic
                     </span>
                   </Link>
                   <Link
                     to="/shop/filtered-products/healing"
-                    className="hover:bg-gray-200 rounded px-2 transition-colors"
+                    className="hover:bg-gray-200 rounded px-2 py-1 transition-colors touch-manipulation"
                     onClick={() => {
                       setShowMobileMenu(false);
                       setShowFilter(false);
                     }}
                   >
-                    <span className="text-lg text-[#64748b]">
+                    <span className="text-sm sm:text-lg text-[#64748b]">
                       Boosted Healing
                     </span>
                   </Link>
@@ -586,32 +658,35 @@ function Header() {
             </div>
 
             {/* My Account - Mobile */}
-            {storedAuth && storedAuth.data ? (
-              <div className="px-4 py-3 border-t border-gray-700">
-                <div className="flex items-center gap-3">
+            {storedAuth && (storedAuth.data || storedAuth.user) ? (
+              <div className="px-3 py-2.5 sm:px-4 sm:py-3 border-t border-gray-700">
+                <div className="flex items-center gap-2 sm:gap-3">
                   {userImageSrc ? (
                     <img
                       src={userImageSrc}
                       alt="avatar"
-                      className="w-10 h-10 rounded-full object-cover"
+                      className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover flex-shrink-0"
                     />
                   ) : (
-                    <IoPersonOutline className="w-10 h-10" />
+                    <IoPersonOutline className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0" />
                   )}
-                  <div>
-                    <div className="text-white font-medium">
-                      {storedAuth.data.first_name || storedAuth.data.email}
+                  <div className="min-w-0 flex-1">
+                    <div className="text-white font-medium text-sm sm:text-base truncate">
+                      {storedAuth.data?.first_name ||
+                        storedAuth.user?.first_name ||
+                        storedAuth.data?.email ||
+                        storedAuth.user?.email}
                     </div>
-                    <div className="text-gray-300 text-sm">
+                    <div className="text-gray-300 text-xs sm:text-sm truncate">
                       View and manage your account
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 flex flex-col gap-2">
+                <div className="mt-3 sm:mt-4 flex flex-col gap-1.5 sm:gap-2">
                   <Link
                     to="/profile"
                     onClick={() => setShowMobileMenu(false)}
-                    className="text-white"
+                    className="text-white py-1.5 px-2 rounded hover:bg-white/10 transition-colors text-sm sm:text-base touch-manipulation"
                   >
                     View Profile
                   </Link>
@@ -621,7 +696,7 @@ function Header() {
                       setShowMobileMenu(false);
                       setShowChangePassword(true);
                     }}
-                    className="text-white text-left"
+                    className="text-white text-left py-1.5 px-2 rounded hover:bg-white/10 transition-colors text-sm sm:text-base touch-manipulation"
                   >
                     Change Password
                   </button>
@@ -631,14 +706,14 @@ function Header() {
                       setShowMobileMenu(false);
                       setShowRecurring(true);
                     }}
-                    className="text-white text-left"
+                    className="text-white text-left py-1.5 px-2 rounded hover:bg-white/10 transition-colors text-sm sm:text-base touch-manipulation"
                   >
                     Recurring Product List
                   </button>
                   <Link
                     to="/order-history"
                     onClick={() => setShowMobileMenu(false)}
-                    className="text-white"
+                    className="text-white py-1.5 px-2 rounded hover:bg-white/10 transition-colors text-sm sm:text-base touch-manipulation"
                   >
                     Order History
                   </Link>
@@ -656,7 +731,7 @@ function Header() {
                       setStoredAuth(null);
                       navigate("/signin");
                     }}
-                    className="text-left text-white"
+                    className="text-left text-white py-1.5 px-2 rounded hover:bg-white/10 transition-colors text-sm sm:text-base touch-manipulation"
                   >
                     Logout
                   </button>
@@ -664,8 +739,8 @@ function Header() {
               </div>
             ) : (
               <Link to="/signin" onClick={() => setShowMobileMenu(false)}>
-                <button className="w-full flex items-center justify-center bg-white text-black px-4 py-3 rounded-lg text-sm font-medium gap-2 mt-2">
-                  <IoPersonOutline className="w-5 h-5" />
+                <button className="w-full flex items-center justify-center bg-white text-black px-3 py-2.5 sm:px-4 sm:py-3 rounded-lg text-xs sm:text-sm font-medium gap-2 mt-2 touch-manipulation active:scale-95 transition-transform">
+                  <IoPersonOutline className="w-4 h-4 sm:w-5 sm:h-5" />
                   My Account
                 </button>
               </Link>

@@ -11,7 +11,6 @@ import WhyBoostedLab from "./WhyBoostedLab";
 const Home = () => {
   return (
     <div>
-      <Noticebar />
       <Header />
       <Hero />
       <ChooseYourBoostedProduct />

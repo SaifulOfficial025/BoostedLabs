@@ -40,8 +40,10 @@ function FilteredProduct() {
   // Helper function to get image URL
   const getImageUrl = (product) => {
     if (product.images && product.images.length > 0) {
-      const imagePath = product.images[0];
-      return imagePath.startsWith("http")
+      const imageObj = product.images[0];
+      const imagePath =
+        typeof imageObj === "string" ? imageObj : imageObj.image;
+      return imagePath && imagePath.startsWith("http")
         ? imagePath
         : `${BASE_URL}${imagePath}`;
     }
@@ -50,7 +52,7 @@ function FilteredProduct() {
         ? product.logo
         : `${BASE_URL}${product.logo}`;
     }
-    return "/public/dummyproduct.png";
+    return "/dummyproduct.png";
   };
 
   // Transform API response to ProductCard format
@@ -72,7 +74,6 @@ function FilteredProduct() {
   if (loading) {
     return (
       <section className="font-sans">
-        <Noticebar />
         <Header />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-6 lg:px-12 py-8 sm:py-12 mt-12 sm:mt-24">
           <div className="flex items-center justify-center h-64">
@@ -86,7 +87,6 @@ function FilteredProduct() {
 
   return (
     <section className="font-sans">
-      <Noticebar />
       <Header />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-6 lg:px-12 py-8 sm:py-12 mt-12 sm:mt-24">
         <h2 className="text-xl sm:text-2xl font-bold mb-8">

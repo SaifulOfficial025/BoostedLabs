@@ -77,7 +77,6 @@ function WhatarePeptides() {
 
   return (
     <section>
-      <Noticebar />
       <Header />
 
       <nav className="mt-44 ml-44 text-sm text-gray-500 mb-4 bg-[#f8fafc] py-2 w-40">

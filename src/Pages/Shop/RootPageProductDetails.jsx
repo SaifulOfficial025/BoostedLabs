@@ -28,7 +28,6 @@ function RootPageProductDetails() {
   if (loading) {
     return (
       <div className="font-sans">
-        <Noticebar />
         <Header />
         <div className="max-w-7xl mx-auto py-12 text-center">
           <p className="text-lg text-gray-600">Loading product details...</p>
@@ -41,7 +40,6 @@ function RootPageProductDetails() {
   if (error) {
     return (
       <div className="font-sans">
-        <Noticebar />
         <Header />
         <div className="max-w-7xl mx-auto py-12 text-center">
           <p className="text-lg text-red-600">Error: {error}</p>
@@ -53,14 +51,13 @@ function RootPageProductDetails() {
 
   return (
     <div className="font-sans">
-      <Noticebar />
       <Header />
       <ProductAddingToCart product={product} stats={stats} />
       <ProductDetailsText product={product} />
       <ProductCertification />
       <Disclaimer />
       <ProductRatings product={product} stats={stats} />
-      <RelatedProductView />
+      <RelatedProductView relatedProducts={product?.related_products || []} />
       <Footer />
     </div>
   );

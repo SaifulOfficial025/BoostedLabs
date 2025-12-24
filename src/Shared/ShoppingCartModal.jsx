@@ -17,9 +17,14 @@ function ShoppingCartModal({ open, onClose }) {
   const dispatch = useDispatch();
   const [showAddressModal, setShowAddressModal] = useState(false);
 
-  const { items, subtotal, shippingFee, total, loading } = useSelector(
-    (state) => state.cart
-  );
+  const {
+    items,
+    subtotal,
+    shippingFee,
+    total,
+    loading,
+    eligibleForFreeTshirt,
+  } = useSelector((state) => state.cart);
 
   const [selectAll, setSelectAll] = useState(false);
   const [recurring, setRecurring] = useState(false);
@@ -227,6 +232,9 @@ function ShoppingCartModal({ open, onClose }) {
                     title={item.product.name}
                     price={price}
                     quantity={item.quantity}
+                    selectedSize={item.selected_size}
+                    selectedColorHex={item.selected_color_hex}
+                    selectedColorName={item.selected_color_name}
                     onDecrease={() => handleDecreaseQuantity(item.id)}
                     onIncrease={() => handleIncreaseQuantity(item.id)}
                     onRemove={() => handleRemoveItem(item.id)}
@@ -235,7 +243,7 @@ function ShoppingCartModal({ open, onClose }) {
               })}
           </div>
           <div className="px-6">
-            {selectedTotal >= 1500 && (
+            {eligibleForFreeTshirt && (
               <div className="bg-white rounded-md border border-gray-200 p-4 mb-4">
                 <div className="text-sm text-gray-800 font-medium mb-2">
                   You received 1 free t-shirt for your $1500+ order. Please
@@ -312,6 +320,7 @@ function ShoppingCartModal({ open, onClose }) {
           open={showAddressModal}
           onClose={() => setShowAddressModal(false)}
           isSubscription={recurring}
+          freeTshirtSize={eligibleForFreeTshirt ? selectedSize : null}
         />
       )}
     </>,

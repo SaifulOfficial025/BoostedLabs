@@ -2,6 +2,14 @@ import React, { useState } from "react";
 import { FaStar, FaShareAlt } from "react-icons/fa";
 import { LuShoppingCart } from "react-icons/lu";
 import ShoppingCartModal from "../../Shared/ShoppingCartModal";
+import SizeandColor from "./SizeandColor";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addToCart,
+  increaseQuantity,
+  decreaseQuantity,
+} from "../../Redux/Cart";
+import { BASE_URL } from "../../Redux/baseUrl";
 
 function ProductAddingToCart({
   product,
@@ -20,9 +28,29 @@ function ProductAddingToCart({
       ? import.meta.env.BASE_URL
       : "/";
 
+  // Get all images (logo + product images)
+  const allImages = [
+    product?.logo ? { id: 0, image: product.logo, isLogo: true } : null,
+    ...(product?.images || []),
+  ].filter(Boolean);
+
+  // Initialize the main image URL
+  const initialImageUrl = product?.logo
+    ? product.logo.startsWith("http")
+      ? product.logo
+      : `${BASE_URL}${product.logo}`
+    : null;
+
+  // State for selected image
+  const [selectedImageUrl, setSelectedImageUrl] = useState(initialImageUrl);
+
   // Use product data from props, with fallbacks
   const productImage =
-    product?.images?.[0] || product?.logo || image || `${base}dummyproduct.png`;
+    selectedImageUrl ||
+    product?.logo ||
+    product?.images?.[0]?.image ||
+    image ||
+    `${base}dummyproduct.png`;
   const productTitle = product?.name || title;
   const productPrice = product?.discounted_price || price;
   const productOldPrice = product?.initial_price || oldPrice;
@@ -33,11 +61,73 @@ function ProductAddingToCart({
   const averageRating = stats?.average_rating || rating;
   const totalReviews = stats?.total_reviews || reviews;
 
-  const [qty, setQty] = useState(1);
+  const dispatch = useDispatch();
+  const { items: cartItems } = useSelector((state) => state.cart);
   const [showCart, setShowCart] = useState(false);
+  const [cartItemId, setCartItemId] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
 
-  const decrease = () => setQty((q) => Math.max(1, q - 1));
-  const increase = () => setQty((q) => q + 1);
+  // Find cart item for this product
+  const cartItem = cartItems.find(
+    (item) => item.product && product && item.product.id === product.id
+  );
+  const qty = cartItem ? cartItem.quantity : 1;
+  // Keep cartItemId in sync with cart
+  React.useEffect(() => {
+    if (cartItem && cartItem.id !== cartItemId) {
+      setCartItemId(cartItem.id);
+    }
+  }, [cartItem, cartItemId]);
+
+  // Add to cart handler
+  const handleAddToCart = async () => {
+    if (!product?.id) return;
+
+    // For merchandise, validate size and color selection if they are available
+    if (product?.category === "Merchandise") {
+      if (product?.available_sizes?.length > 0 && !selectedSize) {
+        // Size is available but not selected
+        alert("Please select a size");
+        return;
+      }
+      if (product?.available_colors?.length > 0 && !selectedColor) {
+        // Color is available but not selected
+        alert("Please select a color");
+        return;
+      }
+    }
+
+    try {
+      // Find the selected color name if color is selected
+      let colorName = null;
+      if (selectedColor && product?.available_colors) {
+        const colorObj = product.available_colors.find(
+          (c) => c.hex === selectedColor
+        );
+        colorName = colorObj?.name || null;
+      }
+
+      await dispatch(
+        addToCart({
+          productId: product.id,
+          quantity: qty,
+          size: selectedSize,
+          color_hex: selectedColor,
+          color_name: colorName,
+        })
+      ).unwrap();
+      setShowCart(true);
+    } catch (e) {}
+  };
+
+  // Quantity handlers (only after added to cart)
+  const handleIncrease = () => {
+    if (cartItemId) dispatch(increaseQuantity(cartItemId));
+  };
+  const handleDecrease = () => {
+    if (cartItemId && qty > 1) dispatch(decreaseQuantity(cartItemId));
+  };
 
   return (
     <div className="max-w-7xl mx-auto py-10 mt-14 font-sans px-4 sm:px-6">
@@ -49,13 +139,52 @@ function ProductAddingToCart({
                 {productBadge}
               </div>
             )}
-            <div className="flex items-center justify-center p-6 bg-[#f8fafc] rounded-lg min-h-[320px] sm:min-h-[420px]">
+            <div className="flex items-center justify-center p-4 bg-[#f8fafc] rounded-lg min-h-[400px] sm:min-h-[600px]">
               <img
                 src={productImage}
                 alt={productTitle}
-                className="object-contain max-h-80 sm:max-h-[360px]"
+                className="object-contain w-full h-full max-w-full max-h-full"
               />
             </div>
+
+            {/* Photo Grid */}
+            {allImages.length > 1 && (
+              <div className="px-4 py-4 ">
+                <div className="grid grid-cols-4 gap-2">
+                  {allImages.map((img, idx) => {
+                    const imgSrc = img.image.startsWith("http")
+                      ? img.image
+                      : `${BASE_URL}${img.image}`;
+                    const isSelected = selectedImageUrl === imgSrc;
+
+                    return (
+                      <button
+                        key={`${img.id}-${idx}`}
+                        onClick={() => setSelectedImageUrl(imgSrc)}
+                        className={`aspect-square rounded-lg border-2 p-1 bg-white flex items-center justify-center transition-all hover:border-gray-400 ${
+                          isSelected
+                            ? "border-blue-500 shadow-md"
+                            : "border-gray-200"
+                        }`}
+                        title={img.isLogo ? "Main Logo" : `Image ${idx}`}
+                      >
+                        <img
+                          src={imgSrc}
+                          alt={`Product ${idx}`}
+                          className="object-contain max-w-full max-h-full"
+                          onError={(e) => {
+                            const fallback = `${base}dummyproduct.png`;
+                            if (e.currentTarget.src !== fallback) {
+                              e.currentTarget.src = fallback;
+                            }
+                          }}
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -88,12 +217,25 @@ function ProductAddingToCart({
             </button>
           </div>
 
-          <div className="mt-6 flex items-center gap-4">
-            <span className="text-sm">Quantity:</span>
+          {/* Only show size and color for Merchandise */}
+          {product?.category === "Merchandise" && (
+            <div>
+              <SizeandColor
+                availableSizes={product?.available_sizes || []}
+                availableColors={product?.available_colors || []}
+                onSizeChange={setSelectedSize}
+                onColorChange={setSelectedColor}
+              />
+            </div>
+          )}
+
+          {/* <div className="mt-6 flex items-center gap-4">
+            <span className="text-md font-bold">Quantity:</span>
             <div className="flex items-center gap-2">
               <button
-                onClick={decrease}
+                onClick={handleDecrease}
                 className="w-8 h-8 text-xl font-bold flex items-center justify-center border rounded"
+                disabled={!cartItemId}
               >
                 -
               </button>
@@ -101,13 +243,14 @@ function ProductAddingToCart({
                 {qty}
               </div>
               <button
-                onClick={increase}
+                onClick={handleIncrease}
                 className="w-8 h-8 text-xl flex items-center justify-center border rounded"
+                disabled={!cartItemId}
               >
                 +
               </button>
             </div>
-          </div>
+          </div> */}
 
           <div className="mt-6">
             <div className="flex items-baseline gap-4">
@@ -122,11 +265,9 @@ function ProductAddingToCart({
 
           <div className="mt-6">
             <button
-              onClick={() => {
-                onAdd(qty);
-                setShowCart(true);
-              }}
+              onClick={handleAddToCart}
               className="w-full bg-black text-white py-3 flex items-center justify-center gap-2 rounded-lg hover:bg-gray-800 hover:shadow-xl active:scale-95 transition-all duration-300 ease-in-out"
+              disabled={!!cartItemId}
             >
               <LuShoppingCart className="w-6 h-6" /> Add to Cart
             </button>

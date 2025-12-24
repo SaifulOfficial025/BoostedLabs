@@ -83,7 +83,6 @@ function MerchandiseRootPage() {
 
   return (
     <div>
-      <Noticebar />
       <Header />
       <Slider />
       <div className="max-w-7xl mx-auto py-12 mb-16 px-4 sm:px-6">

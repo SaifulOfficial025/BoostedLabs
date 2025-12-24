@@ -5,7 +5,16 @@ import { toast } from "react-toastify";
 // Async thunk to add product to cart
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
-  async (productId, { rejectWithValue }) => {
+  async (
+    {
+      productId,
+      quantity = 1,
+      size = null,
+      color_hex = null,
+      color_name = null,
+    },
+    { rejectWithValue }
+  ) => {
     try {
       const authData = localStorage.getItem("auth");
       const token = authData ? JSON.parse(authData).access : null;
@@ -13,6 +22,14 @@ export const addToCart = createAsyncThunk(
       if (!token) {
         toast.error("Please login to add items to cart");
         return rejectWithValue("No access token found");
+      }
+
+      // Build payload
+      const payload = { quantity };
+      if (size) payload.size = size;
+      if (color_hex) {
+        payload.color_hex = color_hex;
+        payload.color_name = color_name;
       }
 
       const response = await fetch(
@@ -23,6 +40,7 @@ export const addToCart = createAsyncThunk(
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
+          body: JSON.stringify(payload),
         }
       );
 
@@ -185,7 +203,7 @@ export const decreaseQuantity = createAsyncThunk(
 // Async thunk to checkout
 export const checkout = createAsyncThunk(
   "cart/checkout",
-  async ({ address, isSubscription }, { rejectWithValue }) => {
+  async ({ address, isSubscription, freeTshirtSize }, { rejectWithValue }) => {
     try {
       const authData = localStorage.getItem("auth");
       const token = authData ? JSON.parse(authData).access : null;
@@ -194,16 +212,22 @@ export const checkout = createAsyncThunk(
         return rejectWithValue("No access token found");
       }
 
+      // Build payload
+      const payload = {
+        address,
+        is_subscription: isSubscription,
+      };
+      if (freeTshirtSize) {
+        payload.free_tshirt_size = freeTshirtSize;
+      }
+
       const response = await fetch(`${BASE_URL}/shop/checkout/`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          address,
-          is_subscription: isSubscription,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
@@ -230,6 +254,7 @@ const initialState = {
   loading: false,
   error: null,
   checkoutData: null,
+  eligibleForFreeTshirt: false,
 };
 
 const cartSlice = createSlice({
@@ -260,6 +285,8 @@ const cartSlice = createSlice({
         state.subtotal = action.payload.subtotal || 0;
         state.shippingFee = action.payload.shipping_fee || 0;
         state.total = action.payload.total || 0;
+        state.eligibleForFreeTshirt =
+          action.payload.eligible_for_free_tshirt || false;
       })
       .addCase(fetchCart.rejected, (state, action) => {
         state.loading = false;

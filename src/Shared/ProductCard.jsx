@@ -30,7 +30,7 @@ function ProductCard({
 
   const handleAddToCart = async () => {
     if (productId !== undefined) {
-      const result = await dispatch(addToCart(productId));
+      const result = await dispatch(addToCart({ productId, quantity: 1 }));
       if (result.type === "cart/addToCart/fulfilled") {
         // Fetch updated cart data
         await dispatch(fetchCart());
@@ -52,7 +52,7 @@ function ProductCard({
     : `${base}dummyproduct.png`;
 
   return (
-    <div className="bg-white rounded-2xl border border-[#e5e7eb] shadow-sm p-3 max-w-xs mx-auto sm:mx-0 mt-5 font-sans hover:shadow-lg transform hover:scale-105 transition duration-300">
+    <div className="bg-white rounded-2xl border border-[#e5e7eb] shadow-sm p-3 max-w-xs mx-auto sm:mx-0 mt-5 font-sans hover:shadow-lg transform hover:scale-105 transition duration-300 flex flex-col h-full">
       <div className="relative mb-4">
         {!isMerch && (
           <div
@@ -65,7 +65,7 @@ function ProductCard({
           </div>
         )}
         <div
-          className="rounded-xl  flex items-center justify-center  cursor-pointer min-h-[140px] sm:min-h-[180px]"
+          className="rounded-xl flex items-center justify-center cursor-pointer h-[180px] bg-gray-50"
           onClick={() => {
             // navigate to product details when clicking image area
             if (productId !== undefined)
@@ -76,7 +76,7 @@ function ProductCard({
           <img
             src={image || defaultImage}
             alt={title}
-            className="object-contain "
+            className="object-contain w-full h-full"
             onError={(e) => {
               const fallback = defaultImage;
               if (e.currentTarget.src !== fallback)
@@ -85,9 +85,9 @@ function ProductCard({
           />
         </div>
       </div>
-      <div className="mb-2">
+      <div className="mb-4 flex-grow flex flex-col">
         <h2
-          className="text-lg sm:text-xl font-bold text-[#222] mb-1 cursor-pointer text-center sm:text-left"
+          className="text-lg sm:text-xl font-bold text-[#222] mb-2 cursor-pointer text-center sm:text-left line-clamp-2"
           onClick={() => {
             if (productId !== undefined)
               navigate(`/product-details/${productId}`);
@@ -96,11 +96,11 @@ function ProductCard({
         >
           {title}
         </h2>
-        <p className="text-sm text-[#3a4a5c] leading-snug text-center sm:text-left">
+        <p className="text-sm text-[#3a4a5c] leading-snug text-center sm:text-left line-clamp-2 flex-grow">
           {description}
         </p>
       </div>
-      <div className="text-xl sm:text-2xl font-bold text-[#222] mb-4 mt-5 text-center sm:text-left">
+      <div className="text-xl sm:text-2xl font-bold text-[#222] mb-4 text-center sm:text-left">
         ${price}
       </div>
       {!hideActions && (

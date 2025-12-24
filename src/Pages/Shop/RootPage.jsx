@@ -8,7 +8,6 @@ import Footer from "../../Shared/Footer";
 function RootPage() {
   return (
     <div>
-      <Noticebar />
       <Header />
       <Slider />
       <Products />

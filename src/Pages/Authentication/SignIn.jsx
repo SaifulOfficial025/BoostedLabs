@@ -23,7 +23,7 @@ function SignIn() {
     (state) => state.socialLogin || { loading: false }
   );
 
-  // Initialize Google Sign-In
+  // Initialize Google OAuth Client
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://accounts.google.com/gsi/client";
@@ -31,13 +31,9 @@ function SignIn() {
     script.defer = true;
     document.body.appendChild(script);
 
-    script.onload = () => {
-      if (window.google) {
-        window.google.accounts.id.initialize({
-          client_id: "YOUR_GOOGLE_CLIENT_ID", // Replace with your actual Google Client ID
-          callback: handleGoogleResponse,
-        });
-      }
+    script.onerror = () => {
+      console.error("Failed to load Google Sign-In script");
+      toast.error("Failed to load Google Sign-In");
     };
 
     return () => {
@@ -47,31 +43,35 @@ function SignIn() {
     };
   }, []);
 
-  const handleGoogleResponse = async (response) => {
-    if (response.credential) {
-      try {
-        // Decode JWT to get user email
-        const base64Url = response.credential.split(".")[1];
-        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-        const jsonPayload = decodeURIComponent(
-          atob(base64)
-            .split("")
-            .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-            .join("")
-        );
-        const decoded = JSON.parse(jsonPayload);
-        const userEmail = decoded.email;
+  const handleGoogleLogin = async (tokenResponse) => {
+    try {
+      // Fetch user info from Google using the access token
+      const userInfoResponse = await fetch(
+        "https://www.googleapis.com/oauth2/v3/userinfo",
+        {
+          headers: {
+            Authorization: `Bearer ${tokenResponse.access_token}`,
+          },
+        }
+      );
 
-        // Send email to backend social login
-        const result = await dispatch(
-          socialLogin({ email: userEmail })
-        ).unwrap();
-
-        navigate("/");
-      } catch (err) {
-        console.error("Google sign-in error:", err);
-        toast.error("Google sign-in failed");
+      if (!userInfoResponse.ok) {
+        throw new Error("Failed to fetch user info from Google");
       }
+
+      const userInfo = await userInfoResponse.json();
+      const userEmail = userInfo.email;
+
+      if (!userEmail) {
+        throw new Error("Email not found in Google account");
+      }
+
+      // Send email to backend social login
+      await dispatch(socialLogin({ email: userEmail })).unwrap();
+      navigate("/");
+    } catch (err) {
+      console.error("Google sign-in error:", err);
+      toast.error(err.message || "Google sign-in failed");
     }
   };
 
@@ -96,16 +96,24 @@ function SignIn() {
   };
 
   const handleGoogleClick = () => {
-    if (window.google) {
-      window.google.accounts.id.renderButton(
-        document.getElementById("google-signin-btn"),
-        {
-          type: "standard",
-          size: "large",
-          theme: "outline",
-          text: "signin_with",
-        }
-      );
+    if (!window.google) {
+      toast.error("Google Sign-In not loaded yet. Please try again.");
+      return;
+    }
+
+    try {
+      const client = window.google.accounts.oauth2.initTokenClient({
+        client_id:
+          "417880520830-jl84vl0urfbci6c4ufuref65cgksreb8.apps.googleusercontent.com",
+        scope: "email profile openid",
+        callback: handleGoogleLogin,
+      });
+
+      // This opens a popup window for Google authentication
+      client.requestAccessToken();
+    } catch (error) {
+      console.error("Error initiating Google Sign-In:", error);
+      toast.error("Failed to open Google Sign-In");
     }
   };
 
@@ -220,7 +228,6 @@ function SignIn() {
               {socialLoading ? "Signing in..." : "Google"}
             </span>
           </button>
-          <div id="google-signin-btn" className="hidden"></div>
         </form>
         <p className="text-gray-500 text-xs sm:text-sm mt-8 text-center mb-10">
           Don't have an account yet?{" "}

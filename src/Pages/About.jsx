@@ -13,7 +13,6 @@ import ContactUs from "./ContactUs";
 function About() {
   return (
     <section className="font-sans">
-      <Noticebar />
       <Headers />
 
       {/* Hero */}

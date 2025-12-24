@@ -1,30 +1,49 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { BASE_URL } from "./baseUrl";
 
-// Async thunk to fetch both product details and review stats
+// Async thunk to fetch product details
 export const fetchProductDetails = createAsyncThunk(
   "productDetails/fetchProductDetails",
   async (productId, { rejectWithValue }) => {
     try {
-      // Fetch both APIs in parallel
-      const [productRes, statsRes] = await Promise.all([
-        fetch(`${BASE_URL}/shop/products/${productId}/`),
-        fetch(`${BASE_URL}/shop/products/${productId}/reviews/stats/`),
-      ]);
+      const productRes = await fetch(`${BASE_URL}/shop/products/${productId}/`);
 
       if (!productRes.ok) {
         return rejectWithValue("Failed to fetch product details");
       }
-      if (!statsRes.ok) {
-        return rejectWithValue("Failed to fetch review stats");
-      }
 
       const productData = await productRes.json();
-      const statsData = await statsRes.json();
+
+      // Calculate stats from reviews in the product data
+      const reviews = productData.reviews || [];
+      const totalReviews = reviews.length;
+      const averageRating =
+        totalReviews > 0
+          ? reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews
+          : 0;
+
+      const starCounts = {
+        "5_star": reviews.filter((r) => r.rating === 5).length,
+        "4_star": reviews.filter((r) => r.rating === 4).length,
+        "3_star": reviews.filter((r) => r.rating === 3).length,
+        "2_star": reviews.filter((r) => r.rating === 2).length,
+        "1_star": reviews.filter((r) => r.rating === 1).length,
+      };
+
+      const recommendedCount = reviews.filter((r) => r.rating >= 4).length;
+      const recommendedPercentage =
+        totalReviews > 0 ? (recommendedCount / totalReviews) * 100 : 0;
+
+      const stats = {
+        total_reviews: totalReviews,
+        average_rating: averageRating,
+        star_counts: starCounts,
+        recommended_percentage: recommendedPercentage,
+      };
 
       return {
         product: productData,
-        stats: statsData,
+        stats: stats,
       };
     } catch (error) {
       return rejectWithValue(error.message);
