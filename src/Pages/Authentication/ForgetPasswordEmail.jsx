@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FiMail } from "react-icons/fi";
 import { FaArrowCircleLeft } from "react-icons/fa";
@@ -73,7 +73,10 @@ function ForgetPasswordEmail() {
           Don’t worry, happens to all of us. Enter your email below to recover
           your password
         </p>
-        <form className="w-full max-w-xl flex flex-col gap-4">
+        <form
+          className="w-full max-w-xl flex flex-col gap-4"
+          onSubmit={handleSubmit}
+        >
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email
@@ -89,14 +92,17 @@ function ForgetPasswordEmail() {
               />
             </div>
           </div>
-          <Link to="/forget-password-otp">
-            <button
-              type="submit"
-              className="w-full bg-black text-white py-3 rounded-lg font-semibold text-lg mt-2 mb-2 hover:bg-gray-900 transition"
-            >
-              Send OTP
-            </button>
-          </Link>
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full py-3 rounded-lg font-semibold text-lg mt-2 mb-2 transition ${
+              loading
+                ? "bg-gray-400 text-gray-700"
+                : "bg-black text-white hover:bg-gray-900"
+            }`}
+          >
+            {loading ? "Sending..." : "Send OTP"}
+          </button>
         </form>
       </div>
     </section>

@@ -25,20 +25,20 @@ function SetNewPassword() {
     }
   });
 
-  const { loading, error, success, successMessage } = useSelector(
+  const { loading, error, success, successMessage, step } = useSelector(
     (state) => state.forgetPassword
   );
 
   // Navigate to sign in on success
   useEffect(() => {
-    if (success) {
+    if (success && step === "done") {
       toast.success(successMessage || "Password reset successfully");
       localStorage.removeItem("forgetPasswordEmail");
       setTimeout(() => {
         navigate("/signin");
       }, 2000);
     }
-  }, [success, successMessage, navigate]);
+  }, [success, successMessage, step, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

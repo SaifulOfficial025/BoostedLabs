@@ -147,6 +147,7 @@ const forgetPasswordSlice = createSlice({
         state.success = true;
         state.successMessage =
           action.payload.message || "Password reset successfully";
+        state.step = "done";
         state.error = null;
       })
       .addCase(setNewPassword.rejected, (state, action) => {
