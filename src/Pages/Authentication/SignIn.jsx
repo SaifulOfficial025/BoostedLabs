@@ -103,8 +103,7 @@ function SignIn() {
 
     try {
       const client = window.google.accounts.oauth2.initTokenClient({
-        client_id:
-          "417880520830-jl84vl0urfbci6c4ufuref65cgksreb8.apps.googleusercontent.com",
+        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
         scope: "email profile openid",
         callback: handleGoogleLogin,
       });

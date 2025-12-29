@@ -16,7 +16,7 @@ const Home = () => {
       <ChooseYourBoostedProduct />
       <WhyBoostedLab />
       <RealResult />
-      <UsageGuide />
+      {/* <UsageGuide /> */}
       <Footer />
     </div>
   );

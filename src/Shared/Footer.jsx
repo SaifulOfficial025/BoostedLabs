@@ -57,9 +57,13 @@ function Footer() {
           <Link to="/merchandise" className="text-md text-[#cbd5e1] mt-2">
             Merchandise
           </Link>
-          <Link to="/contact-us" className="text-md text-[#cbd5e1] mt-2">
-            Contact Us
+          <Link to="/usage-guide" className="text-md text-[#cbd5e1] mt-2">
+            Usage Guide
           </Link>
+          <Link to="/reconstitute" className="text-md text-[#cbd5e1] mt-2">
+            Reconstitute
+          </Link>
+
           <Link to="/about" className="text-md text-[#cbd5e1] mt-2">
             About Us
           </Link>

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ProductCard from "../../Shared/ProductCard";
 import { fetchHomeProducts } from "../../Redux/ChooseYourBoostedProduct";
+import { BASE_URL } from "../../Redux/baseUrl";
 
 function ChooseYourBoostedProduct() {
   const dispatch = useDispatch();
@@ -14,25 +15,36 @@ function ChooseYourBoostedProduct() {
   }, [dispatch]);
 
   // Map API data to ProductCard props
-  const transformedProducts = products.map((product) => ({
-    id: product.id,
-    badge: {
-      icon: "",
-      text:
-        product.type?.name?.toUpperCase() ||
-        product.category?.toUpperCase() ||
-        "PRODUCT",
-      color: "bg-[#bee3f8]",
-      textColor: "text-[#549ad8]",
-    },
-    image:
-      product.images && product.images.length > 0
+  const transformedProducts = products.map((product) => {
+    let imageUrl = "https://via.placeholder.com/300x300?text=No+Image";
+
+    if (product.images && product.images.length > 0) {
+      imageUrl = product.images[0].startsWith("http")
         ? product.images[0]
-        : product.logo || "https://via.placeholder.com/300x300?text=No+Image",
-    title: product.name,
-    description: product.description || "No description available",
-    price: product.discounted_price || product.initial_price || 0,
-  }));
+        : `${BASE_URL}${product.images[0]}`;
+    } else if (product.logo) {
+      imageUrl = product.logo.startsWith("http")
+        ? product.logo
+        : `${BASE_URL}${product.logo}`;
+    }
+
+    return {
+      id: product.id,
+      badge: {
+        icon: "",
+        text:
+          product.type?.name?.toUpperCase() ||
+          product.category?.toUpperCase() ||
+          "PRODUCT",
+        color: "bg-[#bee3f8]",
+        textColor: "text-[#549ad8]",
+      },
+      image: imageUrl,
+      title: product.name,
+      description: product.description || "No description available",
+      price: product.discounted_price || product.initial_price || 0,
+    };
+  });
 
   if (loading) {
     return (

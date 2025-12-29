@@ -175,7 +175,7 @@ function About() {
 
       <ContactUs />
 
-      <Footer />
+      {/* <Footer /> */}
     </section>
   );
 }

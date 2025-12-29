@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { BASE_URL } from "./baseUrl";
 
-const WS_BASE_URL = "ws://10.10.13.61:8002";
+const WS_BASE_URL = "wss://server.boostedlabs.au";
+// const WS_BASE_URL = "ws://10.10.13.61:8002";
 
 // Fetch chat history
 export const fetchChatHistory = createAsyncThunk(
