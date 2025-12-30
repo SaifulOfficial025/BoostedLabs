@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FiMail } from "react-icons/fi";
 import { FaArrowCircleLeft } from "react-icons/fa";
 import Logo from "../../../public/BoostedLabLogo.svg";
+import { toast } from "react-toastify";
 import {
   sendForgetPasswordEmail,
   clearForgetPasswordError,
@@ -23,11 +24,22 @@ function ForgetPasswordEmail() {
     if (success) {
       // Store email in localStorage for next steps
       localStorage.setItem("forgetPasswordEmail", email);
+      toast.success(successMessage || "OTP sent successfully!");
       setTimeout(() => {
         navigate("/forget-password-otp");
       }, 1500);
     }
-  }, [success, email, navigate]);
+  }, [success, email, navigate, successMessage]);
+
+  // Display error toast
+  useEffect(() => {
+    if (error) {
+      const errorMessage =
+        error.error || error.detail || error.message || "Failed to send OTP";
+      toast.error(errorMessage);
+      dispatch(clearForgetPasswordError());
+    }
+  }, [error, dispatch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

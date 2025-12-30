@@ -202,7 +202,7 @@ function Header() {
           </button>
 
           {/* Navigation - Desktop */}
-          <nav className="hidden xl:flex items-center gap-4 2xl:gap-8 absolute left-1/2 transform -translate-x-1/2">
+          <nav className="hidden xl:flex items-center gap-4 2xl:gap-8 ml-8">
             <Link
               to="/"
               className={`text-white text-sm 2xl:text-base ${

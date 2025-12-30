@@ -110,6 +110,7 @@ function FilteredProduct() {
             {transformedProducts.map((p) => (
               <ProductCard
                 key={p.id}
+                productId={p.id}
                 badge={p.badge}
                 image={p.image}
                 title={p.title}
@@ -117,8 +118,6 @@ function FilteredProduct() {
                 price={p.price}
                 rating={p.rating}
                 reviewCount={p.reviewCount}
-                onViewDetails={() => {}}
-                onAddToCart={() => {}}
               />
             ))}
           </div>
