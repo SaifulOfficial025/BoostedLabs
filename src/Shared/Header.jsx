@@ -161,7 +161,7 @@ function Header() {
           </div>
           <div className="flex-1 flex justify-end px-1 sm:px-2 min-w-0 overflow-hidden">
             <span className="text-white text-[8px] sm:text-xs md:text-sm lg:text-base text-right truncate">
-              FREE Shipping in Australia When Order Above $200
+              {/* FREE Shipping in Australia When Order Above $200 */}
               {/* & Get a FREE
                 T-shirt with any order over $1500. */}
             </span>
