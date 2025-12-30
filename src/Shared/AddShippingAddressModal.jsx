@@ -107,7 +107,7 @@ function AddShippingAddressModal({
               value={formData.name}
               onChange={handleInputChange}
               className="w-full border border-gray-300 rounded-lg px-4 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Jubayer Ahmad"
+              placeholder="Enter Your Full Name"
               required
             />
           </div>
@@ -121,7 +121,7 @@ function AddShippingAddressModal({
               value={formData.phone}
               onChange={handleInputChange}
               className="w-full border border-gray-300 rounded-lg px-4 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="+880 1757976790"
+              placeholder="Enter Your Phone Number"
               required
             />
           </div>
@@ -136,10 +136,10 @@ function AddShippingAddressModal({
                 value={formData.address}
                 onChange={handleInputChange}
                 className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Aqua Tower, Mohakhali, Dhaka"
+                placeholder="Enter Your Address"
                 required
               />
-              <button
+              {/* <button
                 type="button"
                 className="flex items-center gap-2 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-200 transition"
               >
@@ -155,7 +155,7 @@ function AddShippingAddressModal({
                   <circle cx="12" cy="9" r="2.5" />
                 </svg>
                 Add Address
-              </button>
+              </button> */}
             </div>
           </div>
           <div>
