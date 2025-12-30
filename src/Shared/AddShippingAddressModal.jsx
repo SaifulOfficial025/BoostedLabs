@@ -11,6 +11,7 @@ function AddShippingAddressModal({
   freeTshirtSize = null,
 }) {
   const modalRef = useRef(null);
+  const checkoutWindowRef = useRef(null);
   const dispatch = useDispatch();
   const { checkoutData, loading } = useSelector((state) => state.cart);
 
@@ -24,9 +25,15 @@ function AddShippingAddressModal({
   // Handle checkout success
   useEffect(() => {
     if (checkoutData && checkoutData.checkout_url) {
-      // Open checkout URL in a new tab
-      window.open(checkoutData.checkout_url, "_blank");
+      // Redirect the opened window to the checkout URL
+      if (checkoutWindowRef.current && !checkoutWindowRef.current.closed) {
+        checkoutWindowRef.current.location.href = checkoutData.checkout_url;
+      } else {
+        // Fallback: open in new tab if window was closed or blocked
+        window.open(checkoutData.checkout_url, "_blank");
+      }
       // Clear checkout data and close modal
+      checkoutWindowRef.current = null;
       dispatch(clearCheckoutData());
       onClose();
     }
@@ -74,6 +81,13 @@ function AddShippingAddressModal({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Open a blank window immediately to avoid popup blockers
+    checkoutWindowRef.current = window.open("", "_blank");
+    if (checkoutWindowRef.current) {
+      checkoutWindowRef.current.document.write(
+        "<html><body><p>Loading checkout...</p></body></html>"
+      );
+    }
     dispatch(
       checkout({
         address: formData,
