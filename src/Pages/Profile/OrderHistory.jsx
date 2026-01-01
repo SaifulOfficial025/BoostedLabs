@@ -58,18 +58,22 @@ function OrderHistory() {
     }
   };
 
-  // Map status from API to filter
+  // Map status from API to normalized status (capitalize first letter)
   const normalizeStatus = (status) => {
-    if (status === "Pending") return "Active";
-    if (status === "Delivered") return "Delivered";
-    if (status === "Cancelled") return "Cancelled";
-    return "Active";
+    if (!status) return "Pending";
+    const s = status.toLowerCase();
+    if (s === "pending") return "Pending";
+    if (s === "processing") return "Processing";
+    if (s === "delivered") return "Delivered";
+    if (s === "cancelled") return "Cancelled";
+    return "Pending";
   };
 
   const filtered = orders.filter((o) => {
     const normalizedStatus = normalizeStatus(o.status);
     if (filter === "All") return true;
-    if (filter === "Active") return normalizedStatus === "Active";
+    if (filter === "Pending") return normalizedStatus === "Pending";
+    if (filter === "Processing") return normalizedStatus === "Processing";
     if (filter === "Delivered") return normalizedStatus === "Delivered";
     if (filter === "Cancelled") return normalizedStatus === "Cancelled";
     return true;
@@ -77,12 +81,26 @@ function OrderHistory() {
 
   const badgeFor = (status) => {
     const normalizedStatus = normalizeStatus(status);
-    if (normalizedStatus === "Active")
+    if (normalizedStatus === "Pending")
       return {
         icon: null,
-        text: "Active",
+        text: "Unpaid",
+        color: "bg-red-700",
+        textColor: "text-white",
+      };
+    if (normalizedStatus === "Processing")
+      return {
+        icon: null,
+        text: "Processing",
         color: "bg-blue-100",
         textColor: "text-blue-700",
+      };
+    if (normalizedStatus === "Delivered")
+      return {
+        icon: null,
+        text: "Delivered",
+        color: "bg-green-100",
+        textColor: "text-green-700",
       };
     if (normalizedStatus === "Cancelled")
       return {
@@ -93,9 +111,9 @@ function OrderHistory() {
       };
     return {
       icon: null,
-      text: "Completed",
-      color: "bg-green-100",
-      textColor: "text-green-700",
+      text: "Pending",
+      color: "bg-yellow-100",
+      textColor: "text-yellow-700",
     };
   };
 
@@ -115,19 +133,21 @@ function OrderHistory() {
         </div>
 
         <div className="flex flex-wrap gap-2 mb-6">
-          {["All", "Active", "Delivered", "Cancelled"].map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-3 py-1 rounded-full text-sm sm:text-base ${
-                filter === f
-                  ? "bg-black text-white"
-                  : "bg-gray-100 text-gray-700"
-              }`}
-            >
-              {f}
-            </button>
-          ))}
+          {["All", "Pending", "Processing", "Delivered", "Cancelled"].map(
+            (f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`px-3 py-1 rounded-full text-sm sm:text-base ${
+                  filter === f
+                    ? "bg-black text-white"
+                    : "bg-gray-100 text-gray-700"
+                }`}
+              >
+                {f}
+              </button>
+            )
+          )}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mt-6 sm:mt-10 items-start">
@@ -178,23 +198,17 @@ function OrderHistory() {
                     onAddToCart={() => console.log("order again", order.id)}
                   />
                   <div className="mt-3 sm:mt-4 flex flex-col gap-2 w-full">
-                    {normalizedStatus === "Active" && (
-                      <div className="flex flex-col sm:flex-row gap-2 w-full">
-                        <button
-                          onClick={() => handleConfirmDelivery(order.id)}
-                          className="flex-1 bg-black text-white py-2 px-2 text-sm sm:text-base rounded-md hover:bg-[#70c41d] transition"
-                        >
-                          Mark as Delivered
-                        </button>
-                        <button
-                          onClick={() => handleCancelOrder(order.id)}
-                          className="flex-1 bg-[#fe6464] text-white py-2 px-2 text-sm sm:text-base rounded-md hover:bg-red-700 transition"
-                        >
-                          Cancel Order
-                        </button>
-                      </div>
+                    {normalizedStatus === "Pending" && (
+                      <button
+                        onClick={() =>
+                          navigate(`/product-details/${product.id}`)
+                        }
+                        className="w-full border border-gray-400 py-2 px-2 text-sm sm:text-base rounded-md"
+                      >
+                        View Details
+                      </button>
                     )}
-                    {normalizedStatus === "Cancelled" && (
+                    {normalizedStatus === "Processing" && (
                       <div className="flex flex-col sm:flex-row gap-2 w-full">
                         <button
                           onClick={() =>
@@ -205,10 +219,10 @@ function OrderHistory() {
                           View Details
                         </button>
                         <button
-                          onClick={() => console.log("order again", order.id)}
-                          className="flex-1 bg-black text-white py-2 px-2 text-sm sm:text-base rounded-md"
+                          onClick={() => handleCancelOrder(order.id)}
+                          className="flex-1 bg-[#fe6464] text-white py-2 px-2 text-sm sm:text-base rounded-md hover:bg-red-700 transition"
                         >
-                          Order again
+                          Cancel Order
                         </button>
                       </div>
                     )}
@@ -225,6 +239,16 @@ function OrderHistory() {
                         className="w-full bg-black text-white py-2 px-2 text-sm sm:text-base rounded-lg"
                       >
                         Rate this product
+                      </button>
+                    )}
+                    {normalizedStatus === "Cancelled" && (
+                      <button
+                        onClick={() =>
+                          navigate(`/product-details/${product.id}`)
+                        }
+                        className="w-full border border-gray-400 py-2 px-2 text-sm sm:text-base rounded-md"
+                      >
+                        View Details
                       </button>
                     )}
                   </div>
