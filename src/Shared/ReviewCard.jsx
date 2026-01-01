@@ -4,19 +4,7 @@ import staricon from "../../public/star.png";
 function ReviewCard({ avatar, name, date, rating = 5, review }) {
   return (
     <div className="bg-[#f6fafd] rounded-2xl border border-[#e5e7eb] shadow-sm p-4 max-w-sm font-normal font-sans hover:shadow-lg transform hover:scale-105 transition duration-300">
-      <div className="flex items-center gap-3 mb-1">
-        <div className="w-10 h-10 rounded-full flex items-center justify-center bg-blue-600 text-white text-lg font-bold">
-          {avatar ? (
-            <img
-              src={avatar}
-              alt={name}
-              loading="lazy"
-              className="w-full h-full object-cover rounded-full"
-            />
-          ) : (
-            name?.charAt(0)
-          )}
-        </div>
+      <div className="flex items-start gap-3 mb-1">
         <div>
           <div className="font-semibold text-md text-[#222]">{name}</div>
           <div className="text-xs text-[#7b8ca3]">on {date}</div>

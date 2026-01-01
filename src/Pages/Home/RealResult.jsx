@@ -20,7 +20,7 @@ function RealResult() {
         // Transform API reviews to match ReviewCard props
         const transformedReviews = data.reviews.map((review) => ({
           id: review.id,
-          name: `User ${review.user_name}`,
+          name: ` ${review.user_name}`,
           date: new Date(review.created_at).toLocaleDateString("en-US", {
             year: "numeric",
             month: "short",
