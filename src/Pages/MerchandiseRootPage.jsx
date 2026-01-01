@@ -87,8 +87,11 @@ function MerchandiseRootPage() {
       <Slider />
       <div className="max-w-7xl mx-auto py-12 mb-16 px-4 sm:px-6">
         <h1 className="text-2xl sm:text-3xl font-bold font-sans mb-8">
-          Merchandise
+          Merchandise products
         </h1>
+        <span className="flex justify-center text-3xl uppercase text-red-400">
+          Coming soon
+        </span>
         {renderProducts()}
       </div>
       <Footer />

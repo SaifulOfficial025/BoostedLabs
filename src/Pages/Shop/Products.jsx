@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ProductCard from "../../Shared/ProductCard";
 import { fetchShopHealthProducts } from "../../Redux/ShopProduct";
+import { BASE_URL } from "../../Redux/baseUrl";
 
 function Products() {
   const navigate = useNavigate();
@@ -27,10 +28,7 @@ function Products() {
   // Map API data to ProductCard props
   const transformedProducts = products.map((product, index) => ({
     id: product.id,
-    image:
-      product.images && product.images.length > 0
-        ? product.images[0]
-        : product.logo || dummy,
+    image: product.logo ? `${BASE_URL}${product.logo}` : dummy,
     title: product.name,
     description: product.description || "No description available",
     price: product.discounted_price || product.initial_price || 0,
@@ -74,22 +72,23 @@ function Products() {
   return (
     <div className="max-w-7xl mx-auto py-12 mb-16 px-4 sm:px-6">
       <h1 className="text-2xl sm:text-3xl font-bold font-sans mb-8">
-        All Products
+        Health Products
       </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {transformedProducts.map((p) => (
-          <ProductCard
-            key={p.id}
-            productId={p.id}
-            badge={p.badge}
-            image={p.image}
-            title={p.title}
-            description={p.description}
-            price={p.price}
-            onViewDetails={() => navigate(`/product-details/${p.id}`)}
-            onAddToCart={() => console.log("add", p.id)}
-          />
+          <div key={p.id} className="w-full flex">
+            <ProductCard
+              productId={p.id}
+              badge={p.badge}
+              image={p.image}
+              title={p.title}
+              description={p.description}
+              price={p.price}
+              onViewDetails={() => {}}
+              onAddToCart={() => {}}
+            />
+          </div>
         ))}
       </div>
     </div>

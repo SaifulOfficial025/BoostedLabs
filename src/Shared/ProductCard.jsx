@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { FaFire } from "react-icons/fa";
 import ShoppingCartModal from "./ShoppingCartModal";
 import { addToCart, fetchCart } from "../Redux/Cart";
+import { addToGuestCart } from "../utils/guestCart";
 
 function ProductCard({
   badge = {
@@ -27,14 +28,31 @@ function ProductCard({
   const dispatch = useDispatch();
   const pathname = location?.pathname || "";
   const isMerch = pathname.startsWith("/merchandise");
+  const isLoggedIn = !!localStorage.getItem("auth");
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
     if (productId !== undefined) {
-      const result = await dispatch(addToCart({ productId, quantity: 1 }));
-      if (result.type === "cart/addToCart/fulfilled") {
-        // Fetch updated cart data
-        await dispatch(fetchCart());
-        setShowCart(true);
+      if (isLoggedIn) {
+        // Logged-in user: dispatch to Redux and backend
+        const result = await dispatch(addToCart({ productId, quantity: 1 }));
+        if (result.type === "cart/addToCart/fulfilled") {
+          // Fetch updated cart data
+          await dispatch(fetchCart());
+          setShowCart(true);
+        }
+      } else {
+        // Guest user: add to localStorage
+        try {
+          addToGuestCart(productId, 1);
+          setShowCart(true);
+        } catch (error) {
+          console.error("Error adding to guest cart:", error);
+        }
       }
     } else {
       // Fallback if no productId
@@ -76,6 +94,7 @@ function ProductCard({
           <img
             src={image || defaultImage}
             alt={title}
+            loading="lazy"
             className="object-contain w-full h-full"
             onError={(e) => {
               const fallback = defaultImage;
@@ -106,6 +125,7 @@ function ProductCard({
       {!hideActions && (
         <div className="flex flex-col sm:flex-row gap-3">
           <button
+            type="button"
             className="w-full sm:flex-1 border border-[#222] rounded-lg py-2 text-[#222] bg-white font-semibold text-base hover:bg-gray-200 transition"
             onClick={(e) => {
               e.stopPropagation();
@@ -117,11 +137,10 @@ function ProductCard({
             View Details
           </button>
           <button
+            type="button"
             className="w-full sm:flex-1 rounded-lg py-2 text-white bg-black font-semibold text-base hover:bg-gray-900 hover:shadow-lg active:scale-95 transition-all duration-300 ease-in-out"
             onClick={(e) => {
-              // prevent parent click handlers
-              e.stopPropagation();
-              handleAddToCart();
+              handleAddToCart(e);
             }}
           >
             Add To Cart

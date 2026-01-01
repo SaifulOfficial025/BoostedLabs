@@ -10,6 +10,7 @@ import {
   decreaseQuantity,
 } from "../../Redux/Cart";
 import { BASE_URL } from "../../Redux/baseUrl";
+import { addToGuestCart, getGuestCart } from "../../utils/guestCart";
 
 function ProductAddingToCart({
   product,
@@ -68,6 +69,8 @@ function ProductAddingToCart({
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
 
+  const isLoggedIn = !!localStorage.getItem("auth");
+
   // Find cart item for this product
   const cartItem = cartItems.find(
     (item) => item.product && product && item.product.id === product.id
@@ -99,26 +102,41 @@ function ProductAddingToCart({
     }
 
     try {
-      // Find the selected color name if color is selected
-      let colorName = null;
-      if (selectedColor && product?.available_colors) {
-        const colorObj = product.available_colors.find(
-          (c) => c.hex === selectedColor
-        );
-        colorName = colorObj?.name || null;
-      }
+      if (isLoggedIn) {
+        // Find the selected color name if color is selected
+        let colorName = null;
+        if (selectedColor && product?.available_colors) {
+          const colorObj = product.available_colors.find(
+            (c) => c.hex === selectedColor
+          );
+          colorName = colorObj?.name || null;
+        }
 
-      await dispatch(
-        addToCart({
-          productId: product.id,
-          quantity: qty,
-          size: selectedSize,
-          color_hex: selectedColor,
-          color_name: colorName,
-        })
-      ).unwrap();
+        await dispatch(
+          addToCart({
+            productId: product.id,
+            quantity: qty,
+            size: selectedSize,
+            color_hex: selectedColor,
+            color_name: colorName,
+          })
+        ).unwrap();
+      } else {
+        // Guest cart - add to localStorage
+        let colorName = null;
+        if (selectedColor && product?.available_colors) {
+          const colorObj = product.available_colors.find(
+            (c) => c.hex === selectedColor
+          );
+          colorName = colorObj?.name || null;
+        }
+
+        addToGuestCart(product.id, qty, selectedSize, selectedColor, colorName);
+      }
       setShowCart(true);
-    } catch (e) {}
+    } catch (e) {
+      console.error("Error adding to cart:", e);
+    }
   };
 
   // Quantity handlers (only after added to cart)
@@ -255,7 +273,7 @@ function ProductAddingToCart({
           <div className="mt-6">
             <div className="flex items-baseline gap-4">
               <div className="text-2xl font-bold text-gray-900">
-                ${(parseFloat(productPrice) * qty).toFixed(2)}
+                ${parseFloat(productPrice).toFixed(2)}
               </div>
               <div className="text-sm text-gray-400 line-through">
                 ${parseFloat(productOldPrice).toFixed(2)}
@@ -267,7 +285,7 @@ function ProductAddingToCart({
             <button
               onClick={handleAddToCart}
               className="w-full bg-black text-white py-3 flex items-center justify-center gap-2 rounded-lg hover:bg-gray-800 hover:shadow-xl active:scale-95 transition-all duration-300 ease-in-out"
-              disabled={!!cartItemId}
+              // disabled={!!cartItemId}
             >
               <LuShoppingCart className="w-6 h-6" /> Add to Cart
             </button>

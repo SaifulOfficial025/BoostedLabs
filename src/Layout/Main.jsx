@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import ChatwithAI from "../Shared/ChatwithAI";
+import ScrollToTop from "../Components/ScrollToTop";
 
 const Main = () => {
   const [chatOpen, setChatOpen] = useState(false);
 
   return (
     <div>
+      <ScrollToTop />
       <Outlet />
 
       {/* Floating chat launcher (site-wide) */}

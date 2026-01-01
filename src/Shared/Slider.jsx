@@ -59,6 +59,7 @@ function Slider({ images = [] }) {
               <img
                 src={src}
                 alt={`slide-${i + 1}`}
+                loading="lazy"
                 className="w-full h-full object-cover block"
                 style={{ minHeight: 200 }}
               />

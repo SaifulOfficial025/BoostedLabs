@@ -73,6 +73,37 @@ export const verifyEmail = createAsyncThunk(
   }
 );
 
+export const refreshToken = createAsyncThunk(
+  "auth/refreshToken",
+  async (_, { rejectWithValue }) => {
+    try {
+      const authData = localStorage.getItem("auth");
+      if (!authData) {
+        return rejectWithValue({ detail: "No refresh token found" });
+      }
+
+      const { refresh } = JSON.parse(authData);
+      if (!refresh) {
+        return rejectWithValue({ detail: "No refresh token found" });
+      }
+
+      const res = await fetch(`${BASE_URL}/api/token/refresh/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refresh }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        return rejectWithValue(data);
+      }
+      return data;
+    } catch (err) {
+      return rejectWithValue({ detail: err.message || "Network error" });
+    }
+  }
+);
+
 const initialState = {
   user: null,
   token: null,
@@ -143,6 +174,26 @@ const authSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || action.error;
+      })
+      .addCase(refreshToken.fulfilled, (state, action) => {
+        state.token = action.payload.access;
+        // Update localStorage with new access token
+        try {
+          const authData = JSON.parse(localStorage.getItem("auth") || "{}");
+          authData.access = action.payload.access;
+          localStorage.setItem("auth", JSON.stringify(authData));
+        } catch (e) {}
+      })
+      .addCase(refreshToken.rejected, (state) => {
+        // If refresh fails, logout the user
+        state.user = null;
+        state.token = null;
+        state.refresh = null;
+        try {
+          localStorage.removeItem("auth");
+          localStorage.removeItem("auth_verify");
+          localStorage.removeItem("otpEmail");
+        } catch (e) {}
       });
   },
 });

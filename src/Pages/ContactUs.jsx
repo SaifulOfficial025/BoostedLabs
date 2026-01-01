@@ -10,6 +10,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { FaPhone } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import { sendContactMessage, clearContactUsMessage } from "../Redux/ContactUs";
+import { ImWhatsapp } from "react-icons/im";
 
 function ContactUs() {
   const dispatch = useDispatch();
@@ -90,8 +91,7 @@ function ContactUs() {
                     Address:
                   </div>
                   <div className="text-sm text-gray-600">
-                    Police Park, House #05, Road #10, floor- Lift-8, Block D,
-                    Banani, Dhaka 1219
+                    Melbourne, Australia
                   </div>
                 </div>
               </div>
@@ -102,9 +102,9 @@ function ContactUs() {
                 </div>
                 <div>
                   <div className="font-semibold flex items-center gap-2">
-                    Phone:
+                    What's app:
                   </div>
-                  <div className="text-sm text-gray-600">+0123456789</div>
+                  <div className="text-sm text-gray-600">+61 478 101 857</div>
                 </div>
               </div>
 
@@ -116,7 +116,9 @@ function ContactUs() {
                   <div className="font-semibold flex items-center gap-2">
                     Email:
                   </div>
-                  <div className="text-sm text-gray-600">example@yahoo.com</div>
+                  <div className="text-sm text-gray-600">
+                    Boostedlabs@hotmail.com
+                  </div>
                 </div>
               </div>
             </div>
@@ -127,10 +129,16 @@ function ContactUs() {
                 <a className="w-8 h-8 rounded bg-blue-600 text-white flex items-center justify-center">
                   <FaFacebookF />
                 </a>
-                <a className="w-8 h-8 rounded bg-blue-400 text-white flex items-center justify-center">
-                  <FaSquareXTwitter />
+                <a
+                  className="w-8 h-8 rounded bg-blue-400 text-white flex items-center justify-center"
+                  href="https://wa.me/61478101857"
+                >
+                  <ImWhatsapp />
                 </a>
-                <a className="w-8 h-8 rounded bg-pink-500 text-white flex items-center justify-center">
+                <a
+                  className="w-8 h-8 rounded bg-pink-500 text-white flex items-center justify-center"
+                  href="https://www.instagram.com/boostedlab"
+                >
                   <FaInstagram />
                 </a>
               </div>
@@ -160,7 +168,7 @@ function ContactUs() {
                     </label>
                     <input
                       className="mt-1 w-full border border-gray-200 rounded px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black"
-                      placeholder="Jubayer Ahmad"
+                      placeholder="Enter Your Full Name"
                       required
                       aria-required="true"
                       type="text"
@@ -176,7 +184,7 @@ function ContactUs() {
                     </label>
                     <input
                       className="mt-1 w-full border border-gray-200 rounded px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black"
-                      placeholder="0175xxxxxxx"
+                      placeholder="+61 478 101 857"
                       type="text"
                       name="whatsapp"
                       value={formData.whatsapp}
@@ -192,7 +200,7 @@ function ContactUs() {
                   </label>
                   <input
                     className="mt-1 w-full border border-gray-200 rounded px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black"
-                    placeholder="email@domain.com"
+                    placeholder="Enter Your Email"
                     required
                     aria-required="true"
                     type="email"
@@ -239,11 +247,11 @@ function ContactUs() {
           <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
             <iframe
               title="map"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.9029834161586!2d90.38469391536726!3d23.79242398459554!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c7b6ae0f5db9%3A0xabcd!2sBanani%2C%20Dhaka!5e0!3m2!1sen!2sbd!4v1699999999999"
+              src="https://www.google.com/maps?q=Melbourne%20Australia&output=embed"
               width="100%"
               height="360"
               style={{ border: 0 }}
-              allowFullScreen=""
+              allowFullScreen
               loading="lazy"
             />
           </div>

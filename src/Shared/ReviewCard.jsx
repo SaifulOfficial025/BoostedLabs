@@ -10,6 +10,7 @@ function ReviewCard({ avatar, name, date, rating = 5, review }) {
             <img
               src={avatar}
               alt={name}
+              loading="lazy"
               className="w-full h-full object-cover rounded-full"
             />
           ) : (
@@ -24,7 +25,12 @@ function ReviewCard({ avatar, name, date, rating = 5, review }) {
       <div className="flex gap-1 mb-2">
         {Array.from({ length: rating }).map((_, i) => (
           <span key={i} className="text-black text-lg">
-            <img src={staricon} alt="rating icon" className="w-4 mt-2" />
+            <img
+              src={staricon}
+              alt="rating icon"
+              loading="lazy"
+              className="w-4 mt-2"
+            />
           </span>
         ))}
       </div>

@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { BASE_URL } from "./baseUrl";
 import { toast } from "react-toastify";
+import { authFetch } from "../utils/authFetch";
 
 // Async thunk to add product to cart
 export const addToCart = createAsyncThunk(
@@ -32,12 +33,11 @@ export const addToCart = createAsyncThunk(
         payload.color_name = color_name;
       }
 
-      const response = await fetch(
-        `${BASE_URL}/shop/products/${productId}/add-to-cart/`,
+      const response = await authFetch(
+        `/shop/products/${productId}/add-to-cart/`,
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(payload),
@@ -72,10 +72,9 @@ export const fetchCart = createAsyncThunk(
         return rejectWithValue("No access token found");
       }
 
-      const response = await fetch(`${BASE_URL}/shop/cart/`, {
+      const response = await authFetch(`/shop/cart/`, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
@@ -104,10 +103,9 @@ export const removeCartItem = createAsyncThunk(
         return rejectWithValue("No access token found");
       }
 
-      const response = await fetch(`${BASE_URL}/shop/cart/remove/${cartId}/`, {
+      const response = await authFetch(`/shop/cart/remove/${cartId}/`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
@@ -138,16 +136,12 @@ export const increaseQuantity = createAsyncThunk(
         return rejectWithValue("No access token found");
       }
 
-      const response = await fetch(
-        `${BASE_URL}/shop/cart/items/increase/${cartId}/`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await authFetch(`/shop/cart/items/increase/${cartId}/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         return rejectWithValue("Failed to increase quantity");
@@ -175,16 +169,12 @@ export const decreaseQuantity = createAsyncThunk(
         return rejectWithValue("No access token found");
       }
 
-      const response = await fetch(
-        `${BASE_URL}/shop/cart/items/decrease/${cartId}/`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await authFetch(`/shop/cart/items/decrease/${cartId}/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         return rejectWithValue("Failed to decrease quantity");
@@ -221,10 +211,9 @@ export const checkout = createAsyncThunk(
         payload.free_tshirt_size = freeTshirtSize;
       }
 
-      const response = await fetch(`${BASE_URL}/shop/checkout/`, {
+      const response = await authFetch(`/shop/checkout/`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),

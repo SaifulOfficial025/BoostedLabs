@@ -95,19 +95,20 @@ function ChooseYourBoostedProduct() {
           best.
         </p>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 justify-center">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 items-stretch">
         {transformedProducts.map((product) => (
-          <ProductCard
-            key={product.id}
-            productId={product.id}
-            badge={product.badge}
-            image={product.image}
-            title={product.title}
-            description={product.description}
-            price={product.price}
-            onViewDetails={() => {}}
-            onAddToCart={() => {}}
-          />
+          <div key={product.id} className="w-full flex">
+            <ProductCard
+              productId={product.id}
+              badge={product.badge}
+              image={product.image}
+              title={product.title}
+              description={product.description}
+              price={product.price}
+              onViewDetails={() => {}}
+              onAddToCart={() => {}}
+            />
+          </div>
         ))}
       </div>
     </section>

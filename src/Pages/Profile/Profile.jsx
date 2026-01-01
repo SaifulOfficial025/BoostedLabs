@@ -6,6 +6,8 @@ import Noticebar from "../../Shared/Noticebar";
 import Headers from "../../Shared/Header";
 import { fetchProfile, updateProfile } from "../../Redux/Profile";
 import { BASE_URL } from "../../Redux/baseUrl";
+import { Link } from "react-router-dom";
+import profileimg from "../.././../public/dummy.jpg";
 
 function Profile() {
   const dispatch = useDispatch();
@@ -58,6 +60,17 @@ function Profile() {
 
   const handleSave = async () => {
     if (editMode) {
+      // Validate required fields
+      if (
+        !firstName ||
+        firstName.trim() === "" ||
+        !lastName ||
+        lastName.trim() === ""
+      ) {
+        window.alert("First Name and Last Name are required.");
+        return;
+      }
+
       // Save changes
       const result = await dispatch(
         updateProfile({
@@ -98,9 +111,11 @@ function Profile() {
       <Headers />
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 md:px-8 font-sans mt-20">
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-9">
-          <button className="flex items-center gap-2 text-sm text-white mb-2 sm:mb-6 hover:underline px-3 py-1.5 bg-black rounded">
-            <FaArrowLeft /> Back
-          </button>
+          <Link to="/">
+            <button className="flex items-center gap-2 text-sm text-white mb-2 sm:mb-6 hover:underline px-3 py-1.5 bg-black rounded">
+              <FaArrowLeft /> Back
+            </button>
+          </Link>
         </div>
 
         {error && (
@@ -112,7 +127,7 @@ function Profile() {
         <div className="flex flex-col items-center mb-8">
           <div className="relative">
             <img
-              src={imagePreview || "/public/profiledummyimage.png"}
+              src={imagePreview || profileimg}
               alt="Profile"
               className="w-28 h-28 sm:w-44 sm:h-44 rounded-full object-cover border-4 border-gray-200"
             />
@@ -159,6 +174,8 @@ function Profile() {
             <div>
               <label className="text-sm text-gray-600">First Name</label>
               <input
+                required
+                aria-required="true"
                 className="mt-1 w-full border border-gray-200 rounded px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black disabled:bg-gray-100"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
@@ -168,6 +185,8 @@ function Profile() {
             <div>
               <label className="text-sm text-gray-600">Last Name</label>
               <input
+                required
+                aria-required="true"
                 className="mt-1 w-full border border-gray-200 rounded px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black disabled:bg-gray-100"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}

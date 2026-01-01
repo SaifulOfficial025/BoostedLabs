@@ -4,19 +4,22 @@ import { HiMenuAlt3 } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
 import ShoppingCartModal from "./ShoppingCartModal";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../Redux/Auth";
+import { clearCart } from "../Redux/Cart";
 import Logo from "../../public/BoostedLabLogo.svg";
 import filtericon from "../../public/filter.png";
 import { LuShoppingCart } from "react-icons/lu";
 import ChangePasswordModal from "../Pages/Profile/ChangePasswordModal";
 import RecurringProductModal from "../Pages/Profile/RecurringProductModal";
 import { BASE_URL } from "../Redux/baseUrl";
+import { getGuestCartCount } from "../utils/guestCart";
 
 import { FaXTwitter } from "react-icons/fa6";
 import { FaFacebookF } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
+import { IoLogoWhatsapp } from "react-icons/io";
 
 function Header() {
   const [showFilter, setShowFilter] = useState(false);
@@ -31,6 +34,14 @@ function Header() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const cartItems = useSelector((state) => state.cart.items || []);
+  const isLoggedIn = !!localStorage.getItem("auth");
+
+  // Calculate cart count based on login status
+  const cartCount = isLoggedIn
+    ? cartItems.reduce((sum, it) => sum + (it.quantity || 0), 0)
+    : getGuestCartCount();
 
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [showRecurring, setShowRecurring] = useState(false);
@@ -86,6 +97,14 @@ function Header() {
     setShowCartModal(true);
   };
 
+  // Force re-render when cart modal is closed (for guest cart count update)
+  const [, forceUpdate] = useState(0);
+  useEffect(() => {
+    if (!showCartModal) {
+      forceUpdate((n) => n + 1);
+    }
+  }, [showCartModal]);
+
   // Close dropdown when clicking outside
   React.useEffect(() => {
     function handleClickOutside(event) {
@@ -123,12 +142,12 @@ function Header() {
             </span>
             <span className="sm:hidden text-[9px]">Follow:</span>
             <a
-              href="#"
+              href="https://wa.me/61478101857"
               className="hover:text-gray-400 transition-all"
               aria-label="Twitter"
             >
               <span className="bg-white rounded-full flex items-center justify-center w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7">
-                <FaXTwitter className="text-black text-[8px] sm:text-[12px] md:text-[15px]" />
+                <IoLogoWhatsapp className="text-black text-[12px] sm:text-[15px] md:text-[18px]" />
               </span>
             </a>
             <a
@@ -140,17 +159,9 @@ function Header() {
                 <FaFacebookF className="text-black text-[8px] sm:text-[12px] md:text-[15px]" />
               </span>
             </a>
+
             <a
-              href="#"
-              className="hover:text-gray-400 transition-all"
-              aria-label="LinkedIn"
-            >
-              <span className="bg-white rounded-full flex items-center justify-center w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7">
-                <FaLinkedinIn className="text-black text-[8px] sm:text-[12px] md:text-[15px]" />
-              </span>
-            </a>
-            <a
-              href="#"
+              href="https://www.instagram.com/boostedlab"
               className="hover:text-gray-400 transition-all"
               aria-label="Instagram"
             >
@@ -356,7 +367,7 @@ function Header() {
             </div>
             {/* Cart Icon */}
             <button
-              className="group bg-transparent p-1.5 md:p-2 rounded hover:bg-gray-100 hover:shadow-sm active:scale-95 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200"
+              className="relative group bg-transparent p-1.5 md:p-2 rounded hover:bg-gray-100 hover:shadow-sm active:scale-95 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200"
               onClick={handleCartClick}
               aria-label="Open shopping cart"
             >
@@ -374,6 +385,11 @@ function Header() {
                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
               </svg>
               <LuShoppingCart className="w-5 h-5 md:w-[22px] md:h-[22px] text-black hidden group-hover:block" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-semibold rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
+              )}
             </button>
             <ShoppingCartModal
               open={showCartModal}
@@ -442,10 +458,12 @@ function Header() {
                       onClick={() => {
                         try {
                           dispatch(logout());
+                          dispatch(clearCart());
+                          dispatch(clearCart());
                         } catch (e) {}
                         setShowAccount(false);
                         setStoredAuth(null);
-                        navigate("/signin");
+                        navigate("/");
                       }}
                       className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
@@ -466,7 +484,7 @@ function Header() {
 
           {/* Cart Icon - Mobile Only */}
           <button
-            className="xl:hidden text-white p-2 ml-auto mr-2 touch-manipulation active:scale-95 transition-transform"
+            className="xl:hidden relative text-white p-2 ml-auto mr-2 touch-manipulation active:scale-95 transition-transform"
             onClick={handleCartClick}
             aria-label="Open shopping cart"
           >
@@ -483,6 +501,11 @@ function Header() {
               <circle cx="20" cy="21" r="1" />
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
             </svg>
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-semibold rounded-full w-5 h-5 flex items-center justify-center">
+                {cartCount > 99 ? "99+" : cartCount}
+              </span>
+            )}
           </button>
         </section>
       </div>
@@ -729,7 +752,7 @@ function Header() {
                       } catch (e) {}
                       setShowMobileMenu(false);
                       setStoredAuth(null);
-                      navigate("/signin");
+                      navigate("/");
                     }}
                     className="text-left text-white py-1.5 px-2 rounded hover:bg-white/10 transition-colors text-sm sm:text-base touch-manipulation"
                   >

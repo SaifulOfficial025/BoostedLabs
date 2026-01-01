@@ -59,6 +59,7 @@ function SmallProductComponentWithVolumeModificationandPrice({
           <img
             src={productImage}
             alt={title}
+            loading="lazy"
             className="w-24 h-20 sm:w-20 sm:h-16 object-contain rounded-lg border border-gray-200 bg-white mx-auto sm:mx-0"
             onError={(e) => {
               // Fallback to public dummy image or a tiny SVG if loading fails

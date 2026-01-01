@@ -9,7 +9,7 @@ import { router } from "./Routes/router";
 import { store } from "./Redux/store";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}>
       <RouterProvider router={router} />
       <ToastContainer
@@ -26,5 +26,5 @@ createRoot(document.getElementById("root")).render(
         style={{ zIndex: 999999 }}
       />
     </Provider>
-  </StrictMode>
+  // </StrictMode>
 );

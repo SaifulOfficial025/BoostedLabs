@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function ReadytoStart() {
   return (
@@ -11,12 +12,16 @@ function ReadytoStart() {
         specific product.
       </p>
       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-xs sm:max-w-none justify-center items-center mx-auto">
-        <button className="w-full sm:w-auto bg-[#FF7A3D] hover:bg-[#ff9a6a] text-white font-semibold py-3 px-7 rounded-lg shadow transition-colors duration-200 text-base sm:text-lg">
-          View Usage Guides &rarr;
-        </button>
-        <button className="w-full sm:w-auto border-2 border-[#0A2239] text-[#0A2239] font-semibold py-3 px-7 rounded-lg shadow-sm hover:bg-[#f5faff] transition-colors duration-200 text-base sm:text-lg">
-          Contact Support &rarr;
-        </button>
+        <Link to="/usage-guide">
+          <button className="w-full sm:w-auto bg-[#FF7A3D] hover:bg-[#ff9a6a] text-white font-semibold py-3 px-7 rounded-lg shadow transition-colors duration-200 text-base sm:text-lg">
+            View Usage Guides &rarr;
+          </button>
+        </Link>
+        <Link to="/about">
+          <button className="w-full sm:w-auto border-2 border-[#0A2239] text-[#0A2239] font-semibold py-3 px-7 rounded-lg shadow-sm hover:bg-[#f5faff] transition-colors duration-200 text-base sm:text-lg">
+            Contact Support &rarr;
+          </button>
+        </Link>
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useDispatch, useSelector } from "react-redux";
 import AddShippingAddressModal from "./AddShippingAddressModal";
+import GuestAddressModal from "./GuestAddressModal";
 import SmallProductComponentWithVolumeModificationandPrice from "./SmallProductComponentWithVolumeModificationandPrice";
 import SizeSelection from "./Sizeselection";
 import {
@@ -10,13 +11,24 @@ import {
   increaseQuantity,
   decreaseQuantity,
 } from "../Redux/Cart";
+import { fetchShopHealthProducts } from "../Redux/ShopProduct";
 import { BASE_URL } from "../Redux/baseUrl";
+import {
+  getGuestCart,
+  increaseGuestCartQuantity,
+  decreaseGuestCartQuantity,
+  removeFromGuestCart,
+} from "../utils/guestCart";
 
 function ShoppingCartModal({ open, onClose }) {
   const modalRef = useRef(null);
   const dispatch = useDispatch();
   const [showAddressModal, setShowAddressModal] = useState(false);
 
+  // Check if user is logged in
+  const isLoggedIn = !!localStorage.getItem("auth");
+
+  // For logged-in users
   const {
     items,
     subtotal,
@@ -26,6 +38,15 @@ function ShoppingCartModal({ open, onClose }) {
     eligibleForFreeTshirt,
   } = useSelector((state) => state.cart);
 
+  // For guest users - track guest cart in local state
+  const [guestCartItems, setGuestCartItems] = useState([]);
+  const [guestCartProducts, setGuestCartProducts] = useState({});
+
+  // Fetch product details for guest cart items
+  const { products: shopProducts, loading: shopLoading } = useSelector(
+    (state) => state.shopProduct
+  );
+
   const [selectAll, setSelectAll] = useState(false);
   const [recurring, setRecurring] = useState(false);
   const [checkedItems, setCheckedItems] = useState({});
@@ -33,21 +54,32 @@ function ShoppingCartModal({ open, onClose }) {
   // Fetch cart data when modal opens
   useEffect(() => {
     if (open) {
-      dispatch(fetchCart());
+      if (isLoggedIn) {
+        dispatch(fetchCart());
+      } else {
+        // Load guest cart from localStorage
+        const guestCart = getGuestCart();
+        setGuestCartItems(guestCart);
+        // Only fetch shop products if not already loaded (prevents re-render of Products page)
+        if (guestCart.length > 0 && shopProducts.length === 0) {
+          dispatch(fetchShopHealthProducts());
+        }
+      }
     }
-  }, [open, dispatch]);
+  }, [open, dispatch, isLoggedIn, shopProducts.length]);
 
   // Initialize checked items when items change
   useEffect(() => {
-    if (items.length > 0) {
+    const cartItems = isLoggedIn ? items : guestCartItems;
+    if (cartItems.length > 0) {
       const initialChecked = {};
-      items.forEach((item) => {
+      cartItems.forEach((item) => {
         initialChecked[item.id] = true;
       });
       setCheckedItems(initialChecked);
       setSelectAll(true);
     }
-  }, [items]);
+  }, [items, guestCartItems, isLoggedIn]);
 
   // Local mount/visibility state so the modal can animate on mount/unmount
   const [isMounted, setIsMounted] = useState(open);
@@ -100,16 +132,19 @@ function ShoppingCartModal({ open, onClose }) {
 
   // keep selectAll in sync when checkedItems changes
   useEffect(() => {
+    const cartItems = isLoggedIn ? items : guestCartItems;
     const allChecked =
-      items.length > 0 && items.every((item) => checkedItems[item.id] === true);
+      cartItems.length > 0 &&
+      cartItems.every((item) => checkedItems[item.id] === true);
     setSelectAll(allChecked);
-  }, [checkedItems, items]);
+  }, [checkedItems, items, guestCartItems, isLoggedIn]);
 
   function toggleSelectAll() {
     const next = !selectAll;
     setSelectAll(next);
+    const cartItems = isLoggedIn ? items : guestCartItems;
     const newChecked = {};
-    items.forEach((item) => {
+    cartItems.forEach((item) => {
       newChecked[item.id] = next;
     });
     setCheckedItems(newChecked);
@@ -123,29 +158,83 @@ function ShoppingCartModal({ open, onClose }) {
   }
 
   function handleIncreaseQuantity(id) {
-    dispatch(increaseQuantity(id));
+    if (isLoggedIn) {
+      dispatch(increaseQuantity(id));
+    } else {
+      increaseGuestCartQuantity(id);
+      setGuestCartItems(getGuestCart());
+    }
   }
 
   function handleDecreaseQuantity(id) {
-    dispatch(decreaseQuantity(id));
+    if (isLoggedIn) {
+      dispatch(decreaseQuantity(id));
+    } else {
+      decreaseGuestCartQuantity(id);
+      setGuestCartItems(getGuestCart());
+    }
   }
 
   function handleRemoveItem(id) {
-    dispatch(removeCartItem(id));
+    if (isLoggedIn) {
+      dispatch(removeCartItem(id));
+    } else {
+      removeFromGuestCart(id);
+      setGuestCartItems(getGuestCart());
+    }
   }
 
-  const selectedSubtotal = items.reduce((sum, item) => {
-    if (checkedItems[item.id]) {
-      const price = parseFloat(
-        item.product.discounted_price || item.product.initial_price
-      );
-      return sum + price * item.quantity;
+  useEffect(() => {
+    if (!isLoggedIn && guestCartItems.length > 0) {
+      // Build product map for quick lookup
+      const productMap = {};
+      guestCartItems.forEach((item) => {
+        const product = shopProducts.find((p) => p.id === item.product_id);
+        if (product) {
+          productMap[item.id] = product;
+        }
+      });
+      setGuestCartProducts(productMap);
     }
-    return sum;
-  }, 0);
+  }, [guestCartItems, shopProducts, isLoggedIn]);
 
-  const selectedShippingFee = selectedSubtotal > 0 ? shippingFee : 0;
+  const selectedSubtotal = (() => {
+    const cartItems = isLoggedIn ? items : guestCartItems;
+    return cartItems.reduce((sum, item) => {
+      if (checkedItems[item.id]) {
+        let price;
+        if (isLoggedIn) {
+          price = parseFloat(
+            item.product.discounted_price || item.product.initial_price
+          );
+        } else {
+          const product = guestCartProducts[item.id];
+          if (product) {
+            price = parseFloat(
+              product.discounted_price || product.initial_price
+            );
+          } else {
+            return sum;
+          }
+        }
+        return sum + price * item.quantity;
+      }
+      return sum;
+    }, 0);
+  })();
+
+  // Fixed shipping fee - you can adjust this
+  const fixedShippingFee = 10.0;
+  const selectedShippingFee =
+    selectedSubtotal > 0 ? (isLoggedIn ? shippingFee : fixedShippingFee) : 0;
   const selectedTotal = selectedSubtotal + selectedShippingFee;
+
+  // Check if eligible for free t-shirt ($1500+ order)
+  const isEligibleForFreeTshirt = isLoggedIn
+    ? eligibleForFreeTshirt
+    : selectedSubtotal >= 1500;
+
+  const cartItems = isLoggedIn ? items : guestCartItems;
   const [selectedSize, setSelectedSize] = useState("S");
 
   return createPortal(
@@ -203,47 +292,75 @@ function ShoppingCartModal({ open, onClose }) {
               />
               <span className="text-[#222] text-sm">Select All</span>
             </label>
-            {loading && (
+            {loading && isLoggedIn && (
               <div className="text-center text-gray-500 py-6">
                 Loading cart...
               </div>
             )}
-            {!loading && items.length === 0 && (
+            {!loading && cartItems.length === 0 && (
               <div className="text-center text-gray-500 py-6">
                 Your cart is empty
               </div>
             )}
-            {!loading &&
-              items.map((item) => {
-                const imageUrl = item.product.logo
+            {cartItems.map((item) => {
+              let imageUrl,
+                price,
+                productName,
+                category,
+                selectedSize,
+                selectedColorHex,
+                selectedColorName;
+
+              if (isLoggedIn) {
+                imageUrl = item.product.logo
                   ? `${BASE_URL}${item.product.logo}`
                   : "/product-weightloss.png";
-                const price = parseFloat(
+                price = parseFloat(
                   item.product.discounted_price || item.product.initial_price
                 );
-
-                return (
-                  <SmallProductComponentWithVolumeModificationandPrice
-                    key={item.id}
-                    checked={!!checkedItems[item.id]}
-                    onCheck={() => toggleItemCheck(item.id)}
-                    image={imageUrl}
-                    badge={item.product.category || ""}
-                    title={item.product.name}
-                    price={price}
-                    quantity={item.quantity}
-                    selectedSize={item.selected_size}
-                    selectedColorHex={item.selected_color_hex}
-                    selectedColorName={item.selected_color_name}
-                    onDecrease={() => handleDecreaseQuantity(item.id)}
-                    onIncrease={() => handleIncreaseQuantity(item.id)}
-                    onRemove={() => handleRemoveItem(item.id)}
-                  />
+                productName = item.product.name;
+                category = item.product.category || "";
+                selectedSize = item.selected_size;
+                selectedColorHex = item.selected_color_hex;
+                selectedColorName = item.selected_color_name;
+              } else {
+                const product = guestCartProducts[item.id];
+                if (!product) return null;
+                imageUrl = product.logo
+                  ? `${BASE_URL}${product.logo}`
+                  : "/product-weightloss.png";
+                price = parseFloat(
+                  product.discounted_price || product.initial_price
                 );
-              })}
+                productName = product.name;
+                category = product.category || "";
+                selectedSize = item.size;
+                selectedColorHex = item.color_hex;
+                selectedColorName = item.color_name;
+              }
+
+              return (
+                <SmallProductComponentWithVolumeModificationandPrice
+                  key={item.id}
+                  checked={!!checkedItems[item.id]}
+                  onCheck={() => toggleItemCheck(item.id)}
+                  image={imageUrl}
+                  badge={category}
+                  title={productName}
+                  price={price}
+                  quantity={item.quantity}
+                  selectedSize={selectedSize}
+                  selectedColorHex={selectedColorHex}
+                  selectedColorName={selectedColorName}
+                  onDecrease={() => handleDecreaseQuantity(item.id)}
+                  onIncrease={() => handleIncreaseQuantity(item.id)}
+                  onRemove={() => handleRemoveItem(item.id)}
+                />
+              );
+            })}
           </div>
           <div className="px-6">
-            {eligibleForFreeTshirt && (
+            {isEligibleForFreeTshirt && (
               <div className="bg-white rounded-md border border-gray-200 p-4 mb-4">
                 <div className="text-sm text-gray-800 font-medium mb-2">
                   You received 1 free t-shirt for your $1500+ order. Please
@@ -286,8 +403,9 @@ function ShoppingCartModal({ open, onClose }) {
                 </span>
               </label>
               <button
-                className="w-full bg-black text-white py-2 rounded-lg font-semibold text-base mt-2 mb-2 transition-all hover:shadow-[0_0_16px_2px_rgba(0,0,0,0.25)]"
+                className="w-full bg-black text-white py-2 rounded-lg font-semibold text-base mt-2 mb-2 transition-all hover:shadow-[0_0_16px_2px_rgba(0,0,0,0.25)] disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:shadow-none"
                 onClick={() => setShowAddressModal(true)}
+                disabled={cartItems.length === 0 || selectedSubtotal === 0}
               >
                 Proceed to checkout
               </button>
@@ -315,12 +433,20 @@ function ShoppingCartModal({ open, onClose }) {
           </div>
         </div>
       </div>
-      {showAddressModal && (
+      {showAddressModal && isLoggedIn && (
         <AddShippingAddressModal
           open={showAddressModal}
           onClose={() => setShowAddressModal(false)}
           isSubscription={recurring}
-          freeTshirtSize={eligibleForFreeTshirt ? selectedSize : null}
+          freeTshirtSize={isEligibleForFreeTshirt ? selectedSize : null}
+        />
+      )}
+      {showAddressModal && !isLoggedIn && (
+        <GuestAddressModal
+          open={showAddressModal}
+          onClose={() => setShowAddressModal(false)}
+          isSubscription={recurring}
+          freeTshirtSize={isEligibleForFreeTshirt ? selectedSize : null}
         />
       )}
     </>,
