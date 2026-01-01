@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { FaArrowLeft, FaEdit } from "react-icons/fa";
 import Footer from "../../Shared/Footer";
@@ -67,7 +68,7 @@ function Profile() {
         !lastName ||
         lastName.trim() === ""
       ) {
-        window.alert("First Name and Last Name are required.");
+        toast.error("First Name and Last Name are required.");
         return;
       }
 
@@ -81,10 +82,16 @@ function Profile() {
         })
       );
 
-      // If successful, exit edit mode
       if (result.type === "profile/updateProfile/fulfilled") {
+        toast.success("Profile updated successfully!");
         setEditMode(false);
         setImageFile(null);
+      } else {
+        const errorMsg =
+          result?.payload?.error ||
+          result?.payload ||
+          "Failed to update profile.";
+        toast.error(errorMsg);
       }
     } else {
       // Enter edit mode

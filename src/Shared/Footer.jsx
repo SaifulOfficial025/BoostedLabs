@@ -32,18 +32,30 @@ function Footer() {
           <div className="flex gap-3 mt-1">
             {/* Social Icons */}
 
-            <a href="#" aria-label="Facebook">
+            <a
+              href="https://facebook.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+            >
               <span className="bg-white rounded-full flex items-center justify-center w-7 h-7">
                 <FaFacebookF className="text-black text-[15px]" />
               </span>
             </a>
-            <a href="https://wa.me/61478101857" aria-label="WhatsApp">
+            <a
+              href="https://wa.me/61478101857"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp"
+            >
               <span className="bg-white rounded-full flex items-center justify-center w-7 h-7">
                 <IoLogoWhatsapp className="text-black text-[18px]" />
               </span>
             </a>
             <a
               href="https://www.instagram.com/boostedlab"
+              target="_blank"
+              rel="noopener noreferrer"
               aria-label="Instagram"
             >
               <span className="bg-white rounded-full flex items-center justify-center w-7 h-7">

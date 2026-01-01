@@ -1,6 +1,8 @@
+import { clear } from "localforage";
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { FaStar } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 function Star({ filled, onClick, onMouseEnter, onMouseLeave }) {
   return (
@@ -23,7 +25,7 @@ function ShareYourFeedbackModal({ open, onClose, onSubmit }) {
   const modalRef = useRef(null);
   const [isMounted, setIsMounted] = useState(open);
   const [isVisible, setIsVisible] = useState(false);
-  const [rating, setRating] = useState(4);
+  const [rating, setRating] = useState(5);
   const [hover, setHover] = useState(0);
   const [feedback, setFeedback] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -64,16 +66,30 @@ function ShareYourFeedbackModal({ open, onClose, onSubmit }) {
     if (submitting) return;
     setSubmitting(true);
     try {
-      if (onSubmit) await onSubmit({ rating, feedback });
+      if (onSubmit) {
+        const result = await onSubmit({ rating, feedback });
+        // Check if result contains an error (don't close modal on error)
+        // Toast is already handled by Redux thunk
+        if (result && !result.error) {
+          onClose && onClose();
+        }
+      }
     } catch (err) {
-      // swallow — UI-only implementation
-      console.error(err);
+      // Error toast is already handled by Redux thunk
+      console.error("Submit feedback error:", err);
     }
     setSubmitting(false);
-    onClose && onClose();
   }
 
   if (!isMounted) return null;
+
+  // Helper to clear form and close modal
+  const handleCancel = () => {
+    setFeedback("");
+    setRating(5);
+    setHover(0);
+    onClose && onClose();
+  };
 
   return createPortal(
     <div
@@ -123,12 +139,13 @@ function ShareYourFeedbackModal({ open, onClose, onSubmit }) {
             rows={5}
             className="w-full border border-gray-200 rounded-lg p-3 mb-4 resize-none text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
             placeholder="My feedback!!"
+            initialValue={""}
           />
 
           <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={() => onClose && onClose()}
+              onClick={handleCancel}
               className="px-4 py-2 rounded-lg border border-gray-300 text-gray-800 bg-white hover:bg-gray-50 flex-1"
             >
               Cancel

@@ -126,18 +126,27 @@ function ContactUs() {
             <div className="mb-6">
               <div className="font-semibold mb-2">Follow Us</div>
               <div className="flex items-center gap-3">
-                <a className="w-8 h-8 rounded bg-blue-600 text-white flex items-center justify-center">
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 rounded bg-blue-600 text-white flex items-center justify-center"
+                >
                   <FaFacebookF />
                 </a>
                 <a
                   className="w-8 h-8 rounded bg-blue-400 text-white flex items-center justify-center"
                   href="https://wa.me/61478101857"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <ImWhatsapp />
                 </a>
                 <a
                   className="w-8 h-8 rounded bg-pink-500 text-white flex items-center justify-center"
                   href="https://www.instagram.com/boostedlab"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <FaInstagram />
                 </a>

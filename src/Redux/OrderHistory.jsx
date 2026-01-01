@@ -146,8 +146,12 @@ export const submitReview = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json();
-        toast.error(errorData.message || "Failed to submit review");
-        return rejectWithValue(errorData.message || "Failed to submit review");
+        toast.error(
+          errorData.error || errorData.message || "Failed to submit review"
+        );
+        return rejectWithValue(
+          errorData.error || errorData.message || "Failed to submit review"
+        );
       }
 
       const data = await response.json();

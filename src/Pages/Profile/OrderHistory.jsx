@@ -38,15 +38,23 @@ function OrderHistory() {
 
   const handleSubmitReview = async ({ rating, feedback }) => {
     if (selectedOrderItem) {
-      await dispatch(
+      const result = await dispatch(
         submitReview({
           productId: selectedOrderItem.productId,
           rating,
           comment: feedback,
         })
       );
+
+      // Check if the action was rejected (error from backend)
+      if (result.type && result.type.endsWith("/rejected")) {
+        return { error: result.payload || "Failed to submit review" };
+      }
+
+      // Success case
       setFeedbackOpen(false);
       setSelectedOrderItem(null);
+      return { message: "Review submitted successfully!" };
     }
   };
 
@@ -95,23 +103,23 @@ function OrderHistory() {
     <div>
       <Header />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 mt-10 font-sans mb-16">
-        <div className="flex items-center gap-4 mb-16">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 py-8 mt-10 font-sans mb-16">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-8 sm:mb-16">
           <Link
             to="/profile"
-            className="text-md bg-black text-white px-3 py-1 rounded inline-flex items-center gap-2"
+            className="text-md bg-black text-white px-3 py-1 rounded inline-flex items-center gap-2 w-fit"
           >
             <FaLongArrowAltLeft /> Back
           </Link>
-          <h1 className="text-2xl font-bold">Order History</h1>
+          <h1 className="text-xl sm:text-2xl font-bold">Order History</h1>
         </div>
 
-        <div className="flex gap-3 mb-6">
+        <div className="flex flex-wrap gap-2 mb-6">
           {["All", "Active", "Delivered", "Cancelled"].map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-3 py-1 rounded-full ${
+              className={`px-3 py-1 rounded-full text-sm sm:text-base ${
                 filter === f
                   ? "bg-black text-white"
                   : "bg-gray-100 text-gray-700"
@@ -122,7 +130,7 @@ function OrderHistory() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mt-6 sm:mt-10 items-start">
           {loading && (
             <div className="col-span-full text-center py-12">
               <p className="text-lg text-gray-600">Loading orders...</p>
@@ -154,7 +162,7 @@ function OrderHistory() {
               const normalizedStatus = normalizeStatus(order.status);
 
               return (
-                <div key={order.id} className="w-full">
+                <div key={order.id} className="w-full flex flex-col h-full">
                   <ProductCard
                     hideActions
                     badge={badgeFor(order.status)}
@@ -169,36 +177,36 @@ function OrderHistory() {
                     }
                     onAddToCart={() => console.log("order again", order.id)}
                   />
-                  <div className="mt-4">
+                  <div className="mt-3 sm:mt-4 flex flex-col gap-2 w-full">
                     {normalizedStatus === "Active" && (
-                      <div className="flex gap-3">
+                      <div className="flex flex-col sm:flex-row gap-2 w-full">
                         <button
                           onClick={() => handleConfirmDelivery(order.id)}
-                          className="flex-1 bg-black text-white py-2 rounded-md hover:bg-green-700 transition"
+                          className="flex-1 bg-black text-white py-2 px-2 text-sm sm:text-base rounded-md hover:bg-[#70c41d] transition"
                         >
                           Mark as Delivered
                         </button>
                         <button
                           onClick={() => handleCancelOrder(order.id)}
-                          className="flex-1 bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition"
+                          className="flex-1 bg-[#fe6464] text-white py-2 px-2 text-sm sm:text-base rounded-md hover:bg-red-700 transition"
                         >
                           Cancel Order
                         </button>
                       </div>
                     )}
                     {normalizedStatus === "Cancelled" && (
-                      <div className="flex gap-3">
+                      <div className="flex flex-col sm:flex-row gap-2 w-full">
                         <button
                           onClick={() =>
                             navigate(`/product-details/${product.id}`)
                           }
-                          className="flex-1 border border-gray-400 py-2 rounded-md"
+                          className="flex-1 border border-gray-400 py-2 px-2 text-sm sm:text-base rounded-md"
                         >
                           View Details
                         </button>
                         <button
                           onClick={() => console.log("order again", order.id)}
-                          className="flex-1 bg-black text-white py-2 rounded-md"
+                          className="flex-1 bg-black text-white py-2 px-2 text-sm sm:text-base rounded-md"
                         >
                           Order again
                         </button>
@@ -214,7 +222,7 @@ function OrderHistory() {
                           });
                           setFeedbackOpen(true);
                         }}
-                        className="w-full bg-black text-white py-2 rounded-lg"
+                        className="w-full bg-black text-white py-2 px-2 text-sm sm:text-base rounded-lg"
                       >
                         Rate this product
                       </button>

@@ -15,6 +15,7 @@ import chatReducer from "./Chat";
 import recurringProductReducer from "./RecurringProduct";
 import socialLoginReducer from "./SocialLogin";
 import guestCheckoutReducer from "./GuestCheckout";
+import searchReducer from "./Search";
 
 export const store = configureStore({
   reducer: {
@@ -34,5 +35,6 @@ export const store = configureStore({
     recurringProduct: recurringProductReducer,
     socialLogin: socialLoginReducer,
     guestCheckout: guestCheckoutReducer,
+    search: searchReducer,
   },
 });

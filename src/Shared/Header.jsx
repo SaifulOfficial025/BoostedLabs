@@ -3,7 +3,12 @@ import { IoPersonOutline } from "react-icons/io5";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
 import ShoppingCartModal from "./ShoppingCartModal";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../Redux/Auth";
 import { clearCart } from "../Redux/Cart";
@@ -26,14 +31,42 @@ function Header() {
   const [showAccount, setShowAccount] = useState(false);
   const [showCartModal, setShowCartModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [mobileSearchQuery, setMobileSearchQuery] = useState("");
   const filterRef = useRef(null);
   const accountRef = useRef(null);
   const mobileFilterRef = useRef(null);
   const location = useLocation();
   const pathname = location?.pathname || "";
+  const [searchParams] = useSearchParams();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // Initialize search query from URL params on search page
+  useEffect(() => {
+    if (pathname === "/search") {
+      const q = searchParams.get("q") || "";
+      setSearchQuery(q);
+      setMobileSearchQuery(q);
+    }
+  }, [pathname, searchParams]);
+
+  // Handle search submission
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const handleMobileSearch = (e) => {
+    e.preventDefault();
+    if (mobileSearchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(mobileSearchQuery.trim())}`);
+      setShowMobileMenu(false);
+    }
+  };
 
   const cartItems = useSelector((state) => state.cart.items || []);
   const isLoggedIn = !!localStorage.getItem("auth");
@@ -143,6 +176,8 @@ function Header() {
             <span className="sm:hidden text-[9px]">Follow:</span>
             <a
               href="https://wa.me/61478101857"
+              target="_blank"
+              rel="noopener noreferrer"
               className="hover:text-gray-400 transition-all"
               aria-label="Twitter"
             >
@@ -151,7 +186,9 @@ function Header() {
               </span>
             </a>
             <a
-              href="#"
+              href="https://facebook.com"
+              target="_blank"
+              rel="noopener noreferrer"
               className="hover:text-gray-400 transition-all"
               aria-label="Facebook"
             >
@@ -162,6 +199,8 @@ function Header() {
 
             <a
               href="https://www.instagram.com/boostedlab"
+              target="_blank"
+              rel="noopener noreferrer"
               className="hover:text-gray-400 transition-all"
               aria-label="Instagram"
             >
@@ -270,7 +309,8 @@ function Header() {
           {/* Search, Cart, Account - Desktop */}
           <div className="hidden xl:flex items-center gap-2 2xl:gap-4 ml-auto">
             {/* Search Bar */}
-            <div
+            <form
+              onSubmit={handleSearch}
               className="flex items-center bg-white rounded-full px-3 2xl:px-5 py-1.5 2xl:py-2 shadow-md relative border border-white"
               style={{
                 background: "transparent",
@@ -279,27 +319,30 @@ function Header() {
               }}
               ref={filterRef}
             >
-              <svg
-                width="16"
-                height="16"
-                fill="none"
-                stroke="#fff"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                className="mr-2"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
+              <button type="submit" className="mr-2">
+                <svg
+                  width="16"
+                  height="16"
+                  fill="none"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              </button>
               <input
                 type="text"
                 placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="bg-transparent outline-none text-white text-xs 2xl:text-sm placeholder-white flex-1"
               />
               <img
                 src={filtericon}
                 alt="Filter"
-                className="w-4 md:w-5 cursor-pointer"
+                className="w-4 md:w-5 cursor-pointer -ml-5"
                 onClick={handleFilterClick}
               />
               {showFilter && (
@@ -364,7 +407,7 @@ function Header() {
                   </div>
                 </div>
               )}
-            </div>
+            </form>
             {/* Cart Icon */}
             <button
               className="relative group bg-transparent p-1.5 md:p-2 rounded hover:bg-gray-100 hover:shadow-sm active:scale-95 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200"
@@ -574,22 +617,29 @@ function Header() {
 
             {/* Search Bar - Mobile */}
             <div className="mt-3 mb-2 sm:mt-4">
-              <div className="flex items-center bg-transparent rounded-full px-3 py-2 sm:px-4 border border-white">
-                <svg
-                  width="14"
-                  height="14"
-                  fill="none"
-                  stroke="#fff"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  className="mr-2 flex-shrink-0 sm:w-4 sm:h-4"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
+              <form
+                onSubmit={handleMobileSearch}
+                className="flex items-center bg-transparent rounded-full px-3 py-2 sm:px-4 border border-white"
+              >
+                <button type="submit" className="mr-2 flex-shrink-0">
+                  <svg
+                    width="14"
+                    height="14"
+                    fill="none"
+                    stroke="#fff"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    className="sm:w-4 sm:h-4"
+                  >
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                </button>
                 <input
                   type="text"
                   placeholder="Search..."
+                  value={mobileSearchQuery}
+                  onChange={(e) => setMobileSearchQuery(e.target.value)}
                   className="bg-transparent outline-none text-white text-xs sm:text-sm placeholder-white flex-1 min-w-0"
                 />
                 <img
@@ -598,7 +648,7 @@ function Header() {
                   className="w-3.5 sm:w-4 cursor-pointer flex-shrink-0 touch-manipulation"
                   onClick={handleFilterClick}
                 />
-              </div>
+              </form>
               {showFilter && (
                 <div
                   ref={mobileFilterRef}

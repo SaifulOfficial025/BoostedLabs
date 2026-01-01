@@ -19,6 +19,7 @@ import UsageRootPage from "../Pages/UsageGuide/RootPage";
 import ReconstituteRootPage from "../Pages/Reconstitute/RootPage";
 import ForgetPasswordOTP from "../Pages/Authentication/ForgetPasswordVerifyOTP";
 import SizeandColor from "../Pages/Shop/SizeandColor";
+import SearchResult from "../Pages/SearchResult";
 
 export const router = createBrowserRouter([
   {
@@ -90,6 +91,10 @@ export const router = createBrowserRouter([
       {
         path: "test",
         element: <SizeandColor />,
+      },
+      {
+        path: "search",
+        element: <SearchResult />,
       },
     ],
   },
