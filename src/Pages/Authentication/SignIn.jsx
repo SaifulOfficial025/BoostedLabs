@@ -120,22 +120,26 @@ function SignIn() {
     <section>
       <div className="flex items-start justify-center bg-white py-5 font-sans mt-10 px-4 sm:px-6">
         <div className="w-full max-w-lg">
-          <button
-            onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-2 mb-6 bg-black text-white px-3 py-2 rounded-lg"
-          >
-            <FaArrowCircleLeft className="w-5 h-5" />
-            Back
-          </button>
+          <Link to="/">
+            <button
+              // onClick={() => navigate(-1)}
+              className="inline-flex items-center gap-2 mb-6 bg-black text-white px-3 py-2 rounded-lg"
+            >
+              <FaArrowCircleLeft className="w-5 h-5" />
+              Back
+            </button>
+          </Link>
         </div>
       </div>
 
       <div className="flex flex-col items-center justify-center bg-white px-4 sm:px-6 md:px-10 font-sans">
-        <img
-          src={Logo}
-          alt="Boosted Labs Logo"
-          className="w-14 sm:w-16 md:w-20 mb-6"
-        />
+        <Link to="/">
+          <img
+            src={Logo}
+            alt="Boosted Labs Logo"
+            className="w-14 sm:w-16 md:w-20 mb-6"
+          />
+        </Link>
         <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2 text-[#222]">
           Sign In
         </h1>
