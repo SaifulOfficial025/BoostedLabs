@@ -2,7 +2,9 @@ import Container from "../../Layout/Container/Container";
 import Footer from "../../Shared/Footer";
 import Header from "../../Shared/Header";
 import Noticebar from "../../Shared/Noticebar";
+
 import ChooseYourBoostedProduct from "./ChooseYourBoostedProduct";
+import FAQ from "./FAQ";
 import Hero from "./Hero";
 import RealResult from "./RealResult";
 import UsageGuide from "./UsageGuide";
@@ -16,6 +18,7 @@ const Home = () => {
       <ChooseYourBoostedProduct />
       <WhyBoostedLab />
       <RealResult />
+      <FAQ />
       {/* <UsageGuide /> */}
       <Footer />
     </div>

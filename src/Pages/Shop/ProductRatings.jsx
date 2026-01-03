@@ -2,11 +2,24 @@ import React from "react";
 import { FaStar } from "react-icons/fa";
 
 function ProductRatings({ product, stats }) {
-  // Fallback to sample data if stats are not available
-  const average = stats?.average_rating || 4.5;
-  const total = stats?.total_reviews || 0;
-  const recommendedPercent = stats?.recommended_percentage || 0;
-  const starCounts = stats?.star_counts || {
+  // Only show if real backend data exists
+  const hasRealStats =
+    stats &&
+    typeof stats.average_rating === "number" &&
+    typeof stats.total_reviews === "number" &&
+    stats.total_reviews > 0;
+
+  if (!hasRealStats) {
+    return null;
+  }
+
+  const average = stats.average_rating;
+  const total = stats.total_reviews;
+  const recommendedPercent =
+    typeof stats.recommended_percentage === "number"
+      ? stats.recommended_percentage
+      : 0;
+  const starCounts = stats.star_counts || {
     "5_star": 0,
     "4_star": 0,
     "3_star": 0,
@@ -23,7 +36,7 @@ function ProductRatings({ product, stats }) {
     { stars: 1, count: starCounts["1_star"] || 0 },
   ];
 
-  const reviews = product?.reviews || [];
+  const reviews = Array.isArray(product?.reviews) ? product.reviews : [];
   const max = Math.max(...barData.map((b) => b.count), 1);
 
   // Format date helper
@@ -38,7 +51,7 @@ function ProductRatings({ product, stats }) {
 
   // Get user name or default
   const getUserName = (userId, index) => {
-    return `User ${userId || index + 1}`;
+    return ` ${userId || index + 1}`;
   };
 
   return (
@@ -121,9 +134,9 @@ function ProductRatings({ product, stats }) {
                   className=" border-2 border-gray-200 rounded-xl p-5 hover:transition hover:shadow-lg duration-200"
                 >
                   <div className="flex items-start gap-4 ">
-                    <div className="flex-shrink-0 w-11 h-11 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-lg">
+                    {/* <div className="flex-shrink-0 w-11 h-11 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-lg">
                       {getUserName(r.user_name, index)[0]}
-                    </div>
+                    </div> */}
                     <div className="flex-1 ">
                       <div className="flex items-center justify-between ">
                         <div className="text-[15px] font-semibold text-gray-900">

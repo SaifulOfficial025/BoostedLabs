@@ -11,6 +11,7 @@ import { FaPhone } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import { sendContactMessage, clearContactUsMessage } from "../Redux/ContactUs";
 import { ImWhatsapp } from "react-icons/im";
+import FAQ from "./FAQ";
 
 function ContactUs() {
   const dispatch = useDispatch();
@@ -266,6 +267,7 @@ function ContactUs() {
           </div>
         </div>
       </div>
+      {/* <FAQ /> */}
       <Footer />
     </section>
   );

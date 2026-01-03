@@ -20,6 +20,7 @@ import ReconstituteRootPage from "../Pages/Reconstitute/RootPage";
 import ForgetPasswordOTP from "../Pages/Authentication/ForgetPasswordVerifyOTP";
 import SizeandColor from "../Pages/Shop/SizeandColor";
 import SearchResult from "../Pages/SearchResult";
+import FAQ from "../Pages/FAQ";
 
 export const router = createBrowserRouter([
   {
@@ -96,6 +97,7 @@ export const router = createBrowserRouter([
         path: "search",
         element: <SearchResult />,
       },
+      { path: "faq", element: <FAQ /> },
     ],
   },
 ]);

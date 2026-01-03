@@ -59,8 +59,13 @@ function ProductAddingToCart({
     product?.type?.name?.toUpperCase() ||
     product?.category?.toUpperCase() ||
     badge;
-  const averageRating = stats?.average_rating || rating;
-  const totalReviews = stats?.total_reviews || reviews;
+  const hasRealStats =
+    stats &&
+    typeof stats.average_rating === "number" &&
+    typeof stats.total_reviews === "number" &&
+    stats.total_reviews > 0;
+  const averageRating = hasRealStats ? stats.average_rating : null;
+  const totalReviews = hasRealStats ? stats.total_reviews : null;
 
   const dispatch = useDispatch();
   const { items: cartItems } = useSelector((state) => state.cart);
@@ -212,23 +217,29 @@ function ProductAddingToCart({
               <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
                 {productTitle}
               </h1>
-              <div className="flex items-center gap-3 mt-3">
-                <div className="flex items-center text-yellow-500">
-                  {[...Array(5)].map((_, i) => (
-                    <FaStar
-                      key={i}
-                      className={
-                        i < Math.floor(averageRating)
-                          ? "text-yellow-500"
-                          : "text-gray-300"
-                      }
-                    />
-                  ))}
+              {hasRealStats && (
+                <div className="flex items-center gap-2 mt-3">
+                  <span className="text-xl font-bold text-gray-900">
+                    {averageRating.toFixed(1)}
+                  </span>
+                  <div className="flex items-center text-[#fbbc05] ml-2">
+                    {[...Array(5)].map((_, i) => (
+                      <FaStar
+                        key={i}
+                        size={18}
+                        className={
+                          i < Math.round(averageRating)
+                            ? "text-[#fbbc05]"
+                            : "text-gray-300"
+                        }
+                      />
+                    ))}
+                  </div>
+                  <span className="text-sm text-gray-600 ml-2">
+                    {totalReviews} review{totalReviews === 1 ? "" : "s"}
+                  </span>
                 </div>
-                <div className="text-sm text-gray-600">
-                  {averageRating} ({totalReviews} reviews)
-                </div>
-              </div>
+              )}
             </div>
             <button className="text-gray-500 p-2 rounded-full border border-gray-200 hover:bg-gray-50">
               <FaShareAlt />

@@ -121,6 +121,7 @@ function Header() {
   const isAbout = pathname === "/about";
   const isUsageGuide = pathname === "/usage-guide";
   const isReconstitute = pathname === "/reconstitute";
+  const isFAQ = pathname === "/faq";
 
   const handleFilterClick = () => {
     setShowFilter((prev) => !prev);
@@ -304,6 +305,14 @@ function Header() {
               }`}
             >
               About Us
+            </Link>
+            <Link
+              to="/faq"
+              className={`text-white text-sm 2xl:text-base ${
+                isFAQ ? "font-bold border-b-2 border-white pb-1" : ""
+              }`}
+            >
+              FAQ
             </Link>
           </nav>
           {/* Search, Cart, Account - Desktop */}

@@ -54,7 +54,7 @@ function RootPageProductDetails() {
       <Header />
       <ProductAddingToCart product={product} stats={stats} />
       <ProductDetailsText product={product} />
-      <ProductCertification />
+      <ProductCertification certificate={product?.certificate} />
       <Disclaimer />
       <ProductRatings product={product} stats={stats} />
       <RelatedProductView relatedProducts={product?.related_products || []} />

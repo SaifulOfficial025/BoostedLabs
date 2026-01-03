@@ -9,6 +9,7 @@ import { useCallback } from "react";
 import herobg from "../../public/aboutherobg.png";
 import Disclaimer from "../Shared/Disclaimer";
 import ContactUs from "./ContactUs";
+import FAQ from "./FAQ";
 
 function About() {
   return (
@@ -173,7 +174,9 @@ function About() {
 
       <Disclaimer />
 
+      
       <ContactUs />
+
 
       {/* <Footer /> */}
     </section>
