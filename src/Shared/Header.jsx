@@ -512,6 +512,7 @@ function Header() {
                           dispatch(logout());
                           dispatch(clearCart());
                           dispatch(clearCart());
+                          window.location.reload();
                         } catch (e) {}
                         setShowAccount(false);
                         setStoredAuth(null);
@@ -525,7 +526,10 @@ function Header() {
                 )}
               </div>
             ) : (
-              <Link to="/signin">
+              <Link
+                to="/signin"
+                onClick={() => setTimeout(() => window.location.reload(), 1000)}
+              >
                 <button className="flex items-center bg-white text-black px-2 py-2 sm:px-3 sm:py-3 md:px-3 md:py-3 rounded-lg text-xs font-medium gap-1 sm:gap-2">
                   <IoPersonOutline className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span className="hidden sm:inline">My Account</span>
@@ -622,6 +626,15 @@ function Header() {
               onClick={() => setShowMobileMenu(false)}
             >
               About Us
+            </Link>
+            <Link
+              to="/faq"
+              className={`text-white py-2.5 px-3 sm:py-3 sm:px-4 rounded text-sm sm:text-base touch-manipulation ${
+                isFAQ ? "font-bold bg-white/10" : ""
+              }`}
+              onClick={() => setShowMobileMenu(false)}
+            >
+              FAQ
             </Link>
 
             {/* Search Bar - Mobile */}
@@ -808,6 +821,8 @@ function Header() {
                         localStorage.removeItem("auth");
                         localStorage.removeItem("auth_verify");
                         localStorage.removeItem("otpEmail");
+                        localStorage.removeItem("guest_chat_messages");
+                        window.location.reload();
                       } catch (e) {}
                       setShowMobileMenu(false);
                       setStoredAuth(null);
@@ -820,7 +835,13 @@ function Header() {
                 </div>
               </div>
             ) : (
-              <Link to="/signin" onClick={() => setShowMobileMenu(false)}>
+              <Link
+                to="/signin"
+                onClick={() => {
+                  setShowMobileMenu(false);
+                  setTimeout(() => window.location.reload(), 1000);
+                }}
+              >
                 <button className="w-full flex items-center justify-center bg-white text-black px-3 py-2.5 sm:px-4 sm:py-3 rounded-lg text-xs sm:text-sm font-medium gap-2 mt-2 touch-manipulation active:scale-95 transition-transform">
                   <IoPersonOutline className="w-4 h-4 sm:w-5 sm:h-5" />
                   My Account

@@ -4,6 +4,35 @@ import { BASE_URL } from "./baseUrl";
 const WS_BASE_URL = "wss://server.boostedlabs.au";
 // const WS_BASE_URL = "ws://10.10.13.61:8002";
 
+// Helper functions for guest chat persistence
+const GUEST_CHAT_KEY = "guest_chat_messages";
+
+const saveGuestMessages = (messages) => {
+  try {
+    localStorage.setItem(GUEST_CHAT_KEY, JSON.stringify(messages));
+  } catch (error) {
+    console.error("Error saving guest messages:", error);
+  }
+};
+
+const loadGuestMessages = () => {
+  try {
+    const saved = localStorage.getItem(GUEST_CHAT_KEY);
+    return saved ? JSON.parse(saved) : [];
+  } catch (error) {
+    console.error("Error loading guest messages:", error);
+    return [];
+  }
+};
+
+const clearGuestMessages = () => {
+  try {
+    localStorage.removeItem(GUEST_CHAT_KEY);
+  } catch (error) {
+    console.error("Error clearing guest messages:", error);
+  }
+};
+
 // Fetch chat history
 export const fetchChatHistory = createAsyncThunk(
   "chat/fetchHistory",
@@ -13,7 +42,8 @@ export const fetchChatHistory = createAsyncThunk(
       const token = authData ? JSON.parse(authData).access : null;
 
       if (!token) {
-        return rejectWithValue("No access token found");
+        // Guest users - load from localStorage
+        return loadGuestMessages();
       }
 
       const response = await fetch(`${BASE_URL}/chat/history/`, {
@@ -61,9 +91,23 @@ const chatSlice = createSlice({
     addMessages: (state, action) => {
       // Add multiple messages from WebSocket response
       state.messages.push(...action.payload);
+
+      // Save to localStorage for guest users
+      const authData = localStorage.getItem("auth");
+      const token = authData ? JSON.parse(authData).access : null;
+      if (!token) {
+        saveGuestMessages(state.messages);
+      }
     },
     clearMessages: (state) => {
       state.messages = [];
+
+      // Clear guest messages from localStorage
+      const authData = localStorage.getItem("auth");
+      const token = authData ? JSON.parse(authData).access : null;
+      if (!token) {
+        clearGuestMessages();
+      }
     },
     setWebSocket: (state, action) => {
       state.websocket = action.payload;
@@ -79,16 +123,26 @@ const chatSlice = createSlice({
       })
       .addCase(fetchChatHistory.fulfilled, (state, action) => {
         state.historyLoading = false;
-        // Transform API response to component format
-        // API returns messages in reverse chronological order (newest first)
-        // We need to reverse and format them
-        const formattedMessages = action.payload.reverse().map((msg) => ({
-          id: msg.id,
-          from: msg.sender_type === "user" ? "user" : "bot",
-          text: msg.message,
-          sender: msg.sender_name,
-        }));
-        state.messages = formattedMessages;
+
+        // Check if user is logged in
+        const authData = localStorage.getItem("auth");
+        const token = authData ? JSON.parse(authData).access : null;
+
+        if (token) {
+          // Transform API response to component format
+          // API returns messages in reverse chronological order (newest first)
+          // We need to reverse and format them
+          const formattedMessages = action.payload.reverse().map((msg) => ({
+            id: msg.id,
+            from: msg.sender_type === "user" ? "user" : "bot",
+            text: msg.message,
+            sender: msg.sender_name,
+          }));
+          state.messages = formattedMessages;
+        } else {
+          // Guest user - messages are already in the correct format from localStorage
+          state.messages = action.payload;
+        }
       })
       .addCase(fetchChatHistory.rejected, (state) => {
         state.historyLoading = false;
@@ -114,17 +168,20 @@ export const connectWebSocket = () => (dispatch, getState) => {
   const authData = localStorage.getItem("auth");
   const token = authData ? JSON.parse(authData).access : null;
 
-  if (!token) {
-    dispatch(setError("No access token found"));
-    return;
-  }
-
   // Close existing connection if any
   if (ws && ws.readyState === WebSocket.OPEN) {
     return; // Already connected
   }
 
-  const wsUrl = `${WS_BASE_URL}/ws/chat/?token=${token}`;
+  let wsUrl;
+  if (token) {
+    // Authenticated user
+    wsUrl = `${WS_BASE_URL}/ws/chat/?token=${token}`;
+  } else {
+    // Guest user - generate random guest_id
+    const guestId = crypto.randomUUID();
+    wsUrl = `ws://10.10.13.61:8002/ws/chat/?guest_id=${guestId}`;
+  }
 
   try {
     ws = new WebSocket(wsUrl);

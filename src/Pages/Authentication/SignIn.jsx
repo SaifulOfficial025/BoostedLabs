@@ -84,7 +84,8 @@ function SignIn() {
         result.message || result.detail || "Signed in successfully";
       toast.success(String(successMsg));
       // navigate after successful login if needed
-      navigate("/");
+      // navigate("/");
+      window.location.replace("https://boostedlabs.au/");
     } catch (err) {
       // err may be an object with detail or an array of errors
       const msg =
