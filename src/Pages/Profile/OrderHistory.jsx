@@ -210,19 +210,19 @@ function OrderHistory() {
                     )}
                     {normalizedStatus === "Processing" && (
                       <div className="flex flex-col sm:flex-row gap-2 w-full">
-                        <button
+                        {/* <button
                           onClick={() =>
                             navigate(`/product-details/${product.id}`)
                           }
                           className="flex-1 border border-gray-400 py-2 px-2 text-sm sm:text-base rounded-md"
                         >
                           View Details
-                        </button>
+                        </button> */}
                         <button
-                          onClick={() => handleCancelOrder(order.id)}
-                          className="flex-1 bg-[#fe6464] text-white py-2 px-2 text-sm sm:text-base rounded-md hover:bg-red-700 transition"
+                          onClick={() => handleConfirmDelivery(order.id)}
+                          className="flex-1 bg-[#c0f3d2] text-[#205c4c] font-semibold py-2 px-2 text-sm sm:text-base rounded-md hover:bg-[#7bf1bc] transition"
                         >
-                          Cancel Order
+                          Mark as Delivered
                         </button>
                       </div>
                     )}

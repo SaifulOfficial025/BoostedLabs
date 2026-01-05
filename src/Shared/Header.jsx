@@ -511,12 +511,14 @@ function Header() {
                         try {
                           dispatch(logout());
                           dispatch(clearCart());
-                          dispatch(clearCart());
-                          window.location.reload();
+                          localStorage.removeItem("auth");
+                          localStorage.removeItem("auth_verify");
+                          localStorage.removeItem("otpEmail");
+                          localStorage.removeItem("guest_chat_messages");
                         } catch (e) {}
                         setShowAccount(false);
                         setStoredAuth(null);
-                        navigate("/");
+                        window.location.href = "https://boostedlabs.au/";
                       }}
                       className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
@@ -822,11 +824,10 @@ function Header() {
                         localStorage.removeItem("auth_verify");
                         localStorage.removeItem("otpEmail");
                         localStorage.removeItem("guest_chat_messages");
-                        window.location.reload();
                       } catch (e) {}
                       setShowMobileMenu(false);
                       setStoredAuth(null);
-                      navigate("/");
+                      window.location.href = "https://boostedlabs.au/";
                     }}
                     className="text-left text-white py-1.5 px-2 rounded hover:bg-white/10 transition-colors text-sm sm:text-base touch-manipulation"
                   >

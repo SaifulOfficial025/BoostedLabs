@@ -180,7 +180,7 @@ export const connectWebSocket = () => (dispatch, getState) => {
   } else {
     // Guest user - generate random guest_id
     const guestId = crypto.randomUUID();
-    wsUrl = `ws://10.10.13.61:8002/ws/chat/?guest_id=${guestId}`;
+    wsUrl = `wss://server.boostedlabs.au/ws/chat/?guest_id=${guestId}`;
   }
 
   try {
