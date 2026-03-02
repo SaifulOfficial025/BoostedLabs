@@ -10,6 +10,7 @@ function GuestAddressModal({
   onClose,
   isSubscription = false,
   freeTshirtSize = null,
+  applyExtraCharge = false,
 }) {
   const modalRef = useRef(null);
   const checkoutWindowRef = useRef(null);
@@ -98,15 +99,24 @@ function GuestAddressModal({
     checkoutWindowRef.current = window.open("", "_blank");
     if (checkoutWindowRef.current) {
       checkoutWindowRef.current.document.write(
-        "<html><body><p>Loading checkout...</p></body></html>"
+        "<html><body><p>Loading checkout...</p></body></html>",
       );
     }
 
     // Format cart items for API
-    const cartItems = guestCart.map((item) => ({
-      product_id: item.product_id,
-      quantity: item.quantity,
-    }));
+    const cartItems = guestCart.map((item) => {
+      const cartItem = {
+        product_id: item.product_id,
+        quantity: item.quantity,
+      };
+      if (
+        item.reconstitute_pen !== undefined &&
+        item.reconstitute_pen !== null
+      ) {
+        cartItem.reconstitute_pen = item.reconstitute_pen;
+      }
+      return cartItem;
+    });
 
     dispatch(
       guestCheckout({
@@ -120,7 +130,8 @@ function GuestAddressModal({
         email: formData.email,
         isSubscription,
         freeTshirtSize,
-      })
+        apply_extra_charge: applyExtraCharge,
+      }),
     );
   };
 

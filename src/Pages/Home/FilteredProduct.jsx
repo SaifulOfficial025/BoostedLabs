@@ -16,7 +16,7 @@ function FilteredProduct() {
   const { category } = useParams();
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector(
-    (state) => state.filteredProduct
+    (state) => state.filteredProduct,
   );
 
   // Get type ID from category slug
@@ -69,6 +69,7 @@ function FilteredProduct() {
     price: parseFloat(product.discounted_price || product.initial_price),
     rating: getAverageRating(product.reviews),
     reviewCount: product.reviews?.length || 0,
+    reconstitutePen: product.reconstitute_pen || false,
   }));
 
   if (loading) {
@@ -118,6 +119,7 @@ function FilteredProduct() {
                 price={p.price}
                 rating={p.rating}
                 reviewCount={p.reviewCount}
+                reconstitutePen={p.reconstitutePen}
               />
             ))}
           </div>

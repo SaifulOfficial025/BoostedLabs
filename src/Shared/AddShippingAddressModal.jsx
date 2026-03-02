@@ -9,6 +9,7 @@ function AddShippingAddressModal({
   onClose,
   isSubscription = false,
   freeTshirtSize = null,
+  applyExtraCharge = false,
 }) {
   const modalRef = useRef(null);
   const checkoutWindowRef = useRef(null);
@@ -85,7 +86,7 @@ function AddShippingAddressModal({
     checkoutWindowRef.current = window.open("", "_blank");
     if (checkoutWindowRef.current) {
       checkoutWindowRef.current.document.write(
-        "<html><body><p>Loading checkout...</p></body></html>"
+        "<html><body><p>Loading checkout...</p></body></html>",
       );
     }
     dispatch(
@@ -93,7 +94,8 @@ function AddShippingAddressModal({
         address: formData,
         isSubscription,
         freeTshirtSize,
-      })
+        apply_extra_charge: applyExtraCharge,
+      }),
     );
   };
 

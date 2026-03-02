@@ -4,6 +4,11 @@ import React from "react";
 import fallbackCertificate from "../../public/Certificate.png";
 
 function ProductCertification({ certificate }) {
+  // If backend explicitly returns null, hide the whole section
+  if (certificate === null) {
+    return null;
+  }
+
   // If certificate is a relative path, prepend BASE_URL
   let certUrl = fallbackCertificate;
   if (certificate) {

@@ -28,11 +28,11 @@ function Footer() {
             Boostedlabs@hotmail.com
           </span>
           <span className="text-md text-[#cbd5e1]">+61 478 101 857</span>
-          <span className="mt-5 mb-1">Join Us</span>
+          {/* <span className="mt-5 mb-1">Join Us</span> */}
           <div className="flex gap-3 mt-1">
             {/* Social Icons */}
 
-            <a
+            {/* <a
               href="https://facebook.com"
               target="_blank"
               rel="noopener noreferrer"
@@ -41,8 +41,8 @@ function Footer() {
               <span className="bg-white rounded-full flex items-center justify-center w-7 h-7">
                 <FaFacebookF className="text-black text-[15px]" />
               </span>
-            </a>
-            <a
+            </a> */}
+            {/* <a
               href="https://wa.me/61478101857"
               target="_blank"
               rel="noopener noreferrer"
@@ -51,8 +51,8 @@ function Footer() {
               <span className="bg-white rounded-full flex items-center justify-center w-7 h-7">
                 <IoLogoWhatsapp className="text-black text-[18px]" />
               </span>
-            </a>
-            <a
+            </a> */}
+            {/* <a
               href="https://www.instagram.com/boostedlab"
               target="_blank"
               rel="noopener noreferrer"
@@ -61,7 +61,7 @@ function Footer() {
               <span className="bg-white rounded-full flex items-center justify-center w-7 h-7">
                 <FaInstagram className="text-black text-[15px]" />
               </span>
-            </a>
+            </a> */}
           </div>
         </div>
         {/* Account */}

@@ -15,7 +15,7 @@ function SearchResult() {
   const queryParam = searchParams.get("q") || "";
 
   const { results, loading, error, query } = useSelector(
-    (state) => state.search
+    (state) => state.search,
   );
 
   useEffect(() => {
@@ -174,8 +174,9 @@ function SearchResult() {
                     product.description || "No description available"
                   }
                   price={parseFloat(
-                    product.discounted_price || product.initial_price
+                    product.discounted_price || product.initial_price,
                   )}
+                  reconstitutePen={product.reconstitute_pen || false}
                   onViewDetails={() =>
                     navigate(`/product-details/${product.id}`)
                   }

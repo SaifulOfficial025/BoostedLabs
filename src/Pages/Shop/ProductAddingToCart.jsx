@@ -78,7 +78,7 @@ function ProductAddingToCart({
 
   // Find cart item for this product
   const cartItem = cartItems.find(
-    (item) => item.product && product && item.product.id === product.id
+    (item) => item.product && product && item.product.id === product.id,
   );
   const qty = cartItem ? cartItem.quantity : 1;
   // Keep cartItemId in sync with cart
@@ -91,6 +91,17 @@ function ProductAddingToCart({
   // Add to cart handler
   const handleAddToCart = async () => {
     if (!product?.id) return;
+
+    // Check stock status
+    if (!product?.is_in_stock) {
+      alert("This product is currently out of stock");
+      return;
+    }
+
+    if (product?.is_coming_soon) {
+      alert("This product is coming soon and not yet available");
+      return;
+    }
 
     // For merchandise, validate size and color selection if they are available
     if (product?.category === "Merchandise") {
@@ -112,7 +123,7 @@ function ProductAddingToCart({
         let colorName = null;
         if (selectedColor && product?.available_colors) {
           const colorObj = product.available_colors.find(
-            (c) => c.hex === selectedColor
+            (c) => c.hex === selectedColor,
           );
           colorName = colorObj?.name || null;
         }
@@ -124,14 +135,14 @@ function ProductAddingToCart({
             size: selectedSize,
             color_hex: selectedColor,
             color_name: colorName,
-          })
+          }),
         ).unwrap();
       } else {
         // Guest cart - add to localStorage
         let colorName = null;
         if (selectedColor && product?.available_colors) {
           const colorObj = product.available_colors.find(
-            (c) => c.hex === selectedColor
+            (c) => c.hex === selectedColor,
           );
           colorName = colorObj?.name || null;
         }
@@ -158,8 +169,19 @@ function ProductAddingToCart({
         <div className="bg-white rounded-md border border-gray-200 shadow-sm">
           <div className="relative">
             {productBadge && (
-              <div className="absolute  bg-blue-100 text-blue-700 text-md px-2 py-1 rounded-tl-md rounded-br-md">
+              <div className="absolute right-0 bg-blue-100 text-blue-700 text-md px-2 py-1 rounded-tr-md rounded-bl-md z-10">
                 {productBadge}
+              </div>
+            )}
+            {/* Stock Status Badges */}
+            {product?.is_coming_soon && (
+              <div className="absolute left-0 top-0 bg-purple-500 text-white px-3 py-1 rounded-tl-md rounded-br-md text-sm font-semibold z-10">
+                Coming Soon
+              </div>
+            )}
+            {!product?.is_coming_soon && !product?.is_in_stock && (
+              <div className="absolute left-0 top-0 bg-red-500 text-white px-3 py-1 rounded-tl-md rounded-br-md text-sm font-semibold z-10">
+                Out of Stock
               </div>
             )}
             <div className="flex items-center justify-center p-4 bg-[#f8fafc] rounded-lg min-h-[400px] sm:min-h-[600px]">
@@ -290,19 +312,45 @@ function ProductAddingToCart({
                 ${parseFloat(productOldPrice).toFixed(2)}
               </div>
             </div>
+            {/* Stock Quantity Display */}
+            {product?.is_in_stock &&
+              !product?.is_coming_soon &&
+              typeof product?.stock_quantity === "number" && (
+                <div className="mt-3">
+                  {product.stock_quantity > 0 &&
+                  product.stock_quantity <= 10 ? (
+                    <span className="text-sm font-semibold text-orange-600">
+                      Only {product.stock_quantity} left in stock - Order soon!
+                    </span>
+                  ) : product.stock_quantity > 10 ? (
+                    <span className="text-sm font-semibold text-green-600">
+                      In Stock ({product.stock_quantity} available)
+                    </span>
+                  ) : null}
+                </div>
+              )}
           </div>
 
           <div className="mt-6">
             <button
               onClick={handleAddToCart}
-              className="w-full bg-black text-white py-3 flex items-center justify-center gap-2 rounded-lg hover:bg-gray-800 hover:shadow-xl active:scale-95 transition-all duration-300 ease-in-out"
-              // disabled={!!cartItemId}
+              className={`w-full py-3 flex items-center justify-center gap-2 rounded-lg transition-all duration-300 ease-in-out ${
+                !product?.is_in_stock || product?.is_coming_soon
+                  ? "bg-gray-400 cursor-not-allowed text-white"
+                  : "bg-black text-white hover:bg-gray-800 hover:shadow-xl active:scale-95"
+              }`}
+              disabled={!product?.is_in_stock || product?.is_coming_soon}
             >
-              <LuShoppingCart className="w-6 h-6" /> Add to Cart
+              <LuShoppingCart className="w-6 h-6" />
+              {product?.is_coming_soon
+                ? "Coming Soon"
+                : !product?.is_in_stock
+                  ? "Out of Stock"
+                  : "Add to Cart"}
             </button>
-            <div className="text-xs text-gray-500 mt-2">
-              Enjoy FREE express & Free Returns on orders over $35! Kindly place
-              your order early for expedited processing.
+            <div className="text-md text-gray-500 mt-2">
+              Enjoy FREE express & Free Returns on orders over $250! Kindly
+              place your order early for expedited processing.
             </div>
           </div>
 

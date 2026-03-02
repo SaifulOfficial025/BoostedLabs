@@ -7,7 +7,7 @@ import { BASE_URL } from "../../Redux/baseUrl";
 function ChooseYourBoostedProduct() {
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector(
-    (state) => state.chooseYourBoostedProduct
+    (state) => state.chooseYourBoostedProduct,
   );
 
   useEffect(() => {
@@ -19,13 +19,29 @@ function ChooseYourBoostedProduct() {
     let imageUrl = "https://via.placeholder.com/300x300?text=No+Image";
 
     if (product.images && product.images.length > 0) {
-      imageUrl = product.images[0].startsWith("http")
-        ? product.images[0]
-        : `${BASE_URL}${product.images[0]}`;
+      // Handle both string and object formats
+      const firstImage =
+        typeof product.images[0] === "string"
+          ? product.images[0]
+          : product.images[0]?.url || product.images[0]?.image || "";
+
+      if (firstImage) {
+        imageUrl = firstImage.startsWith("http")
+          ? firstImage
+          : `${BASE_URL}${firstImage}`;
+      }
     } else if (product.logo) {
-      imageUrl = product.logo.startsWith("http")
-        ? product.logo
-        : `${BASE_URL}${product.logo}`;
+      // Handle both string and object formats for logo
+      const logoImage =
+        typeof product.logo === "string"
+          ? product.logo
+          : product.logo?.url || product.logo?.image || "";
+
+      if (logoImage) {
+        imageUrl = logoImage.startsWith("http")
+          ? logoImage
+          : `${BASE_URL}${logoImage}`;
+      }
     }
 
     return {
@@ -43,6 +59,9 @@ function ChooseYourBoostedProduct() {
       title: product.name,
       description: product.description || "No description available",
       price: product.discounted_price || product.initial_price || 0,
+      isInStock: product.is_in_stock,
+      isComingSoon: product.is_coming_soon,
+      reconstitutePen: product.reconstitute_pen || false,
     };
   });
 
@@ -105,6 +124,9 @@ function ChooseYourBoostedProduct() {
               title={product.title}
               description={product.description}
               price={product.price}
+              isInStock={product.isInStock}
+              isComingSoon={product.isComingSoon}
+              reconstitutePen={product.reconstitutePen}
               onViewDetails={() => {}}
               onAddToCart={() => {}}
             />

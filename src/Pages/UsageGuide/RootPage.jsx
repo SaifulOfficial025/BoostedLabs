@@ -3,12 +3,14 @@ import Header from "../../Shared/Header";
 import Footer from "../../Shared/Footer";
 import Noticebar from "../../Shared/Noticebar";
 import TabswithInfo from "./TabswithInfo";
+import UpdatedUsagesGuide from "./UpdatedUsagesGuide";
 
 function RootPage() {
   return (
     <div>
       <Header />
-      <TabswithInfo />
+      {/* <TabswithInfo /> */}
+      <UpdatedUsagesGuide />
       <Footer />
     </div>
   );

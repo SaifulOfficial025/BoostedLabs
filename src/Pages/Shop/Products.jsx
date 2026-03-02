@@ -9,7 +9,7 @@ function Products() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector(
-    (state) => state.shopProduct
+    (state) => state.shopProduct,
   );
   const base =
     import.meta && import.meta.env && import.meta.env.BASE_URL
@@ -41,6 +41,9 @@ function Products() {
       color: "bg-blue-100",
       textColor: "text-blue-700",
     },
+    isInStock: product.is_in_stock,
+    isComingSoon: product.is_coming_soon,
+    reconstitutePen: product.reconstitute_pen || false,
   }));
 
   if (loading) {
@@ -85,6 +88,9 @@ function Products() {
               title={p.title}
               description={p.description}
               price={p.price}
+              isInStock={p.isInStock}
+              isComingSoon={p.isComingSoon}
+              reconstitutePen={p.reconstitutePen}
               onViewDetails={() => {}}
               onAddToCart={() => {}}
             />

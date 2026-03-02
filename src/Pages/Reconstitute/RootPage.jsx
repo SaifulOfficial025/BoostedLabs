@@ -9,17 +9,19 @@ import HowtoKnow from "./HowtoKnow";
 import CommonQuestions from "./CommonQuestions";
 import SafetyNotes from "./SafetyNotes";
 import ReadytoStart from "./ReadytoStart";
+import UpdatedReconstitute from "./UpdatedReconstitute";
 
 function RootPage() {
   return (
     <div>
       <Header />
-      <Hero />
+      <UpdatedReconstitute />
+      {/* <Hero />
       <Steps />
       <ReconstitutionVolumes />
       <HowtoKnow />
       <CommonQuestions />
-      <SafetyNotes />
+      <SafetyNotes /> */}
       <ReadytoStart />
       <Footer />
     </div>

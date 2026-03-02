@@ -12,7 +12,7 @@ function MerchandiseRootPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { products, loading, error } = useSelector(
-    (state) => state.merchandiseProducts
+    (state) => state.merchandiseProducts,
   );
   const base =
     import.meta && import.meta.env && import.meta.env.BASE_URL
@@ -43,6 +43,8 @@ function MerchandiseRootPage() {
       color: "bg-blue-100",
       textColor: "text-blue-700",
     },
+    isInStock: product.is_in_stock,
+    isComingSoon: product.is_coming_soon,
   }));
 
   const renderProducts = () => {
@@ -73,6 +75,8 @@ function MerchandiseRootPage() {
             title={p.title}
             description={p.description}
             price={p.price}
+            isInStock={p.isInStock}
+            isComingSoon={p.isComingSoon}
             onViewDetails={() => navigate(`/product-details/${p.id}`)}
             onAddToCart={() => console.log("add", p.id)}
           />

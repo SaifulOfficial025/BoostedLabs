@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { FaFire } from "react-icons/fa";
 import ShoppingCartModal from "./ShoppingCartModal";
+import ReconstituteModal from "./ReconstituteModal";
 import { addToCart, fetchCart } from "../Redux/Cart";
 import { addToGuestCart } from "../utils/guestCart";
 
@@ -21,8 +22,12 @@ function ProductCard({
   productId,
   onAddToCart,
   hideActions = false,
+  isInStock = true,
+  isComingSoon = false,
+  reconstitutePen = false,
 }) {
   const [showCart, setShowCart] = useState(false);
+  const [showReconstituteModal, setShowReconstituteModal] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -30,16 +35,15 @@ function ProductCard({
   const isMerch = pathname.startsWith("/merchandise");
   const isLoggedIn = !!localStorage.getItem("auth");
 
-  const handleAddToCart = async (e) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
+  const performAddToCart = async (withReconstitutePen = null) => {
     if (productId !== undefined) {
       if (isLoggedIn) {
         // Logged-in user: dispatch to Redux and backend
-        const result = await dispatch(addToCart({ productId, quantity: 1 }));
+        const payload = { productId, quantity: 1 };
+        if (withReconstitutePen !== null) {
+          payload.reconstitute_pen = withReconstitutePen;
+        }
+        const result = await dispatch(addToCart(payload));
         if (result.type === "cart/addToCart/fulfilled") {
           // Fetch updated cart data
           await dispatch(fetchCart());
@@ -48,7 +52,7 @@ function ProductCard({
       } else {
         // Guest user: add to localStorage
         try {
-          addToGuestCart(productId, 1);
+          addToGuestCart(productId, 1, null, null, null, withReconstitutePen);
           setShowCart(true);
         } catch (error) {
           console.error("Error adding to guest cart:", error);
@@ -59,6 +63,32 @@ function ProductCard({
       if (onAddToCart) onAddToCart();
       setShowCart(true);
     }
+  };
+
+  const handleAddToCart = async (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    // If reconstitute_pen is true for this product, show the modal
+    if (reconstitutePen) {
+      setShowReconstituteModal(true);
+      return;
+    }
+
+    // Otherwise, add to cart directly
+    await performAddToCart(null);
+  };
+
+  const handleReconstituteYes = async () => {
+    setShowReconstituteModal(false);
+    await performAddToCart(true);
+  };
+
+  const handleReconstituteNo = async () => {
+    setShowReconstituteModal(false);
+    await performAddToCart(false);
   };
 
   const base =
@@ -82,6 +112,17 @@ function ProductCard({
             </span>
           </div>
         )}
+        {/* Stock Status Badge */}
+        {/* {isComingSoon && (
+          <div className="absolute left-0 top-0 bg-purple-500 text-white px-3 py-1 rounded-tl-md rounded-br-md text-xs font-semibold">
+            Coming Soon
+          </div>
+        )}
+        {!isComingSoon && !isInStock && (
+          <div className="absolute left-0 top-0 bg-red-500 text-white px-3 py-1 rounded-tl-md rounded-br-md text-xs font-semibold">
+            Out of Stock
+          </div>
+        )} */}
         <div
           className="rounded-xl flex items-center justify-center cursor-pointer h-[180px] bg-gray-50"
           onClick={() => {
@@ -138,17 +179,36 @@ function ProductCard({
           </button>
           <button
             type="button"
-            className="w-full sm:flex-1 rounded-lg py-2 text-white bg-black font-semibold text-base hover:bg-gray-900 hover:shadow-lg active:scale-95 transition-all duration-300 ease-in-out"
+            className={`w-full sm:flex-1 rounded-lg py-2 text-white font-semibold text-base transition-all duration-300 ease-in-out ${
+              !isInStock || isComingSoon
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-black hover:bg-gray-900 hover:shadow-lg active:scale-95"
+            }`}
             onClick={(e) => {
-              handleAddToCart(e);
+              if (isInStock && !isComingSoon) {
+                handleAddToCart(e);
+              }
             }}
+            disabled={!isInStock || isComingSoon}
           >
-            Add To Cart
+            {isComingSoon
+              ? "Coming Soon"
+              : !isInStock
+                ? "Out of Stock"
+                : "Add To Cart"}
           </button>
         </div>
       )}
       {showCart && (
         <ShoppingCartModal open={showCart} onClose={() => setShowCart(false)} />
+      )}
+      {showReconstituteModal && (
+        <ReconstituteModal
+          open={showReconstituteModal}
+          onClose={() => setShowReconstituteModal(false)}
+          onYes={handleReconstituteYes}
+          onNo={handleReconstituteNo}
+        />
       )}
     </div>
   );

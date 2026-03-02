@@ -6,8 +6,15 @@ import { toast } from "react-toastify";
 export const guestCheckout = createAsyncThunk(
   "guestCheckout/checkout",
   async (
-    { cartItems, address, email, isSubscription, freeTshirtSize },
-    { rejectWithValue }
+    {
+      cartItems,
+      address,
+      email,
+      isSubscription,
+      freeTshirtSize,
+      apply_extra_charge,
+    },
+    { rejectWithValue },
   ) => {
     try {
       // Build payload
@@ -16,6 +23,7 @@ export const guestCheckout = createAsyncThunk(
         address,
         email,
         is_subscription: isSubscription,
+        apply_extra_charge: apply_extra_charge || false,
       };
 
       if (freeTshirtSize) {
@@ -43,7 +51,7 @@ export const guestCheckout = createAsyncThunk(
       toast.error(error.message);
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 const initialState = {

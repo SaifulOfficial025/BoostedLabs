@@ -166,16 +166,16 @@ function Header() {
   return (
     <>
       <div
-        className="w-full bg-black flex items-center justify-between px-2 sm:px-4 md:px-8 lg:px-32 py-1.5 sm:py-2 md:py-3 text-white text-xs sm:text-sm md:text-md font-normal fixed top-0 left-0 z-40"
-        style={{ minHeight: "32px" }}
+        className="w-full bg-black px-2 sm:px-4 md:px-8 lg:px-32 py-2.5 sm:py-2.5 md:py-3 text-white text-xs sm:text-sm md:text-md font-normal fixed top-0 left-0 z-40"
+        style={{ minHeight: "52px" }}
       >
-        <section className="max-w-[1536px] mx-auto flex items-center w-full relative">
+        <section className="max-w-[1536px] mx-auto w-full relative">
           <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-            <span className="hidden sm:inline text-[10px] sm:text-xs md:text-sm">
+            {/* <span className="hidden sm:inline text-[10px] sm:text-xs md:text-sm">
               Follow Us On:
-            </span>
-            <span className="sm:hidden text-[9px]">Follow:</span>
-            <a
+            </span> */}
+            {/* <span className="sm:hidden text-[9px]">Follow:</span> */}
+            {/* <a
               href="https://wa.me/61478101857"
               target="_blank"
               rel="noopener noreferrer"
@@ -185,8 +185,8 @@ function Header() {
               <span className="bg-white rounded-full flex items-center justify-center w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7">
                 <IoLogoWhatsapp className="text-black text-[12px] sm:text-[15px] md:text-[18px]" />
               </span>
-            </a>
-            <a
+            </a> */}
+            {/* <a
               href="https://facebook.com"
               target="_blank"
               rel="noopener noreferrer"
@@ -196,9 +196,9 @@ function Header() {
               <span className="bg-white rounded-full flex items-center justify-center w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7">
                 <FaFacebookF className="text-black text-[8px] sm:text-[12px] md:text-[15px]" />
               </span>
-            </a>
+            </a> */}
 
-            <a
+            {/* <a
               href="https://www.instagram.com/boostedlab"
               target="_blank"
               rel="noopener noreferrer"
@@ -208,19 +208,25 @@ function Header() {
               <span className="bg-white rounded-full flex items-center justify-center w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7">
                 <FaInstagram className="text-black text-[8px] sm:text-[12px] md:text-[15px]" />
               </span>
-            </a>
+            </a> */}
           </div>
-          <div className="flex-1 flex justify-end px-1 sm:px-2 min-w-0 overflow-hidden">
-            <span className="text-white text-[8px] sm:text-xs md:text-sm lg:text-base text-right truncate">
-              {/* FREE Shipping in Australia When Order Above $200 */}
-              {/* & Get a FREE
-                T-shirt with any order over $1500. */}
+          <div className="w-full text-center" style={{ overflow: "visible" }}>
+            <span
+              className="text-white text-[14px] sm:text-xs md:text-sm lg:text-base text-center px-1 py-0.5 whitespace-normal break-words inline-block max-w-full"
+              style={{
+                wordBreak: "break-word",
+                lineHeight: "1.5",
+                fontWeight: 500,
+              }}
+            >
+              FREE Shipping in Australia When Order Above $250 & Get a FREE
+              T-shirt with any order over $500.
             </span>
           </div>
         </section>
       </div>
       <div
-        className="w-full flex items-center justify-between px-2 sm:px-4 md:px-16 py-2 md:py-4 left-0 z-50 font-sans sticky top-[32px] sm:top-[44px] md:top-[48px] bg-black/35 "
+        className="w-full flex items-center justify-between px-2 sm:px-4 md:px-16 py-2 md:py-4 left-0 z-50 font-sans sticky top-[52px] sm:top-[52px] md:top-[52px] bg-black/35 "
         style={{ backdropFilter: "blur(10px)", minHeight: "56px" }}
       >
         <section className="max-w-[1536px] mx-auto flex items-center w-full relative">
@@ -570,7 +576,7 @@ function Header() {
 
       {/* Mobile Menu */}
       {showMobileMenu && (
-        <div className="xl:hidden fixed top-[88px] sm:top-[96px] left-0 right-0 bg-black/95 backdrop-blur-lg z-40 border-t border-gray-700 max-h-[calc(100vh-88px)] sm:max-h-[calc(100vh-96px)] overflow-y-auto">
+        <div className="xl:hidden fixed top-[108px] sm:top-[108px] left-0 right-0 bg-black/95 backdrop-blur-lg z-40 border-t border-gray-700 max-h-[calc(100vh-108px)] sm:max-h-[calc(100vh-108px)] overflow-y-auto">
           <nav className="flex flex-col p-3 sm:p-4">
             <Link
               to="/"

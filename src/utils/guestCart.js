@@ -26,13 +26,13 @@ export const saveGuestCart = (cart) => {
 };
 
 // Add item to guest cart
-export const addToGuestCart = (productId, quantity = 1, size = null, colorHex = null, colorName = null) => {
+export const addToGuestCart = (productId, quantity = 1, size = null, colorHex = null, colorName = null, reconstitutePen = null) => {
   const cart = getGuestCart();
   
   // Check if product already exists in cart
   const existingItemIndex = cart.findIndex(
     (item) => 
-      item.product_id === productId && 
+      String(item.product_id) === String(productId) && 
       item.size === size && 
       item.color_hex === colorHex
   );
@@ -40,16 +40,24 @@ export const addToGuestCart = (productId, quantity = 1, size = null, colorHex = 
   if (existingItemIndex !== -1) {
     // Update quantity
     cart[existingItemIndex].quantity += quantity;
+    // Update reconstitute_pen if provided
+    if (reconstitutePen !== null) {
+      cart[existingItemIndex].reconstitute_pen = reconstitutePen;
+    }
   } else {
     // Add new item
-    cart.push({
+    const newItem = {
       id: Date.now(), // Temporary ID
       product_id: productId,
       quantity,
       size,
       color_hex: colorHex,
       color_name: colorName,
-    });
+    };
+    if (reconstitutePen !== null) {
+      newItem.reconstitute_pen = reconstitutePen;
+    }
+    cart.push(newItem);
   }
 
   saveGuestCart(cart);

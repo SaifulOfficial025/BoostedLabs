@@ -16,7 +16,7 @@ import FAQ from "./FAQ";
 function ContactUs() {
   const dispatch = useDispatch();
   const { loading, error, success, successMessage } = useSelector(
-    (state) => state.contactUs
+    (state) => state.contactUs,
   );
 
   const [formData, setFormData] = useState({
@@ -59,7 +59,7 @@ function ContactUs() {
         whatsapp: formData.whatsapp,
         email: formData.email,
         project_details: formData.project_details,
-      })
+      }),
     );
   };
 
@@ -125,9 +125,9 @@ function ContactUs() {
             </div>
 
             <div className="mb-6">
-              <div className="font-semibold mb-2">Follow Us</div>
+              {/* <div className="font-semibold mb-2">Follow Us</div> */}
               <div className="flex items-center gap-3">
-                <a
+                {/* <a
                   href="https://facebook.com"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -150,7 +150,7 @@ function ContactUs() {
                   rel="noopener noreferrer"
                 >
                   <FaInstagram />
-                </a>
+                </a> */}
               </div>
             </div>
           </div>

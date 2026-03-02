@@ -44,11 +44,12 @@ function ShoppingCartModal({ open, onClose }) {
 
   // Fetch product details for guest cart items
   const { products: shopProducts, loading: shopLoading } = useSelector(
-    (state) => state.shopProduct
+    (state) => state.shopProduct,
   );
 
   const [selectAll, setSelectAll] = useState(false);
   const [recurring, setRecurring] = useState(false);
+  const [applyExtraCharge, setApplyExtraCharge] = useState(false);
   const [checkedItems, setCheckedItems] = useState({});
 
   // Fetch cart data when modal opens
@@ -205,13 +206,13 @@ function ShoppingCartModal({ open, onClose }) {
         let price;
         if (isLoggedIn) {
           price = parseFloat(
-            item.product.discounted_price || item.product.initial_price
+            item.product.discounted_price || item.product.initial_price,
           );
         } else {
           const product = guestCartProducts[item.id];
           if (product) {
             price = parseFloat(
-              product.discounted_price || product.initial_price
+              product.discounted_price || product.initial_price,
             );
           } else {
             return sum;
@@ -224,15 +225,16 @@ function ShoppingCartModal({ open, onClose }) {
   })();
 
   // Fixed shipping fee - you can adjust this
-  const fixedShippingFee = 10.0;
+  const fixedShippingFee = 50.0;
   const selectedShippingFee =
     selectedSubtotal > 0 ? (isLoggedIn ? shippingFee : fixedShippingFee) : 0;
-  const selectedTotal = selectedSubtotal + selectedShippingFee;
+  const extraCharge = applyExtraCharge ? 10.0 : 0;
+  const selectedTotal = selectedSubtotal + selectedShippingFee + extraCharge;
 
-  // Check if eligible for free t-shirt ($1500+ order)
+  // Check if eligible for free t-shirt ($400+ order)
   const isEligibleForFreeTshirt = isLoggedIn
     ? eligibleForFreeTshirt
-    : selectedSubtotal >= 1500;
+    : selectedSubtotal >= 500;
 
   const cartItems = isLoggedIn ? items : guestCartItems;
   const [selectedSize, setSelectedSize] = useState("S");
@@ -316,7 +318,7 @@ function ShoppingCartModal({ open, onClose }) {
                   ? `${BASE_URL}${item.product.logo}`
                   : "/product-weightloss.png";
                 price = parseFloat(
-                  item.product.discounted_price || item.product.initial_price
+                  item.product.discounted_price || item.product.initial_price,
                 );
                 productName = item.product.name;
                 category = item.product.category || "";
@@ -330,7 +332,7 @@ function ShoppingCartModal({ open, onClose }) {
                   ? `${BASE_URL}${product.logo}`
                   : "/product-weightloss.png";
                 price = parseFloat(
-                  product.discounted_price || product.initial_price
+                  product.discounted_price || product.initial_price,
                 );
                 productName = product.name;
                 category = product.category || "";
@@ -363,7 +365,7 @@ function ShoppingCartModal({ open, onClose }) {
             {isEligibleForFreeTshirt && (
               <div className="bg-white rounded-md border border-gray-200 p-4 mb-4">
                 <div className="text-sm text-gray-800 font-medium mb-2">
-                  You received 1 free t-shirt for your $1500+ order. Please
+                  You received 1 free t-shirt for your $400+ order. Please
                   select your size.
                 </div>
                 <SizeSelection
@@ -384,6 +386,12 @@ function ShoppingCartModal({ open, onClose }) {
                 <span>Shipping Fee</span>
                 <span>${selectedShippingFee.toFixed(2)}</span>
               </div>
+              {applyExtraCharge && (
+                <div className="flex justify-between text-sm mb-1">
+                  <span>Reconstitute Pen</span>
+                  <span>$10.00</span>
+                </div>
+              )}
               <div className="flex justify-between text-base font-bold mb-1">
                 <span>Total</span>
                 <span>${selectedTotal.toFixed(2)}</span>
@@ -391,17 +399,28 @@ function ShoppingCartModal({ open, onClose }) {
               <div className="text-xs text-[#7b8ca3] mb-2">
                 Tax also included
               </div>
-              <label className="flex items-center gap-2 mb-2 cursor-pointer mt-5 ">
+              <label className="flex items-center gap-2 mb-2 cursor-pointer mt-5">
+                <input
+                  type="checkbox"
+                  className="form-checkbox"
+                  checked={applyExtraCharge}
+                  onChange={() => setApplyExtraCharge((s) => !s)}
+                />
+                <span className="text-[#222] text-md font-bold">
+                  Add reconstitute pen (+$10.00)
+                </span>
+              </label>
+              {/* <label className="flex items-center gap-2 mb-2 cursor-pointer">
                 <input
                   type="checkbox"
                   className="form-checkbox"
                   checked={recurring}
                   onChange={() => setRecurring((s) => !s)}
                 />
-                <span className="text-[#222] text-lg font-bold">
+                <span className="text-[#222] text-md font-bold">
                   I want to buy every month.
                 </span>
-              </label>
+              </label> */}
               <button
                 className="w-full bg-black text-white py-2 rounded-lg font-semibold text-base mt-2 mb-2 transition-all hover:shadow-[0_0_16px_2px_rgba(0,0,0,0.25)] disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:shadow-none"
                 onClick={() => setShowAddressModal(true)}
@@ -439,6 +458,7 @@ function ShoppingCartModal({ open, onClose }) {
           onClose={() => setShowAddressModal(false)}
           isSubscription={recurring}
           freeTshirtSize={isEligibleForFreeTshirt ? selectedSize : null}
+          applyExtraCharge={applyExtraCharge}
         />
       )}
       {showAddressModal && !isLoggedIn && (
@@ -447,11 +467,12 @@ function ShoppingCartModal({ open, onClose }) {
           onClose={() => setShowAddressModal(false)}
           isSubscription={recurring}
           freeTshirtSize={isEligibleForFreeTshirt ? selectedSize : null}
+          applyExtraCharge={applyExtraCharge}
         />
       )}
     </>,
     // render modal at the end of document body so it escapes parent stacking contexts
-    document.body
+    document.body,
   );
 }
 export default ShoppingCartModal;

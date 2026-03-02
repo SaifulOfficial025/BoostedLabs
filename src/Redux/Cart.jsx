@@ -13,8 +13,9 @@ export const addToCart = createAsyncThunk(
       size = null,
       color_hex = null,
       color_name = null,
+      reconstitute_pen = null,
     },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     try {
       const authData = localStorage.getItem("auth");
@@ -32,6 +33,9 @@ export const addToCart = createAsyncThunk(
         payload.color_hex = color_hex;
         payload.color_name = color_name;
       }
+      if (reconstitute_pen !== null) {
+        payload.reconstitute_pen = reconstitute_pen;
+      }
 
       const response = await authFetch(
         `/shop/products/${productId}/add-to-cart/`,
@@ -41,7 +45,7 @@ export const addToCart = createAsyncThunk(
             "Content-Type": "application/json",
           },
           body: JSON.stringify(payload),
-        }
+        },
       );
 
       if (!response.ok) {
@@ -57,7 +61,7 @@ export const addToCart = createAsyncThunk(
       toast.error(error.message);
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 // Async thunk to fetch cart data
@@ -88,7 +92,7 @@ export const fetchCart = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 // Async thunk to remove item from cart
@@ -121,7 +125,7 @@ export const removeCartItem = createAsyncThunk(
       toast.error(error.message);
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 // Async thunk to increase quantity
@@ -154,7 +158,7 @@ export const increaseQuantity = createAsyncThunk(
       toast.error(error.message);
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 // Async thunk to decrease quantity
@@ -187,13 +191,16 @@ export const decreaseQuantity = createAsyncThunk(
       toast.error(error.message);
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 // Async thunk to checkout
 export const checkout = createAsyncThunk(
   "cart/checkout",
-  async ({ address, isSubscription, freeTshirtSize }, { rejectWithValue }) => {
+  async (
+    { address, isSubscription, freeTshirtSize, apply_extra_charge },
+    { rejectWithValue },
+  ) => {
     try {
       const authData = localStorage.getItem("auth");
       const token = authData ? JSON.parse(authData).access : null;
@@ -206,6 +213,7 @@ export const checkout = createAsyncThunk(
       const payload = {
         address,
         is_subscription: isSubscription,
+        apply_extra_charge: apply_extra_charge || false,
       };
       if (freeTshirtSize) {
         payload.free_tshirt_size = freeTshirtSize;
@@ -232,7 +240,7 @@ export const checkout = createAsyncThunk(
       toast.error(error.message);
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 const initialState = {
@@ -289,10 +297,10 @@ const cartSlice = createSlice({
           (sum, item) =>
             sum +
             parseFloat(
-              item.product.discounted_price || item.product.initial_price
+              item.product.discounted_price || item.product.initial_price,
             ) *
               item.quantity,
-          0
+          0,
         );
         state.shippingFee = state.subtotal > 0 ? state.shippingFee : 0;
         state.total = state.subtotal + state.shippingFee;
@@ -300,7 +308,7 @@ const cartSlice = createSlice({
       // Increase quantity
       .addCase(increaseQuantity.fulfilled, (state, action) => {
         const item = state.items.find(
-          (item) => item.id === action.payload.cartId
+          (item) => item.id === action.payload.cartId,
         );
         if (item) {
           item.quantity = action.payload.quantity;
@@ -309,10 +317,10 @@ const cartSlice = createSlice({
             (sum, item) =>
               sum +
               parseFloat(
-                item.product.discounted_price || item.product.initial_price
+                item.product.discounted_price || item.product.initial_price,
               ) *
                 item.quantity,
-            0
+            0,
           );
           state.total = state.subtotal + state.shippingFee;
         }
@@ -320,7 +328,7 @@ const cartSlice = createSlice({
       // Decrease quantity
       .addCase(decreaseQuantity.fulfilled, (state, action) => {
         const item = state.items.find(
-          (item) => item.id === action.payload.cartId
+          (item) => item.id === action.payload.cartId,
         );
         if (item) {
           item.quantity = action.payload.quantity;
@@ -329,10 +337,10 @@ const cartSlice = createSlice({
             (sum, item) =>
               sum +
               parseFloat(
-                item.product.discounted_price || item.product.initial_price
+                item.product.discounted_price || item.product.initial_price,
               ) *
                 item.quantity,
-            0
+            0,
           );
           state.total = state.subtotal + state.shippingFee;
         }
