@@ -247,6 +247,7 @@ const initialState = {
   items: [],
   subtotal: 0,
   shippingFee: 0,
+  extraCharge: 0,
   total: 0,
   loading: false,
   error: null,
@@ -262,6 +263,7 @@ const cartSlice = createSlice({
       state.items = [];
       state.subtotal = 0;
       state.shippingFee = 0;
+      state.extraCharge = 0;
       state.total = 0;
       state.error = null;
     },
@@ -281,6 +283,7 @@ const cartSlice = createSlice({
         state.items = action.payload.items || [];
         state.subtotal = action.payload.subtotal || 0;
         state.shippingFee = action.payload.shipping_fee || 0;
+        state.extraCharge = action.payload.extra_charge || 0;
         state.total = action.payload.total || 0;
         state.eligibleForFreeTshirt =
           action.payload.eligible_for_free_tshirt || false;

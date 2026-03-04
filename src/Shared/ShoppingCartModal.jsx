@@ -33,6 +33,7 @@ function ShoppingCartModal({ open, onClose }) {
     items,
     subtotal,
     shippingFee,
+    extraCharge,
     total,
     loading,
     eligibleForFreeTshirt,
@@ -160,7 +161,10 @@ function ShoppingCartModal({ open, onClose }) {
 
   function handleIncreaseQuantity(id) {
     if (isLoggedIn) {
-      dispatch(increaseQuantity(id));
+      dispatch(increaseQuantity(id)).then(() => {
+        // Refresh cart to get updated extra_charge from backend
+        dispatch(fetchCart());
+      });
     } else {
       increaseGuestCartQuantity(id);
       setGuestCartItems(getGuestCart());
@@ -169,7 +173,10 @@ function ShoppingCartModal({ open, onClose }) {
 
   function handleDecreaseQuantity(id) {
     if (isLoggedIn) {
-      dispatch(decreaseQuantity(id));
+      dispatch(decreaseQuantity(id)).then(() => {
+        // Refresh cart to get updated extra_charge from backend
+        dispatch(fetchCart());
+      });
     } else {
       decreaseGuestCartQuantity(id);
       setGuestCartItems(getGuestCart());
@@ -178,7 +185,10 @@ function ShoppingCartModal({ open, onClose }) {
 
   function handleRemoveItem(id) {
     if (isLoggedIn) {
-      dispatch(removeCartItem(id));
+      dispatch(removeCartItem(id)).then(() => {
+        // Refresh cart to get updated extra_charge from backend
+        dispatch(fetchCart());
+      });
     } else {
       removeFromGuestCart(id);
       setGuestCartItems(getGuestCart());
@@ -228,13 +238,28 @@ function ShoppingCartModal({ open, onClose }) {
   const fixedShippingFee = 50.0;
   const selectedShippingFee =
     selectedSubtotal > 0 ? (isLoggedIn ? shippingFee : fixedShippingFee) : 0;
-  const extraCharge = applyExtraCharge ? 10.0 : 0;
-  const selectedTotal = selectedSubtotal + selectedShippingFee + extraCharge;
 
-  // Check if eligible for free t-shirt ($400+ order)
-  const isEligibleForFreeTshirt = isLoggedIn
-    ? eligibleForFreeTshirt
-    : selectedSubtotal >= 500;
+  // Calculate reconstitute pen charges
+  const reconstitutePenCharge = (() => {
+    if (isLoggedIn) {
+      // For logged-in users, use extra_charge from backend
+      return extraCharge || 0;
+    } else {
+      // For guest users, calculate based on items with reconstitute_pen = true
+      return guestCartItems.reduce((sum, item) => {
+        if (checkedItems[item.id] && item.reconstitute_pen === true) {
+          return sum + 10.0 * item.quantity;
+        }
+        return sum;
+      }, 0);
+    }
+  })();
+
+  const selectedTotal =
+    selectedSubtotal + selectedShippingFee + reconstitutePenCharge;
+
+  // Check if eligible for free t-shirt ($500+ order)
+  const isEligibleForFreeTshirt = selectedSubtotal >= 500;
 
   const cartItems = isLoggedIn ? items : guestCartItems;
   const [selectedSize, setSelectedSize] = useState("S");
@@ -360,12 +385,13 @@ function ShoppingCartModal({ open, onClose }) {
                 />
               );
             })}
+            
           </div>
           <div className="px-6">
             {isEligibleForFreeTshirt && (
               <div className="bg-white rounded-md border border-gray-200 p-4 mb-4">
                 <div className="text-sm text-gray-800 font-medium mb-2">
-                  You received 1 free t-shirt for your $400+ order. Please
+                  You received 1 free t-shirt for your $500+ order. Please
                   select your size.
                 </div>
                 <SizeSelection
@@ -386,10 +412,13 @@ function ShoppingCartModal({ open, onClose }) {
                 <span>Shipping Fee</span>
                 <span>${selectedShippingFee.toFixed(2)}</span>
               </div>
-              {applyExtraCharge && (
+              {reconstitutePenCharge > 0 && (
                 <div className="flex justify-between text-sm mb-1">
-                  <span>Reconstitute Pen</span>
-                  <span>$10.00</span>
+                  <span>
+                    Reconstitute Pen
+                    {!isLoggedIn && reconstitutePenCharge > 10 ? "s" : ""}
+                  </span>
+                  <span>${reconstitutePenCharge.toFixed(2)}</span>
                 </div>
               )}
               <div className="flex justify-between text-base font-bold mb-1">
@@ -399,7 +428,7 @@ function ShoppingCartModal({ open, onClose }) {
               <div className="text-xs text-[#7b8ca3] mb-2">
                 Tax also included
               </div>
-              <label className="flex items-center gap-2 mb-2 cursor-pointer mt-5">
+              {/* <label className="flex items-center gap-2 mb-2 cursor-pointer mt-5">
                 <input
                   type="checkbox"
                   className="form-checkbox"
@@ -409,7 +438,7 @@ function ShoppingCartModal({ open, onClose }) {
                 <span className="text-[#222] text-md font-bold">
                   Add reconstitute pen (+$10.00)
                 </span>
-              </label>
+              </label> */}
               {/* <label className="flex items-center gap-2 mb-2 cursor-pointer">
                 <input
                   type="checkbox"

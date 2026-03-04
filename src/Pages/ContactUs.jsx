@@ -97,7 +97,7 @@ function ContactUs() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 mb-3">
+              {/* <div className="flex items-start gap-3 mb-3">
                 <div className="mt-1 text-gray-700">
                   <FaPhone className="w-5 h-5" />
                 </div>
@@ -107,7 +107,7 @@ function ContactUs() {
                   </div>
                   <div className="text-sm text-gray-600">+61 478 101 857</div>
                 </div>
-              </div>
+              </div> */}
 
               <div className="flex items-start gap-3 mb-3">
                 <div className="mt-1 text-gray-700">
@@ -118,7 +118,7 @@ function ContactUs() {
                     Email:
                   </div>
                   <div className="text-sm text-gray-600">
-                    Boostedlabs@hotmail.com
+                    info@boostedlabs.au
                   </div>
                 </div>
               </div>

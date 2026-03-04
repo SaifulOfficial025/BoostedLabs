@@ -313,7 +313,7 @@ function ProductAddingToCart({
               </div>
             </div>
             {/* Stock Quantity Display */}
-            {product?.is_in_stock &&
+            {/* {product?.is_in_stock &&
               !product?.is_coming_soon &&
               typeof product?.stock_quantity === "number" && (
                 <div className="mt-3">
@@ -328,7 +328,7 @@ function ProductAddingToCart({
                     </span>
                   ) : null}
                 </div>
-              )}
+              )} */}
           </div>
 
           <div className="mt-6">

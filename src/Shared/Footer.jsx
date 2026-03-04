@@ -24,10 +24,8 @@ function Footer() {
         <div className="flex flex-col gap-2 min-w-[180px] items-center sm:items-start">
           <span className="font-semibold text-xl mb-5">Stay Connected</span>
           <span className="font-semibold text-[#cbd5e1]">BOOSTED LABS</span>
-          <span className="text-md text-[#cbd5e1]">
-            Boostedlabs@hotmail.com
-          </span>
-          <span className="text-md text-[#cbd5e1]">+61 478 101 857</span>
+          <span className="text-md text-[#cbd5e1]">info@boostedlabs.au</span>
+          {/* <span className="text-md text-[#cbd5e1]">+61 478 101 857</span> */}
           {/* <span className="mt-5 mb-1">Join Us</span> */}
           <div className="flex gap-3 mt-1">
             {/* Social Icons */}

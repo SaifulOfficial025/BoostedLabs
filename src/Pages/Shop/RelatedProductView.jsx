@@ -35,6 +35,8 @@ function RelatedProductView({ relatedProducts = [] }) {
               title={p.name}
               description={p.description}
               price={parseFloat(p.discounted_price || p.initial_price || 0)}
+              isInStock={p.is_in_stock}
+              isComingSoon={p.is_coming_soon}
               reconstitutePen={p.reconstitute_pen || false}
               onViewDetails={() => {}}
               onAddToCart={() => {}}
